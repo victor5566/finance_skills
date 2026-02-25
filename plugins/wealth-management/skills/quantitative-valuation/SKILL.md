@@ -180,4 +180,4 @@ If the stock trades at $75, it appears undervalued relative to peers (16.7% disc
 - **asset-allocation** (wealth-management plugin, Layer 4): valuation outputs feed into portfolio construction decisions
 
 ## Reference Implementation
-Planned — `scripts/quantitative_valuation.py` is not yet implemented.
+See `scripts/quantitative_valuation.py` for computational helpers.

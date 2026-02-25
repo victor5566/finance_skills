@@ -193,4 +193,4 @@ The posterior tilts returns toward the view. When these posterior returns are fe
 - **quantitative-valuation** (wealth-management plugin, Layer 3): valuation signals can inform TAA decisions
 
 ## Reference Implementation
-Planned — `scripts/asset_allocation.py` is not yet implemented.
+See `scripts/asset_allocation.py` for computational helpers.

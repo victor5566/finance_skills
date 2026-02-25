@@ -134,4 +134,4 @@ Recommended priority order:
 - **finance-psychology** (wealth-management plugin, Layer 7): mental accounting, present bias, commitment devices
 
 ## Reference Implementation
-Planned — `scripts/savings_goals.py` is not yet implemented.
+See `scripts/savings_goals.py` for computational helpers.

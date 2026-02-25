@@ -153,4 +153,4 @@ Amortization calculation with extra payments:
 - **liquidity-management** (wealth-management plugin, Layer 6): debt payments are fixed obligations in cash flow planning
 
 ## Reference Implementation
-Planned — `scripts/debt-management.py` is not yet implemented.
+See `scripts/debt_management.py` for computational helpers.

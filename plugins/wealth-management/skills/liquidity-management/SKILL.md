@@ -141,4 +141,4 @@ Maintain buffer above minimum liquidity requirements:
 - **fixed-income-sovereign** (wealth-management plugin, Layer 2): T-bill ladder mechanics, Treasury Direct
 
 ## Reference Implementation
-Planned — `scripts/liquidity_management.py` is not yet implemented.
+See `scripts/liquidity_management.py` for computational helpers.

@@ -169,4 +169,4 @@ After using the emergency fund:
 - **investment-policy** (wealth-management plugin, Layer 5): emergency fund size feeds the liquidity constraint in an IPS
 
 ## Reference Implementation
-Planned — `scripts/emergency-fund.py` is not yet implemented.
+See `scripts/emergency_fund.py` for computational helpers.

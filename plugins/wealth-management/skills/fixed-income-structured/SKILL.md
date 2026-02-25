@@ -124,4 +124,4 @@ The AAA tranche has 35% subordination — the portfolio would need to lose more 
 - **portfolio-construction** (wealth-management plugin, Layer 3): structured products in multi-asset portfolios
 
 ## Reference Implementation
-Planned — `scripts/fixed_income_structured.py` is not yet implemented.
+See `scripts/fixed_income_structured.py` for computational helpers.

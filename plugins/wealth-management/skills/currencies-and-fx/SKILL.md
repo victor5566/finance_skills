@@ -126,4 +126,4 @@ Because EUR rates (3%) are lower than USD rates (5%), the EUR investor earns a p
 - **portfolio-construction** (wealth-management plugin, Layer 3): currency hedging decisions in portfolio context
 
 ## Reference Implementation
-Planned — `scripts/currencies_and_fx.py` is not yet implemented.
+See `scripts/currencies_and_fx.py` for computational helpers.

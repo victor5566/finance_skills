@@ -187,4 +187,4 @@ Given that the 8% expected return and 20% volatility are estimates with signific
 - **quantitative-valuation** (wealth-management plugin, Layer 3): valuation-based edge estimates feed into conviction weighting
 
 ## Reference Implementation
-Planned — `scripts/bet_sizing.py` is not yet implemented.
+See `scripts/bet_sizing.py` for computational helpers.

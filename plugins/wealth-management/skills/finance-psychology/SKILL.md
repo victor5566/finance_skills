@@ -398,4 +398,4 @@ Designing the decision environment to guide better outcomes without restricting 
 - Sethi, R. (2024). *Money for Couples: How to Make Money Decisions That Bring You Closer Together.*
 
 ## Reference Implementation
-Planned — `scripts/finance_psychology.py` is not yet implemented.
+N/A — this skill is qualitative and does not require a computational script.

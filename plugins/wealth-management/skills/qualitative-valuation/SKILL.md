@@ -174,4 +174,4 @@ Alternatively, instead of adjusting the discount rate, the analyst could model a
 - **diversification** (wealth-management plugin, Layer 4): qualitative sector/factor analysis informs diversification decisions
 
 ## Reference Implementation
-Planned — `scripts/qualitative_valuation.py` is not yet implemented.
+N/A — this skill is qualitative and does not require a computational script.

@@ -123,4 +123,4 @@ The J-curve is visible: negative net cash flows in years 1-4, turning positive i
 - **performance-attribution** (wealth-management plugin, Layer 5): evaluating manager alpha vs factor beta
 
 ## Reference Implementation
-Planned — `scripts/alternatives.py` is not yet implemented.
+N/A — this skill is qualitative and does not require a computational script.

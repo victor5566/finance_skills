@@ -255,4 +255,4 @@ Interpretation: When losses exceed the 95% VaR threshold, the average loss is $2
 - **volatility-modeling** (wealth-management plugin, Layer 1b): EWMA and GARCH volatility forecasts provide the volatility inputs (sigma) for parametric and Monte Carlo VaR.
 
 ## Reference Implementation
-Planned — `scripts/forward-risk.py` is not yet implemented.
+See `scripts/forward_risk.py` for computational helpers.

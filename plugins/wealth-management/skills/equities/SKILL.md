@@ -109,4 +109,4 @@ Interpretation: The fund has a 74% value tilt (0.70 / (0.70 + 0.25)) and 26% gro
 - **portfolio-construction** (wealth-management plugin, Layer 3): equity allocation within multi-asset portfolios
 
 ## Reference Implementation
-Planned — `scripts/equities.py` is not yet implemented.
+See `scripts/equities.py` for computational helpers.

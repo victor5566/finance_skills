@@ -173,4 +173,4 @@ Required when conventional loan LTV exceeds 80%:
 - **liquidity-management** (wealth-management plugin, Layer 6): mortgage payments are the largest fixed obligation in most household cash flow plans
 
 ## Reference Implementation
-Planned — `scripts/lending.py` is not yet implemented.
+See `scripts/lending.py` for computational helpers.

@@ -141,4 +141,4 @@ Duration alone would estimate -2.195%; the convexity correction reduces the esti
 - **asset-allocation** (wealth-management plugin, Layer 3): bonds as an asset class in portfolio construction
 
 ## Reference Implementation
-Planned — `scripts/fixed_income_sovereign.py` is not yet implemented.
+See `scripts/fixed_income_sovereign.py` for computational helpers.

@@ -167,4 +167,4 @@ Interpretation: The portfolio achieves significant diversification — the weigh
 - **bet-sizing** (wealth-management plugin, Layer 4): position sizing interacts with diversification — concentrated vs. diversified approaches
 
 ## Reference Implementation
-Planned — `scripts/diversification.py` is not yet implemented.
+See `scripts/diversification.py` for computational helpers.

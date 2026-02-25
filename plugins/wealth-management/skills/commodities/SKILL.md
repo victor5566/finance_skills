@@ -115,4 +115,4 @@ Despite a 10% spot price increase, the futures-based investor earned only 9% due
 - **asset-allocation** (wealth-management plugin, Layer 3): commodities as a portfolio diversifier
 
 ## Reference Implementation
-Planned — `scripts/commodities.py` is not yet implemented.
+See `scripts/commodities.py` for computational helpers.

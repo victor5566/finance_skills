@@ -139,4 +139,4 @@ The LP's position is worth 5.72% less than if they had simply held the tokens. I
 - **tax-efficiency** (wealth-management plugin, Layer 5): cryptocurrency tax reporting and optimization
 
 ## Reference Implementation
-Planned — `scripts/digital_assets.py` is not yet implemented.
+N/A — this skill is qualitative and does not require a computational script.

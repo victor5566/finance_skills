@@ -248,4 +248,4 @@ A systematic vol-selling strategy would sell this option, expecting to profit fr
 - **performance-metrics** (wealth-management plugin, Layer 1a): Volatility estimates affect the denominators of Sharpe, Sortino, and other risk-adjusted ratios. Using forward-looking (GARCH) volatility can produce conditional performance ratios.
 
 ## Reference Implementation
-Planned — `scripts/volatility-modeling.py` is not yet implemented.
+See `scripts/volatility_modeling.py` for computational helpers.

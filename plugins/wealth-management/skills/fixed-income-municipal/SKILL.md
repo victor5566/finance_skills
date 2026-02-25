@@ -103,4 +103,4 @@ The revenue bond yields 40bp more than the GO bond. The DSCR of 1.8x is well abo
 - **tax-efficiency** (wealth-management plugin, Layer 5): muni bonds as a primary tax management tool
 
 ## Reference Implementation
-Planned — `scripts/fixed_income_municipal.py` is not yet implemented.
+See `scripts/fixed_income_municipal.py` for computational helpers.

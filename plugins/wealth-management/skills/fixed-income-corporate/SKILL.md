@@ -108,4 +108,4 @@ The expected annual credit loss is $12,000, or 1.2% of the exposure. This repres
 - **portfolio-construction** (wealth-management plugin, Layer 3): credit allocation in multi-asset portfolios
 
 ## Reference Implementation
-Planned — `scripts/fixed_income_corporate.py` is not yet implemented.
+See `scripts/fixed_income_corporate.py` for computational helpers.

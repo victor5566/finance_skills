@@ -138,4 +138,4 @@ An appropriate benchmark must be:
 - **emergency-fund** (wealth-management plugin, Layer 6): emergency reserve requirement feeds into IPS liquidity constraint
 
 ## Reference Implementation
-Planned — `scripts/investment-policy.py` is not yet implemented.
+N/A — this skill is qualitative and does not require a computational script.

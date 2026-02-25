@@ -207,4 +207,4 @@ Note: TLH creates a lower cost basis in the replacement security, so taxes are d
 - **financial-statements** (wealth-management plugin, Layer 2): tax implications of rebalancing require understanding of tax accounting
 
 ## Reference Implementation
-Planned — `scripts/rebalancing.py` is not yet implemented.
+See `scripts/rebalancing.py` for computational helpers.

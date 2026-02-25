@@ -214,4 +214,4 @@ The most important reporting skill is translating numbers into meaning.
 - **finance-psychology** (wealth-management plugin, Layer 7): framing effects in how performance is presented to clients
 
 ## Reference Implementation
-Planned — `scripts/performance_reporting.py` is not yet implemented.
+See `scripts/performance_reporting.py` for computational helpers.

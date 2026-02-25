@@ -122,4 +122,4 @@ The ETF's tax deferral advantage is worth approximately $10,000-$20,000 over 20 
 - **portfolio-construction** (wealth-management plugin, Layer 3): selecting vehicles within an asset allocation
 
 ## Reference Implementation
-Planned — `scripts/fund_vehicles.py` is not yet implemented.
+See `scripts/fund_vehicles.py` for computational helpers.

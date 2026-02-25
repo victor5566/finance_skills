@@ -151,4 +151,4 @@ The order of withdrawals from different account types in retirement:
 - **liquidity-management** (wealth-management plugin, Layer 6): Tax implications of accessing different account types affect liquidity planning
 
 ## Reference Implementation
-Planned — `scripts/tax-efficiency.py` is not yet implemented.
+See `scripts/tax_efficiency.py` for computational helpers.

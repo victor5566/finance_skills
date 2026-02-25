@@ -145,4 +145,4 @@ For international portfolios, returns decompose into:
 - **liquidity-management** (wealth-management plugin, Layer 6): Cash drag from liquidity reserves affects portfolio-level attribution
 
 ## Reference Implementation
-Planned — `scripts/performance-attribution.py` is not yet implemented.
+See `scripts/performance_attribution.py` for computational helpers.

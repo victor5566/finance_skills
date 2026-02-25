@@ -122,4 +122,4 @@ Compare to the unlevered cap rate: $35,000 / $500,000 = 7.0%. Leverage boosts th
 - **asset-allocation** (wealth-management plugin, Layer 3): real assets as a portfolio diversifier and inflation hedge
 
 ## Reference Implementation
-Planned — `scripts/real_assets.py` is not yet implemented.
+See `scripts/real_assets.py` for computational helpers.

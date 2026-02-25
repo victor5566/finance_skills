@@ -1,12 +1,21 @@
-# Finance Skills
+# Finance Skills for Claude Code
 
-A suite of Claude Code skill plugins for wealth management. Each plugin is a
-self-contained domain of skills that can be installed independently into any project's
-`.claude/skills/` directory, giving Claude deep expertise in that financial domain.
+A collection of Claude Code skill plugins for financial services. 81 skills across
+7 domain plugins teach Claude investment management, regulatory compliance, advisory
+workflows, trading operations, and more — so it can assist with finance questions,
+build financial tools, and flag compliance concerns.
 
-All **81 skills** are implemented across seven plugins (`core`, `wealth-management`,
-`compliance`, `advisory-practice`, `trading-operations`, `client-operations`,
-`data-integration`).
+Built by [Joel Lewis](https://joelelewis.com?ref=finance_skills).
+
+**Contributions welcome!** Found a way to improve a skill or have a new one to add?
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+> **Disclaimer:** These skills are provided as-is for educational and informational
+> purposes only. The authors make no representations or warranties regarding the
+> accuracy, completeness, or currentness of this content. Nothing in these skills
+> constitutes financial, legal, tax, or investment advice. Users should independently
+> verify any information before relying on it in a professional or personal context.
+> See [LICENSE](LICENSE) for full terms.
 
 ---
 
@@ -170,33 +179,68 @@ Data foundations that every financial system depends on.
 
 ## Installation
 
-### Prerequisites
+### Option 1: Claude Code Marketplace (Recommended)
 
-- A project with a `.claude/` directory (Claude Code project)
-- Bash shell (macOS, Linux, or WSL)
-
-### Install a Plugin
+Install via Claude Code's built-in plugin system:
 
 ```bash
-# Clone this repo
-git clone <repo-url> finance_skills
+/install JoelLewis/finance_skills
+```
+
+### Option 2: npx skills
+
+Use [npx skills](https://github.com/anthropics/skills) to install skills directly:
+
+```bash
+# Install all skills
+npx skills add JoelLewis/finance_skills
+
+# Install specific plugins
+npx skills add JoelLewis/finance_skills --plugin wealth-management
+
+# List available plugins
+npx skills add JoelLewis/finance_skills --list
+```
+
+### Option 3: install.sh (Symlink)
+
+Clone the repo and use the included installer, which symlinks skills into your
+project so updates are reflected immediately:
+
+```bash
+git clone https://github.com/JoelLewis/finance_skills.git
 cd finance_skills
 
-# Install a single plugin into your project
+# Install a single plugin
 ./install.sh --plugin wealth-management --target /path/to/your/project
-
-# Install multiple plugins
-./install.sh --plugin compliance --target /path/to/your/project
-./install.sh --plugin advisory-practice --target /path/to/your/project
 
 # Install all plugins
 ./install.sh --plugin all --target /path/to/your/project
+
+# List available plugins
+./install.sh --list
 ```
 
-The installer:
-1. Always installs `core` (implicit dependency of every plugin)
-2. Installs any declared plugin dependencies first
-3. Symlinks each skill directory into `<target>/.claude/skills/`
+The installer always installs `core` first (implicit dependency), then any declared
+plugin dependencies, then symlinks each skill into `<target>/.claude/skills/`.
+
+### Option 4: Clone and Copy
+
+Copy skills directly without symlinks:
+
+```bash
+git clone https://github.com/JoelLewis/finance_skills.git
+mkdir -p /path/to/your/project/.claude/skills
+
+# Copy a single plugin
+cp -r finance_skills/plugins/core/skills/* /path/to/your/project/.claude/skills/
+cp -r finance_skills/plugins/wealth-management/skills/* /path/to/your/project/.claude/skills/
+
+# Or copy everything
+for plugin in finance_skills/plugins/*/; do
+  cp -r "$plugin"skills/* /path/to/your/project/.claude/skills/
+done
+```
 
 ### What Gets Installed
 
@@ -211,15 +255,10 @@ your-project/
         └── ...
 ```
 
-Skills are symlinked (not copied), so updates to this repo are reflected immediately.
-
-### Verify Installation
-
-After installing, Claude will automatically pick up the skills. You can verify by
-checking the symlinks:
+After installing, Claude will automatically pick up the skills. Verify with:
 
 ```bash
-ls -la /path/to/your/project/.claude/skills/
+ls /path/to/your/project/.claude/skills/
 ```
 
 ---

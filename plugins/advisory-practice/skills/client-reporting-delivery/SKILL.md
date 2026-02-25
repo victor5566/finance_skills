@@ -1,11 +1,7 @@
 ---
 name: client-reporting-delivery
-description: Report generation, customization, delivery channels, frequency management, report templates, client portal integration, compliance review, and print vs digital delivery for advisory firms.
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
+description: "Report generation, customization, delivery channels, frequency management, report templates, client portal integration, compliance review, and print vs digital delivery for advisory firms."
+allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 
 # Client Reporting and Delivery

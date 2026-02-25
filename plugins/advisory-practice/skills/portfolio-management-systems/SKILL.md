@@ -1,15 +1,7 @@
 ---
 name: portfolio-management-systems
-description: >
-  Guidance on portfolio management system architecture, model portfolios, sleeve-based
-  and UMA management, drift monitoring, rebalancing engines, held-away aggregation,
-  portfolio accounting, trading integration, performance calculation, billing, and
-  custodian data feeds for advisory practices.
-allowed-tools:
-  - Bash
-  - Read
-  - Write
-  - Edit
+description: "Portfolio management systems (PMS) for RIAs: model portfolios, sleeve-based/UMA management, drift monitoring, rebalancing, held-away aggregation, portfolio accounting, TWR/MWR performance, billing, custodian feeds. Platforms: Orion, Black Diamond, Tamarac, Addepar, Advent/APX."
+allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 
 # Portfolio Management Systems

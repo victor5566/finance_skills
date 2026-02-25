@@ -1,6 +1,6 @@
 ---
 name: currencies-and-fx
-description: Currency markets: spot/forward rates, covered/uncovered interest rate parity, FX hedging, cross rates, carry trade.
+description: "Currency markets: spot/forward rates, covered/uncovered interest rate parity, FX hedging, cross rates, carry trade."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

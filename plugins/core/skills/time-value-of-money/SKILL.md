@@ -1,6 +1,6 @@
 ---
 name: time-value-of-money
-description: Present value, future value, NPV, IRR, annuities, amortization schedules, and compounding conventions.
+description: "Present value, future value, NPV, IRR, annuities, amortization schedules, and compounding conventions."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

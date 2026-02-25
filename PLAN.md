@@ -235,16 +235,16 @@ finance_skills/
     │   └── skills/                      # 16 skills, guidance-only
     ├── advisory-practice/
     │   ├── plugin.json
-    │   └── skills/                      # 10 skills (8 implemented)
+    │   └── skills/                      # 10 skills
     ├── trading-operations/
     │   ├── plugin.json
     │   └── skills/                      # 9 skills
     ├── client-operations/
     │   ├── plugin.json
-    │   └── skills/                      # 8 skills (7 implemented)
+    │   └── skills/                      # 8 skills
     └── data-integration/
         ├── plugin.json
-        └── skills/                      # 4 skills (2 implemented)
+        └── skills/                      # 4 skills
 ```
 
 ---

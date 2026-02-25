@@ -1,6 +1,6 @@
 ---
 name: forward-risk
-description: Project future risk — parametric VaR, Monte Carlo VaR, CVaR/Expected Shortfall, scenario analysis, stress testing, factor-based risk decomposition.
+description: "Project future risk — parametric VaR, Monte Carlo VaR, CVaR/Expected Shortfall, scenario analysis, stress testing, factor-based risk decomposition."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

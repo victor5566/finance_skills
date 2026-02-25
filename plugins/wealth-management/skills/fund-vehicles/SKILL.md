@@ -1,6 +1,6 @@
 ---
 name: fund-vehicles
-description: Investment vehicles: mutual funds, ETFs, SMAs, index funds, fund selection, expense ratios, tax efficiency.
+description: "Investment vehicles: mutual funds, ETFs, SMAs, index funds, fund selection, expense ratios, tax efficiency."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

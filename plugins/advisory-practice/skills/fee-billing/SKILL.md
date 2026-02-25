@@ -1,6 +1,6 @@
 ---
 name: fee-billing
-description: "Advisory fee billing: fee calculation methods (tiered, flat, breakpoint), billing cycles, AUM valuation, collection methods, revenue recognition, billing exceptions, and fee schedule management."
+description: "Advisory fee billing: fee calculation (tiered, flat, breakpoint), billing cycles, AUM valuation, direct-debit/invoice collection, GAAP revenue recognition, ADV Part 2A/Reg BI/ERISA 408(b)(2) disclosure, billing exceptions, system migration, revenue forecasting, concentration analysis."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

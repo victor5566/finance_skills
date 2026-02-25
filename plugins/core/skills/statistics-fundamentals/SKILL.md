@@ -1,6 +1,6 @@
 ---
 name: statistics-fundamentals
-description: Statistical methods for financial data: distributions, covariance matrices, regression, bootstrapping, shrinkage estimators.
+description: "Statistical methods for financial data: distributions, covariance matrices, regression, bootstrapping, shrinkage estimators."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

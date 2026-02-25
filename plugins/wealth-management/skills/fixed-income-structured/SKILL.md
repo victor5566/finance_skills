@@ -1,6 +1,6 @@
 ---
 name: fixed-income-structured
-description: Structured products: MBS (agency/non-agency), ABS, CLOs, prepayment risk, tranching, waterfall structures.
+description: "Structured products: MBS (agency/non-agency), ABS, CLOs, prepayment risk, tranching, waterfall structures."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

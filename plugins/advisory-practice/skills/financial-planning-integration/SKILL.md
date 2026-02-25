@@ -1,6 +1,6 @@
 ---
 name: financial-planning-integration
-description: "Financial planning integration: planning tool data flows, goal-based plans, Monte Carlo simulation, plan-to-portfolio linkage, scenario analysis, tax projection, Social Security optimization."
+description: "Financial planning integration: goal-based plans, Monte Carlo probability-of-success, plan-to-IPS linkage, scenario analysis, tax-aware planning (QCD, tax-loss harvesting, withdrawal sequencing), Roth conversions, RMD management, SECURE 2.0 Act, Social Security optimization, IRMAA Medicare premiums, 529/donor-advised funds, risk capacity, longevity/sequence-of-returns risk, cash flow modeling by life phase, planning tools (eMoney, MoneyGuidePro, RightCapital), assumption synchronization."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

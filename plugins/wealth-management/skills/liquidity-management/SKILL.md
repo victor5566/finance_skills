@@ -1,6 +1,6 @@
 ---
 name: liquidity-management
-description: Liquidity planning: cash flow forecasting, laddering strategies, liquidity tiers, income smoothing for variable earners.
+description: "Liquidity planning: cash flow forecasting, laddering strategies, liquidity tiers, income smoothing for variable earners."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: fixed-income-corporate
-description: Corporate bond analysis: credit spreads (OAS, Z-spread, G-spread), credit ratings, migration matrices, callable structures, private credit.
+description: "Corporate bond analysis: credit spreads (OAS, Z-spread, G-spread), credit ratings, migration matrices, callable structures, private credit."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

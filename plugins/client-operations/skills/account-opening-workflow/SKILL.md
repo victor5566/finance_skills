@@ -1,6 +1,6 @@
 ---
 name: account-opening-workflow
-description: "Account opening workflows: account types, required documents, approval workflows, NIGO management, regulatory holds, account numbering, and opening process automation."
+description: "Account opening workflows: account types (individual, joint JTWROS/TIC, trust, entity, IRA/SEP/SIMPLE/inherited, UTMA, estate), required forms (Form CIP, CRS, W-9, W-8BEN, beneficial ownership, trust/LLC docs, Form 5305), approval workflows with supervisory review, NIGO management, regulatory holds, PEP/enhanced due diligence screening, senior investor protections, KYC/CIP verification, straight-through processing (STP), multi-custodian operations (Schwab, Fidelity, Pershing), account numbering/titling/classification, ACAT coordination, 30-day compliance review, funding verification, billing system integration, FINRA Rule 4512."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

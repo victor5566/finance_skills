@@ -1,6 +1,6 @@
 ---
 name: fixed-income-municipal
-description: Municipal bond analysis: GO vs revenue bonds, tax-equivalent yield, AMT, state-specific tax treatment, muni credit analysis.
+description: "Municipal bond analysis: GO vs revenue bonds, tax-equivalent yield, AMT, state-specific tax treatment, muni credit analysis."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

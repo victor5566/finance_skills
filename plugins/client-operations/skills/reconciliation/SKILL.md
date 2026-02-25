@@ -1,6 +1,6 @@
 ---
 name: reconciliation
-description: "Reconciliation operations: position reconciliation, cash reconciliation, transaction reconciliation, three-way reconciliation, break identification and resolution, and reconciliation automation."
+description: "Reconciliation operations: position/cash/transaction matching with tolerance thresholds, three-way reconciliation (PMS/custodian/clearing), break identification (timing, pricing, corporate action, stock split/merger/DRIP), tolerance rules, STP rates (95-99% position, 85-95% transaction), auto-resolution, cost basis and tax lot matching, accrued income reconciliation, multi-custodian data normalization (Schwab, Fidelity, Pershing), ex-date processing, custodian feed formats, reconciliation scheduling, regulatory compliance (SEC Rule 204-2, ERISA, SOC 1/SOC 2, books and records), 1099-B accuracy, reconciliation automation platforms (Arcesium, Duco, Advent Geneva)."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

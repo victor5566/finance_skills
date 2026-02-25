@@ -1,6 +1,6 @@
 ---
 name: digital-assets
-description: Digital assets: crypto fundamentals, blockchain mechanics, DeFi, staking yields, on-chain metrics.
+description: "Digital assets: crypto fundamentals, blockchain mechanics, DeFi, staking yields, on-chain metrics."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: real-assets
-description: Real estate and infrastructure: REITs, cap rates, NOI, real estate valuation, infrastructure investments.
+description: "Real estate and infrastructure: REITs, cap rates, NOI, real estate valuation, infrastructure investments."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

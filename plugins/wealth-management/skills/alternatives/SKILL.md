@@ -1,6 +1,6 @@
 ---
 name: alternatives
-description: Alternative investments: hedge fund strategies, private equity, venture capital, fee structures, illiquidity premiums.
+description: "Alternative investments: hedge fund strategies, private equity, venture capital, fee structures, illiquidity premiums."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

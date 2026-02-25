@@ -1,6 +1,6 @@
 ---
 name: historical-risk
-description: Measure realized risk from historical data — volatility estimators, drawdown analysis, historical VaR, downside deviation, tracking error.
+description: "Measure realized risk from historical data — volatility estimators, drawdown analysis, historical VaR, downside deviation, tracking error."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

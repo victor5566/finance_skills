@@ -1,6 +1,6 @@
 ---
 name: volatility-modeling
-description: Model and forecast volatility — EWMA, GARCH(1,1), implied volatility, volatility surfaces, term structure, realized vs implied vol.
+description: "Model and forecast volatility — EWMA, GARCH(1,1), implied volatility, volatility surfaces, term structure, realized vs implied vol."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

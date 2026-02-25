@@ -1,6 +1,6 @@
 ---
 name: return-calculations
-description: Compute and explain investment return metrics: TWR, MWR/IRR, CAGR, annualization, sub-period linking, arithmetic vs geometric vs log returns.
+description: "Compute and explain investment return metrics: TWR, MWR/IRR, CAGR, annualization, sub-period linking, arithmetic vs geometric vs log returns."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: fixed-income-sovereign
-description: Treasury and sovereign bond mechanics: yield curve construction, duration, convexity, TIPS, auction mechanics.
+description: "Treasury and sovereign bond mechanics: yield curve construction, duration, convexity, TIPS, auction mechanics."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

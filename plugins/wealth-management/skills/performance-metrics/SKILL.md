@@ -1,6 +1,6 @@
 ---
 name: performance-metrics
-description: Compute risk-adjusted performance ratios — Sharpe, Sortino, Information Ratio, Calmar, Treynor, Omega, capture ratios, and M-squared.
+description: "Compute risk-adjusted performance ratios — Sharpe, Sortino, Information Ratio, Calmar, Treynor, Omega, capture ratios, and M-squared."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

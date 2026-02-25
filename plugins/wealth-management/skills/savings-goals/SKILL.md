@@ -1,6 +1,6 @@
 ---
 name: savings-goals
-description: Goal-based savings: future value targeting, required savings rates, education funding (529), retirement accumulation.
+description: "Goal-based savings: future value targeting, required savings rates, education funding (529), retirement accumulation."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

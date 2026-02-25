@@ -1,6 +1,6 @@
 ---
 name: commodities
-description: Commodity markets: futures curve (contango/backwardation), roll yield, commodity indices, storage costs, supply/demand fundamentals.
+description: "Commodity markets: futures curve (contango/backwardation), roll yield, commodity indices, storage costs, supply/demand fundamentals."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: equities
-description: Equity market structure, factors, index construction, style analysis, earnings mechanics.
+description: "Equity market structure, factors, index construction, style analysis, earnings mechanics."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

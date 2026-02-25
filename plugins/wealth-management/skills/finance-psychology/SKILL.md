@@ -1,6 +1,6 @@
 ---
 name: finance-psychology
-description: Behavioral finance biases, money psychology, client coaching frameworks, Rich Life design, and emotional discipline in financial decision-making.
+description: "Behavioral finance biases, money psychology, client coaching frameworks, Rich Life design, and emotional discipline in financial decision-making."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
 ---
 

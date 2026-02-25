@@ -117,10 +117,10 @@ The J-curve is visible: negative net cash flows in years 1-4, turning positive i
 - Comparing PE IRR directly to public market time-weighted returns — use PME (Public Market Equivalent) for an apples-to-apples comparison
 
 ## Cross-References
-- Layer 1: `risk-return-foundations` for return measurement and risk-adjusted performance
-- Layer 2: `equities` for long/short equity strategies and factor exposures
-- Layer 2: `fixed-income-corporate` for private credit and leveraged loan markets
-- Layer 3: `performance-attribution` for evaluating manager alpha vs factor beta
+- **historical-risk** (wealth-management plugin, Layer 1a): return measurement and risk-adjusted performance
+- **equities** (wealth-management plugin, Layer 2): long/short equity strategies and factor exposures
+- **fixed-income-corporate** (wealth-management plugin, Layer 2): private credit and leveraged loan markets
+- **performance-attribution** (wealth-management plugin, Layer 5): evaluating manager alpha vs factor beta
 
 ## Reference Implementation
-See `scripts/alternatives.py` for computational helpers.
+Planned — `scripts/alternatives.py` is not yet implemented.

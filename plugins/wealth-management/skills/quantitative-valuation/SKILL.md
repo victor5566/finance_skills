@@ -173,10 +173,11 @@ If the stock trades at $75, it appears undervalued relative to peers (16.7% disc
 - Ignoring dilution from stock-based compensation in per-share value estimates
 
 ## Cross-References
-- **risk-return** (Layer 1): CAPM and beta for cost of equity
-- **financial-statements** (Layer 2): FCF and EBITDA derivation from financials
-- **qualitative-valuation** (Layer 3): complements quantitative models with moat and quality analysis
-- **asset-allocation** (Layer 4): valuation outputs feed into portfolio construction decisions
+- **historical-risk** (wealth-management plugin, Layer 1a): historical beta estimation for CAPM inputs
+- **forward-risk** (wealth-management plugin, Layer 1b): cost of equity estimation via CAPM and factor models
+- **financial-statements** (wealth-management plugin, Layer 2): FCF and EBITDA derivation from financials
+- **qualitative-valuation** (wealth-management plugin, Layer 3): complements quantitative models with moat and quality analysis
+- **asset-allocation** (wealth-management plugin, Layer 4): valuation outputs feed into portfolio construction decisions
 
 ## Reference Implementation
-See `scripts/quantitative_valuation.py` for computational helpers.
+Planned — `scripts/quantitative_valuation.py` is not yet implemented.

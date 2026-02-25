@@ -185,11 +185,12 @@ The posterior tilts returns toward the view. When these posterior returns are fe
 - Over-reliance on historical covariance matrices that may not reflect future relationships
 
 ## Cross-References
-- **risk-return** (Layer 1): expected return, volatility, and correlation inputs for optimization
-- **diversification** (Layer 4): diversification principles underpin all allocation frameworks
-- **bet-sizing** (Layer 4): position sizing within the allocated asset classes
-- **rebalancing** (Layer 4): maintaining allocation targets over time
-- **quantitative-valuation** (Layer 3): valuation signals can inform TAA decisions
+- **historical-risk** (wealth-management plugin, Layer 1a): volatility and correlation inputs for mean-variance optimization
+- **forward-risk** (wealth-management plugin, Layer 1b): expected return forecasts and scenario analysis for portfolio optimization
+- **diversification** (wealth-management plugin, Layer 4): diversification principles underpin all allocation frameworks
+- **bet-sizing** (wealth-management plugin, Layer 4): position sizing within the allocated asset classes
+- **rebalancing** (wealth-management plugin, Layer 4): maintaining allocation targets over time
+- **quantitative-valuation** (wealth-management plugin, Layer 3): valuation signals can inform TAA decisions
 
 ## Reference Implementation
-See `scripts/asset_allocation.py` for computational helpers.
+Planned — `scripts/asset_allocation.py` is not yet implemented.

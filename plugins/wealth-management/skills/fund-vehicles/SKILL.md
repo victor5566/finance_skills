@@ -116,10 +116,10 @@ The ETF's tax deferral advantage is worth approximately $10,000-$20,000 over 20 
 - Overlooking securities lending income that offsets expenses — some index funds achieve tracking difference better than their expense ratio
 
 ## Cross-References
-- Layer 2: `equities` for equity fund selection and equity index tracking
-- Layer 2: `fixed-income-sovereign` and `fixed-income-corporate` for bond fund considerations
-- Layer 3: `tax-efficiency` for comprehensive after-tax investment analysis
-- Layer 3: `portfolio-construction` for selecting vehicles within an asset allocation
+- **equities** (wealth-management plugin, Layer 2): equity fund selection and equity index tracking
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): bond fund considerations (see also **fixed-income-corporate**)
+- **tax-efficiency** (wealth-management plugin, Layer 5): comprehensive after-tax investment analysis
+- **portfolio-construction** (wealth-management plugin, Layer 3): selecting vehicles within an asset allocation
 
 ## Reference Implementation
-See `scripts/fund_vehicles.py` for computational helpers.
+Planned — `scripts/fund_vehicles.py` is not yet implemented.

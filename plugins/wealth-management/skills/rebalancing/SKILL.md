@@ -200,11 +200,11 @@ Note: TLH creates a lower cost basis in the replacement security, so taxes are d
 - Rebalancing into the wrong account: selling appreciated assets in taxable accounts when the same rebalancing could be done in tax-deferred accounts
 
 ## Cross-References
-- **asset-allocation** (Layer 4): rebalancing maintains the target asset allocation over time
-- **diversification** (Layer 4): rebalancing preserves the intended diversification structure
-- **bet-sizing** (Layer 4): position sizes drift and need rebalancing to maintain conviction weighting
-- **risk-return** (Layer 1): drift changes portfolio risk profile; rebalancing controls it
-- **financial-statements** (Layer 2): tax implications of rebalancing require understanding of tax accounting
+- **asset-allocation** (wealth-management plugin, Layer 4): rebalancing maintains the target asset allocation over time
+- **diversification** (wealth-management plugin, Layer 4): rebalancing preserves the intended diversification structure
+- **bet-sizing** (wealth-management plugin, Layer 4): position sizes drift and need rebalancing to maintain conviction weighting
+- **historical-risk** (wealth-management plugin, Layer 1a): drift changes portfolio risk profile; rebalancing controls it
+- **financial-statements** (wealth-management plugin, Layer 2): tax implications of rebalancing require understanding of tax accounting
 
 ## Reference Implementation
-See `scripts/rebalancing.py` for computational helpers.
+Planned — `scripts/rebalancing.py` is not yet implemented.

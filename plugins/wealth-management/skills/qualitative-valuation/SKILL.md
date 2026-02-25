@@ -168,10 +168,10 @@ Alternatively, instead of adjusting the discount rate, the analyst could model a
 - Static analysis: moats, competitive positioning, and ESG risks evolve — reassess periodically
 
 ## Cross-References
-- **quantitative-valuation** (Layer 3): quantitative models that qualitative analysis informs and contextualizes
-- **financial-statements** (Layer 2): ROIC, margins, and cash flow patterns that validate qualitative assessments
-- **risk-return** (Layer 1): risk premium adjustments from ESG and business quality factors
-- **diversification** (Layer 4): qualitative sector/factor analysis informs diversification decisions
+- **quantitative-valuation** (wealth-management plugin, Layer 3): quantitative models that qualitative analysis informs and contextualizes
+- **financial-statements** (wealth-management plugin, Layer 2): ROIC, margins, and cash flow patterns that validate qualitative assessments
+- **forward-risk** (wealth-management plugin, Layer 1b): risk premium adjustments from ESG and business quality factors
+- **diversification** (wealth-management plugin, Layer 4): qualitative sector/factor analysis informs diversification decisions
 
 ## Reference Implementation
-See `scripts/qualitative_valuation.py` for computational helpers.
+Planned — `scripts/qualitative_valuation.py` is not yet implemented.

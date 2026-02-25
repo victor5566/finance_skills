@@ -132,13 +132,13 @@ Maintain buffer above minimum liquidity requirements:
 - Treating credit lines as liquidity (they can be revoked when most needed)
 
 ## Cross-References
-- **emergency-fund** — first tier of liquidity, must be funded before optimizing
-- **lending** — margin loans, HELOCs as backup liquidity (with risks)
-- **time-value-of-money** — CD/bond pricing, yield calculations
-- **debt-management** — debt payments are fixed cash flow obligations
-- **savings-goals** — multiple goals compete for available cash flow
-- **tax-efficiency** — estimated taxes, tax-loss harvesting timing
-- **fixed-income-sovereign** — T-bill ladder mechanics, Treasury Direct
+- **emergency-fund** (wealth-management plugin, Layer 6): first tier of liquidity, must be funded before optimizing
+- **lending** (wealth-management plugin, Layer 6): margin loans, HELOCs as backup liquidity (with risks)
+- **time-value-of-money** (core plugin, Layer 0): CD/bond pricing, yield calculations
+- **debt-management** (wealth-management plugin, Layer 6): debt payments are fixed cash flow obligations
+- **savings-goals** (wealth-management plugin, Layer 6): multiple goals compete for available cash flow
+- **tax-efficiency** (wealth-management plugin, Layer 5): estimated taxes, tax-loss harvesting timing
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): T-bill ladder mechanics, Treasury Direct
 
 ## Reference Implementation
-See `scripts/liquidity_management.py` for computational helpers.
+Planned — `scripts/liquidity_management.py` is not yet implemented.

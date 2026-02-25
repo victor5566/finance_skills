@@ -144,11 +144,11 @@ The order of withdrawals from different account types in retirement:
 - Not coordinating tax strategy across spouses' accounts
 
 ## Cross-References
-- **investment-policy:** Tax constraint in IPS governs asset location and turnover management
-- **performance-attribution:** After-tax return attribution requires tax-aware calculations
-- **debt-management:** Mortgage interest deductibility interacts with tax planning
-- **savings-goals:** Account type selection (Roth vs Traditional) is a core tax decision
-- **liquidity-management:** Tax implications of accessing different account types affect liquidity planning
+- **investment-policy** (wealth-management plugin, Layer 5): Tax constraint in IPS governs asset location and turnover management
+- **performance-attribution** (wealth-management plugin, Layer 5): After-tax return attribution requires tax-aware calculations
+- **debt-management** (wealth-management plugin, Layer 6): Mortgage interest deductibility interacts with tax planning
+- **savings-goals** (wealth-management plugin, Layer 6): Account type selection (Roth vs Traditional) is a core tax decision
+- **liquidity-management** (wealth-management plugin, Layer 6): Tax implications of accessing different account types affect liquidity planning
 
 ## Reference Implementation
-See `scripts/tax-efficiency.py` for computational helpers.
+Planned — `scripts/tax-efficiency.py` is not yet implemented.

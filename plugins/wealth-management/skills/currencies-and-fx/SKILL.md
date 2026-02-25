@@ -120,10 +120,10 @@ Because EUR rates (3%) are lower than USD rates (5%), the EUR investor earns a p
 - CIP holds by arbitrage; UIP is a theory that often fails empirically — do not assume forward rates predict future spot rates
 
 ## Cross-References
-- Layer 1: `risk-return-foundations` for return measurement in multi-currency portfolios
-- Layer 2: `equities` for international equity investing and currency effects
-- Layer 2: `fixed-income-sovereign` for international bond investing and rate differentials
-- Layer 3: `portfolio-construction` for currency hedging decisions in portfolio context
+- **historical-risk** (wealth-management plugin, Layer 1a): return measurement in multi-currency portfolios
+- **equities** (wealth-management plugin, Layer 2): international equity investing and currency effects
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): international bond investing and rate differentials
+- **portfolio-construction** (wealth-management plugin, Layer 3): currency hedging decisions in portfolio context
 
 ## Reference Implementation
-See `scripts/currencies_and_fx.py` for computational helpers.
+Planned — `scripts/currencies_and_fx.py` is not yet implemented.

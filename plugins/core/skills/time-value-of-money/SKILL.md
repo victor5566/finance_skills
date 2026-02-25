@@ -228,8 +228,8 @@ To find the IRR, we would solve for the rate where NPV = 0. Numerically, the IRR
 - Multiple IRR solutions with non-conventional cash flows: when cash flows change sign more than once (e.g., initial outflow, inflows, then a large terminal outflow), Descartes' rule allows up to as many positive real IRR solutions as there are sign changes. In such cases, use NPV profiling or the Modified IRR (MIRR) instead.
 
 ## Cross-References
-- return-calculations — CAGR is a special case of compound growth; MWR/IRR uses the same NPV=0 framework
-- statistics-fundamentals — Discount rate estimation often relies on regression (CAPM beta) and distributional assumptions
+- **return-calculations** (core plugin, Layer 0): CAGR is a special case of compound growth; MWR/IRR uses the same NPV=0 framework
+- **statistics-fundamentals** (core plugin, Layer 0): Discount rate estimation often relies on regression (CAPM beta) and distributional assumptions
 
 ## Reference Implementation
-See `scripts/time-value-of-money.py` for computational helpers.
+See `scripts/time_value_of_money.py` for computational helpers.

@@ -382,13 +382,13 @@ Designing the decision environment to guide better outcomes without restricting 
 ---
 
 ## Cross-References
-- Layer 1: `statistics-fundamentals` — base rates, probability calibration, compounding math
-- Layer 2: `time-value-of-money` — framing decisions in present value terms, compounding illustrations
-- Layer 4: `historical-risk` — long-term drawdown context for recency bias discussions; "price of admission" framing
-- Layer 5: `asset-allocation` — systematic rebalancing as a debiasing mechanism; $30,000 question
-- Layer 5: `diversification` — structural protection against overconfidence and concentration
-- Layer 6: `tax-planning` — tax-loss harvesting as a silver lining for loss aversion; account sequencing
-- Layer 8: `performance-reporting` — framing effects in how returns are presented; nominal vs. real
+- **statistics-fundamentals** (core plugin, Layer 0): base rates, probability calibration, compounding math
+- **time-value-of-money** (core plugin, Layer 0): framing decisions in present value terms, compounding illustrations
+- **historical-risk** (wealth-management plugin, Layer 1a): long-term drawdown context for recency bias discussions; "price of admission" framing
+- **asset-allocation** (wealth-management plugin, Layer 4): systematic rebalancing as a debiasing mechanism; $30,000 question
+- **diversification** (wealth-management plugin, Layer 4): structural protection against overconfidence and concentration
+- **tax-efficiency** (wealth-management plugin, Layer 5): tax-loss harvesting as a silver lining for loss aversion; account sequencing
+- **performance-reporting** (wealth-management plugin, Layer 8): framing effects in how returns are presented; nominal vs. real
 
 ## Key Sources
 - Kahneman, D. & Tversky, A. (1979). Prospect Theory: An Analysis of Decision under Risk.
@@ -398,4 +398,4 @@ Designing the decision environment to guide better outcomes without restricting 
 - Sethi, R. (2024). *Money for Couples: How to Make Money Decisions That Bring You Closer Together.*
 
 ## Reference Implementation
-See `scripts/finance_psychology.py` for computational helpers.
+Planned — `scripts/finance_psychology.py` is not yet implemented.

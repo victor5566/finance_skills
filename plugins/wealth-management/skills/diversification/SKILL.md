@@ -161,10 +161,10 @@ Interpretation: The portfolio achieves significant diversification — the weigh
 - Using historical correlations without testing sensitivity to regime changes
 
 ## Cross-References
-- **risk-return** (Layer 1): volatility, correlation, and systematic vs. idiosyncratic risk foundations
-- **asset-allocation** (Layer 4): diversification principles feed directly into portfolio construction and optimization
-- **rebalancing** (Layer 4): maintaining diversification targets over time through rebalancing
-- **bet-sizing** (Layer 4): position sizing interacts with diversification — concentrated vs. diversified approaches
+- **historical-risk** (wealth-management plugin, Layer 1a): volatility, correlation, and systematic vs. idiosyncratic risk foundations
+- **asset-allocation** (wealth-management plugin, Layer 4): diversification principles feed directly into portfolio construction and optimization
+- **rebalancing** (wealth-management plugin, Layer 4): maintaining diversification targets over time through rebalancing
+- **bet-sizing** (wealth-management plugin, Layer 4): position sizing interacts with diversification — concentrated vs. diversified approaches
 
 ## Reference Implementation
-See `scripts/diversification.py` for computational helpers.
+Planned — `scripts/diversification.py` is not yet implemented.

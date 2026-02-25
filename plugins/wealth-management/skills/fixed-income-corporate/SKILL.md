@@ -102,10 +102,10 @@ The expected annual credit loss is $12,000, or 1.2% of the exposure. This repres
 - Assuming recovery rates are constant — they vary significantly by seniority and economic cycle (lower in recessions)
 
 ## Cross-References
-- Layer 2: `fixed-income-sovereign` for the Treasury curve used as the risk-free benchmark
-- Layer 2: `fixed-income-structured` for CLOs and structured credit products
-- Layer 2: `alternatives` for private credit as an alternative investment
-- Layer 3: `portfolio-construction` for credit allocation in multi-asset portfolios
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): the Treasury curve used as the risk-free benchmark
+- **fixed-income-structured** (wealth-management plugin, Layer 2): CLOs and structured credit products
+- **alternatives** (wealth-management plugin, Layer 2): private credit as an alternative investment
+- **portfolio-construction** (wealth-management plugin, Layer 3): credit allocation in multi-asset portfolios
 
 ## Reference Implementation
-See `scripts/fixed_income_corporate.py` for computational helpers.
+Planned — `scripts/fixed_income_corporate.py` is not yet implemented.

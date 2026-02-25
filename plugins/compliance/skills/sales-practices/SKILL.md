@@ -194,4 +194,4 @@ FINRA Rule 2360 governs the conduct of member firms and associated persons in op
 - **fiduciary-standards** (Layer 9): For dual-registrants, fiduciary duties may impose obligations beyond FINRA sales practice rules
 
 ## Reference Implementation
-See `scripts/sales-practices.py` for computational helpers.
+Planned — `scripts/sales_practices.py` is not yet implemented.

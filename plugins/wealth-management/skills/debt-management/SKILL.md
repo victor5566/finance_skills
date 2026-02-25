@@ -146,11 +146,11 @@ Amortization calculation with extra payments:
 - Ignoring the amortization reset: refinancing to a new 30-year term extends the payoff date
 
 ## Cross-References
-- **lending:** Mortgage analysis, loan terms, and amortization calculations
-- **emergency-fund:** Adequate emergency fund prevents taking on new high-interest debt during crises
-- **savings-goals:** Debt payoff competes with savings goals for cash flow allocation
-- **tax-efficiency:** Tax deductibility of certain debt interest affects optimal payoff order
-- **liquidity-management:** Debt payments are fixed obligations in cash flow planning
+- **lending** (wealth-management plugin, Layer 6): mortgage analysis, loan terms, and amortization calculations
+- **emergency-fund** (wealth-management plugin, Layer 6): adequate emergency fund prevents taking on new high-interest debt during crises
+- **savings-goals** (wealth-management plugin, Layer 6): debt payoff competes with savings goals for cash flow allocation
+- **tax-efficiency** (wealth-management plugin, Layer 5): tax deductibility of certain debt interest affects optimal payoff order
+- **liquidity-management** (wealth-management plugin, Layer 6): debt payments are fixed obligations in cash flow planning
 
 ## Reference Implementation
-See `scripts/debt-management.py` for computational helpers.
+Planned — `scripts/debt-management.py` is not yet implemented.

@@ -125,13 +125,13 @@ Recommended priority order:
 - Using average returns without considering sequence risk near goal date
 
 ## Cross-References
-- **time-value-of-money** — FV/PV calculations, annuity formulas
-- **emergency-fund** — must be funded before other goals
-- **debt-management** — high-interest debt payoff competes with savings
-- **tax-efficiency** — 529 tax benefits, Roth vs traditional, HSA
-- **investment-policy** — goal-based allocation aligns with IPS constraints
-- **asset-allocation** — glide paths for target-date retirement savings
-- **finance-psychology** — mental accounting, present bias, commitment devices
+- **time-value-of-money** (core plugin, Layer 0): FV/PV calculations, annuity formulas
+- **emergency-fund** (wealth-management plugin, Layer 6): must be funded before other goals
+- **debt-management** (wealth-management plugin, Layer 6): high-interest debt payoff competes with savings
+- **tax-efficiency** (wealth-management plugin, Layer 5): 529 tax benefits, Roth vs traditional, HSA
+- **investment-policy** (wealth-management plugin, Layer 5): goal-based allocation aligns with IPS constraints
+- **asset-allocation** (wealth-management plugin, Layer 4): glide paths for target-date retirement savings
+- **finance-psychology** (wealth-management plugin, Layer 7): mental accounting, present bias, commitment devices
 
 ## Reference Implementation
-See `scripts/savings_goals.py` for computational helpers.
+Planned — `scripts/savings_goals.py` is not yet implemented.

@@ -183,8 +183,8 @@ The MWR is approximately **-0.48% annualized**.
 - Double-counting dividends: if the ending value `V_end` already includes reinvested dividends, do not add `D` separately in the holding period return formula.
 
 ## Cross-References
-- time-value-of-money — NPV, IRR, and discounting concepts overlap with MWR calculations
-- statistics-fundamentals — Arithmetic and geometric means, return distribution analysis
+- **time-value-of-money** (core plugin, Layer 0): NPV, IRR, and discounting concepts overlap with MWR calculations
+- **statistics-fundamentals** (core plugin, Layer 0): Arithmetic and geometric means, return distribution analysis
 
 ## Reference Implementation
-See `scripts/return-calculations.py` for computational helpers.
+See `scripts/return_calculations.py` for computational helpers.

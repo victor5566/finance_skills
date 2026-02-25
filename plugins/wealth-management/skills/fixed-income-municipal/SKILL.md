@@ -97,10 +97,10 @@ The revenue bond yields 40bp more than the GO bond. The DSCR of 1.8x is well abo
 - Confusing call provisions — many munis are callable at par after 10 years; always check yield-to-worst
 
 ## Cross-References
-- Layer 1: `time-value-of-money` for present value and discounting fundamentals
-- Layer 2: `fixed-income-sovereign` for yield curve context and duration concepts
-- Layer 2: `fixed-income-corporate` for comparing muni spreads to corporate spreads
-- Layer 3: `tax-efficiency` for muni bonds as a primary tax management tool
+- **time-value-of-money** (core plugin, Layer 0): present value and discounting fundamentals
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): yield curve context and duration concepts
+- **fixed-income-corporate** (wealth-management plugin, Layer 2): comparing muni spreads to corporate spreads
+- **tax-efficiency** (wealth-management plugin, Layer 5): muni bonds as a primary tax management tool
 
 ## Reference Implementation
-See `scripts/fixed_income_municipal.py` for computational helpers.
+Planned — `scripts/fixed_income_municipal.py` is not yet implemented.

@@ -109,10 +109,10 @@ Despite a 10% spot price increase, the futures-based investor earned only 9% due
 - Storage costs matter for physical but not financial investors — financial investors face roll yield, not storage costs
 
 ## Cross-References
-- Layer 1: `risk-return-foundations` for return and risk measurement basics
-- Layer 2: `real-assets` for physical commodity-related investments (gold, farmland)
-- Layer 2: `currencies-and-fx` for commodity currency relationships
-- Layer 3: `asset-allocation` for commodities as a portfolio diversifier
+- **historical-risk** (wealth-management plugin, Layer 1a): return and risk measurement basics
+- **real-assets** (wealth-management plugin, Layer 2): physical commodity-related investments (gold, farmland)
+- **currencies-and-fx** (wealth-management plugin, Layer 2): commodity currency relationships
+- **asset-allocation** (wealth-management plugin, Layer 3): commodities as a portfolio diversifier
 
 ## Reference Implementation
-See `scripts/commodities.py` for computational helpers.
+Planned — `scripts/commodities.py` is not yet implemented.

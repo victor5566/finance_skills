@@ -313,8 +313,8 @@ Since `|7.76| >> 2.074`, the beta is **highly statistically significant**, confi
 - Unstable covariance matrices with small samples: when the number of assets `p` approaches or exceeds the number of observations `n`, the sample covariance matrix becomes singular or poorly conditioned. Apply Ledoit-Wolf shrinkage or factor-based covariance models to obtain stable, invertible matrices for portfolio optimization.
 
 ## Cross-References
-- return-calculations — Arithmetic and geometric mean returns, log returns for statistical modeling
-- time-value-of-money — Discount rate estimation via CAPM regression; NPV and IRR calculations use statistical inputs
+- **return-calculations** (core plugin, Layer 0): Arithmetic and geometric mean returns, log returns for statistical modeling
+- **time-value-of-money** (core plugin, Layer 0): Discount rate estimation via CAPM regression; NPV and IRR calculations use statistical inputs
 
 ## Reference Implementation
-See `scripts/statistics-fundamentals.py` for computational helpers.
+See `scripts/statistics_fundamentals.py` for computational helpers.

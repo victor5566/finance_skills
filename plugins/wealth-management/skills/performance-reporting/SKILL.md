@@ -205,13 +205,13 @@ The most important reporting skill is translating numbers into meaning.
 - Ignoring taxes: for taxable investors, after-tax returns are what actually matters.
 
 ## Cross-References
-- Layer 1: `statistics-fundamentals` — return distributions, confidence intervals for projections
-- Layer 2: `time-value-of-money` — future value projections, annualization math
-- Layer 3: `performance-metrics` — Sharpe, Sortino, Information Ratio calculation details
-- Layer 4: `historical-risk` — volatility, drawdown, VaR computation for risk dashboards
-- Layer 5: `asset-allocation` — benchmark construction for multi-asset portfolios
-- Layer 6: `quantitative-valuation` — forward-looking return assumptions for goal projections
-- Layer 7: `finance-psychology` — framing effects in how performance is presented to clients
+- **statistics-fundamentals** (core plugin, Layer 0): return distributions, confidence intervals for projections
+- **time-value-of-money** (core plugin, Layer 0): future value projections, annualization math
+- **performance-metrics** (wealth-management plugin, Layer 1a): Sharpe, Sortino, Information Ratio calculation details
+- **historical-risk** (wealth-management plugin, Layer 1a): volatility, drawdown, VaR computation for risk dashboards
+- **asset-allocation** (wealth-management plugin, Layer 4): benchmark construction for multi-asset portfolios
+- **quantitative-valuation** (wealth-management plugin, Layer 3): forward-looking return assumptions for goal projections
+- **finance-psychology** (wealth-management plugin, Layer 7): framing effects in how performance is presented to clients
 
 ## Reference Implementation
-See `scripts/performance_reporting.py` for computational helpers.
+Planned — `scripts/performance_reporting.py` is not yet implemented.

@@ -133,10 +133,10 @@ The LP's position is worth 5.72% less than if they had simply held the tokens. I
 - Comparing crypto "yields" to traditional fixed income — very different risk profiles; crypto yields compensate for smart contract risk, impermanent loss, token price volatility, and regulatory uncertainty
 
 ## Cross-References
-- Layer 1: `risk-return-foundations` for volatility and risk measurement (crypto exhibits extreme volatility)
-- Layer 2: `currencies-and-fx` for stablecoin and crypto-fiat exchange dynamics
-- Layer 2: `alternatives` for crypto as an alternative asset class
-- Layer 3: `tax-efficiency` for cryptocurrency tax reporting and optimization
+- **historical-risk** (wealth-management plugin, Layer 1a): volatility and risk measurement (crypto exhibits extreme volatility)
+- **currencies-and-fx** (wealth-management plugin, Layer 2): stablecoin and crypto-fiat exchange dynamics
+- **alternatives** (wealth-management plugin, Layer 2): crypto as an alternative asset class
+- **tax-efficiency** (wealth-management plugin, Layer 5): cryptocurrency tax reporting and optimization
 
 ## Reference Implementation
-See `scripts/digital_assets.py` for computational helpers.
+Planned — `scripts/digital_assets.py` is not yet implemented.

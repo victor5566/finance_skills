@@ -103,10 +103,10 @@ Interpretation: The fund has a 74% value tilt (0.70 / (0.70 + 0.25)) and 26% gro
 - Confusing price return with total return — dividends contribute significantly to long-term equity returns
 
 ## Cross-References
-- Layer 1: `risk-return-foundations` for beta, volatility, and Sharpe ratio fundamentals
-- Layer 2: `fund-vehicles` for equity fund selection (ETFs, mutual funds, SMAs)
-- Layer 2: `currencies-and-fx` for international equity currency effects
-- Layer 3: `portfolio-construction` for equity allocation within multi-asset portfolios
+- **historical-risk** (wealth-management plugin, Layer 1a): beta, volatility, and Sharpe ratio fundamentals
+- **fund-vehicles** (wealth-management plugin, Layer 2): equity fund selection (ETFs, mutual funds, SMAs)
+- **currencies-and-fx** (wealth-management plugin, Layer 2): international equity currency effects
+- **portfolio-construction** (wealth-management plugin, Layer 3): equity allocation within multi-asset portfolios
 
 ## Reference Implementation
-See `scripts/equities.py` for computational helpers.
+Planned — `scripts/equities.py` is not yet implemented.

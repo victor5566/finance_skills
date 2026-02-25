@@ -188,9 +188,9 @@ The manager generated 0.50 units of active return per unit of active risk. This 
 - **Comparing Sharpe ratios across different time periods:** A Sharpe of 1.0 in a low-vol environment is not the same as 1.0 in a high-vol environment. Performance ratios are period-specific and not directly comparable across different market regimes.
 
 ## Cross-References
-- **historical-risk:** Provides the risk measures (volatility, drawdown, downside deviation, tracking error) used as denominators in these performance ratios.
-- **forward-risk:** Forward-looking risk measures (VaR, CVaR) complement retrospective performance assessment by estimating future potential losses.
-- **volatility-modeling:** Volatility forecasts from GARCH or EWMA can be used to compute forward-looking or conditional Sharpe ratios.
+- **historical-risk** (wealth-management plugin, Layer 1a): Provides the risk measures (volatility, drawdown, downside deviation, tracking error) used as denominators in these performance ratios.
+- **forward-risk** (wealth-management plugin, Layer 1b): Forward-looking risk measures (VaR, CVaR) complement retrospective performance assessment by estimating future potential losses.
+- **volatility-modeling** (wealth-management plugin, Layer 1b): Volatility forecasts from GARCH or EWMA can be used to compute forward-looking or conditional Sharpe ratios.
 
 ## Reference Implementation
-See `scripts/performance-metrics.py` for computational helpers.
+See `scripts/performance_metrics.py` for computational helpers.

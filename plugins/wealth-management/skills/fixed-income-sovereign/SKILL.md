@@ -135,10 +135,10 @@ Duration alone would estimate -2.195%; the convexity correction reduces the esti
 - Clean price vs dirty price (accrued interest) — quoted prices exclude accrued interest, but settlement requires paying it
 
 ## Cross-References
-- Layer 1: `time-value-of-money` for discounting and present value fundamentals
-- Layer 2: `fixed-income-corporate` for credit spreads over the sovereign curve
-- Layer 2: `fixed-income-municipal` for muni-to-Treasury yield ratios
-- Layer 3: `asset-allocation` for bonds as an asset class in portfolio construction
+- **time-value-of-money** (core plugin, Layer 0): discounting and present value fundamentals
+- **fixed-income-corporate** (wealth-management plugin, Layer 2): credit spreads over the sovereign curve
+- **fixed-income-municipal** (wealth-management plugin, Layer 2): muni-to-Treasury yield ratios
+- **asset-allocation** (wealth-management plugin, Layer 3): bonds as an asset class in portfolio construction
 
 ## Reference Implementation
-See `scripts/fixed_income_sovereign.py` for computational helpers.
+Planned — `scripts/fixed_income_sovereign.py` is not yet implemented.

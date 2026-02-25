@@ -131,11 +131,11 @@ An appropriate benchmark must be:
 - Ignoring the interaction between constraints (e.g., tax considerations affecting asset allocation ranges)
 
 ## Cross-References
-- **tax-efficiency:** Asset location and withdrawal sequencing affect IPS constraint section
-- **performance-attribution:** Benchmark selection in IPS directly feeds performance evaluation
-- **liquidity-management:** Liquidity constraint in IPS depends on cash flow analysis
-- **savings-goals:** Return objectives often derived from goal-based planning
-- **emergency-fund:** Emergency reserve requirement feeds into IPS liquidity constraint
+- **tax-efficiency** (wealth-management plugin, Layer 5): asset location and withdrawal sequencing affect IPS constraint section
+- **performance-attribution** (wealth-management plugin, Layer 5): benchmark selection in IPS directly feeds performance evaluation
+- **liquidity-management** (wealth-management plugin, Layer 6): liquidity constraint in IPS depends on cash flow analysis
+- **savings-goals** (wealth-management plugin, Layer 6): return objectives often derived from goal-based planning
+- **emergency-fund** (wealth-management plugin, Layer 6): emergency reserve requirement feeds into IPS liquidity constraint
 
 ## Reference Implementation
-See `scripts/investment-policy.py` for computational helpers.
+Planned — `scripts/investment-policy.py` is not yet implemented.

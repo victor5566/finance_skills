@@ -178,9 +178,9 @@ Interpretation: On 95% of days, the loss is expected not to exceed 2.8% based on
 - **Log returns vs simple returns:** For volatility estimation, log returns are preferred because they are additive across time. For reporting cumulative performance, simple returns are more intuitive.
 
 ## Cross-References
-- **performance-metrics:** Uses volatility, downside deviation, tracking error, and max drawdown as denominators in risk-adjusted ratios (Sharpe, Sortino, Information Ratio, Calmar).
-- **forward-risk:** Historical VaR and historical volatility serve as inputs to forward-looking VaR models and stress tests.
-- **volatility-modeling:** EWMA and GARCH models extend the simple historical volatility estimators covered here into forecasting frameworks.
+- **performance-metrics** (wealth-management plugin, Layer 1a): Uses volatility, downside deviation, tracking error, and max drawdown as denominators in risk-adjusted ratios (Sharpe, Sortino, Information Ratio, Calmar).
+- **forward-risk** (wealth-management plugin, Layer 1b): Historical VaR and historical volatility serve as inputs to forward-looking VaR models and stress tests.
+- **volatility-modeling** (wealth-management plugin, Layer 1b): EWMA and GARCH models extend the simple historical volatility estimators covered here into forecasting frameworks.
 
 ## Reference Implementation
-See `scripts/historical-risk.py` for computational helpers.
+See `scripts/historical_risk.py` for computational helpers.

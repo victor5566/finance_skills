@@ -60,3 +60,9 @@ Only quantitative skills (core, wealth-management) get Python scripts. Scripts s
 - Compliance skills cite specific rule numbers and act sections inline
 - Cross-references include the layer/plugin and a brief description of the relationship
 - Do not add features, tests, or tooling beyond what is explicitly requested
+
+## Linear
+
+- **Project**: Finance Skills (team: Joellewis)
+- Reference issue IDs (e.g., JOE-42) in commit messages and PR titles
+- Issues discovered during implementation go to Triage with `agent-drafted` label

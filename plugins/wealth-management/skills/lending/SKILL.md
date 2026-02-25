@@ -166,11 +166,11 @@ Required when conventional loan LTV exceeds 80%:
 - Ignoring closing costs in refinancing decisions (see debt-management refinance breakeven)
 
 ## Cross-References
-- **debt-management:** Refinancing analysis, debt payoff vs investing decisions, DTI calculations
-- **emergency-fund:** Adequate reserves required for loan qualification and financial safety
-- **tax-efficiency:** Mortgage interest deductibility, points deduction
-- **savings-goals:** Down payment saving is a common goal-based savings target
-- **liquidity-management:** Mortgage payments are the largest fixed obligation in most household cash flow plans
+- **debt-management** (wealth-management plugin, Layer 6): refinancing analysis, debt payoff vs investing decisions, DTI calculations
+- **emergency-fund** (wealth-management plugin, Layer 6): adequate reserves required for loan qualification and financial safety
+- **tax-efficiency** (wealth-management plugin, Layer 5): mortgage interest deductibility, points deduction
+- **savings-goals** (wealth-management plugin, Layer 6): down payment saving is a common goal-based savings target
+- **liquidity-management** (wealth-management plugin, Layer 6): mortgage payments are the largest fixed obligation in most household cash flow plans
 
 ## Reference Implementation
-See `scripts/lending.py` for computational helpers.
+Planned — `scripts/lending.py` is not yet implemented.

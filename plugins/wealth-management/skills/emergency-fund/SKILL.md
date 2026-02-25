@@ -162,11 +162,11 @@ After using the emergency fund:
 - Treating the emergency fund as an investment account rather than an insurance policy
 
 ## Cross-References
-- **liquidity-management:** Emergency fund is the foundation of the personal liquidity tier structure
-- **savings-goals:** Emergency fund is typically the highest priority savings goal
-- **debt-management:** Adequate emergency fund prevents taking on new high-interest debt during crises
-- **lending:** Emergency reserves are a factor in mortgage qualification
-- **investment-policy:** Emergency fund size feeds the liquidity constraint in an IPS
+- **liquidity-management** (wealth-management plugin, Layer 6): emergency fund is the foundation of the personal liquidity tier structure
+- **savings-goals** (wealth-management plugin, Layer 6): emergency fund is typically the highest priority savings goal
+- **debt-management** (wealth-management plugin, Layer 6): adequate emergency fund prevents taking on new high-interest debt during crises
+- **lending** (wealth-management plugin, Layer 6): emergency reserves are a factor in mortgage qualification
+- **investment-policy** (wealth-management plugin, Layer 5): emergency fund size feeds the liquidity constraint in an IPS
 
 ## Reference Implementation
-See `scripts/emergency-fund.py` for computational helpers.
+Planned — `scripts/emergency-fund.py` is not yet implemented.

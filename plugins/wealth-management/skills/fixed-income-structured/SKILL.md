@@ -118,10 +118,10 @@ The AAA tranche has 35% subordination — the portfolio would need to lose more 
 - Not understanding that waterfall mechanics affect tranche risk differently — senior and subordinate tranches of the same deal have very different risk profiles
 
 ## Cross-References
-- Layer 2: `fixed-income-sovereign` for the Treasury curve and duration/convexity concepts
-- Layer 2: `fixed-income-corporate` for credit spread concepts applied to non-agency MBS and CLOs
-- Layer 2: `real-assets` for real estate market fundamentals underlying MBS
-- Layer 3: `portfolio-construction` for structured products in multi-asset portfolios
+- **fixed-income-sovereign** (wealth-management plugin, Layer 2): the Treasury curve and duration/convexity concepts
+- **fixed-income-corporate** (wealth-management plugin, Layer 2): credit spread concepts applied to non-agency MBS and CLOs
+- **real-assets** (wealth-management plugin, Layer 2): real estate market fundamentals underlying MBS
+- **portfolio-construction** (wealth-management plugin, Layer 3): structured products in multi-asset portfolios
 
 ## Reference Implementation
-See `scripts/fixed_income_structured.py` for computational helpers.
+Planned — `scripts/fixed_income_structured.py` is not yet implemented.

@@ -179,11 +179,12 @@ Given that the 8% expected return and 20% volatility are estimates with signific
 - Not adjusting for regime changes: edge and volatility are time-varying
 
 ## Cross-References
-- **risk-return** (Layer 1): expected return and volatility as key inputs to Kelly sizing
-- **diversification** (Layer 4): tension between concentration (large bets) and diversification (many small bets)
-- **asset-allocation** (Layer 4): bet sizing operates within the asset allocation framework
-- **rebalancing** (Layer 4): positions drift from target sizes and require rebalancing
-- **quantitative-valuation** (Layer 3): valuation-based edge estimates feed into conviction weighting
+- **historical-risk** (wealth-management plugin, Layer 1a): realized volatility as a key input to Kelly sizing
+- **forward-risk** (wealth-management plugin, Layer 1b): expected return forecasts as inputs to Kelly criterion
+- **diversification** (wealth-management plugin, Layer 4): tension between concentration (large bets) and diversification (many small bets)
+- **asset-allocation** (wealth-management plugin, Layer 4): bet sizing operates within the asset allocation framework
+- **rebalancing** (wealth-management plugin, Layer 4): positions drift from target sizes and require rebalancing
+- **quantitative-valuation** (wealth-management plugin, Layer 3): valuation-based edge estimates feed into conviction weighting
 
 ## Reference Implementation
-See `scripts/bet_sizing.py` for computational helpers.
+Planned — `scripts/bet_sizing.py` is not yet implemented.

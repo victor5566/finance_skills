@@ -139,10 +139,10 @@ For international portfolios, returns decompose into:
 - Using inappropriate benchmarks that do not match the portfolio's investment universe
 
 ## Cross-References
-- **investment-policy:** Benchmark selection in IPS directly feeds performance attribution analysis
-- **tax-efficiency:** After-tax attribution requires adjusting returns for tax impact
-- **savings-goals:** Attribution helps assess whether investment strategy is on track to meet goals
-- **liquidity-management:** Cash drag from liquidity reserves affects portfolio-level attribution
+- **investment-policy** (wealth-management plugin, Layer 5): Benchmark selection in IPS directly feeds performance attribution analysis
+- **tax-efficiency** (wealth-management plugin, Layer 5): After-tax attribution requires adjusting returns for tax impact
+- **savings-goals** (wealth-management plugin, Layer 6): Attribution helps assess whether investment strategy is on track to meet goals
+- **liquidity-management** (wealth-management plugin, Layer 6): Cash drag from liquidity reserves affects portfolio-level attribution
 
 ## Reference Implementation
-See `scripts/performance-attribution.py` for computational helpers.
+Planned — `scripts/performance-attribution.py` is not yet implemented.

@@ -391,3 +391,4 @@ Expected outcome: Pre-submission validation alone typically reduces NIGO rates b
 - **crm-client-lifecycle** (Layer 10, advisory-practice): The CRM receives client and household data from the onboarding process; onboarding creates the client master record that CRM manages throughout the relationship
 - **portfolio-management-systems** (Layer 10, advisory-practice): The PMS receives new accounts from onboarding for model portfolio assignment and initial investment execution
 - **privacy-data-security** (Layer 9, compliance): Onboarding collects sensitive nonpublic personal information (SSN, financial data, identity documents) that must be protected under Reg S-P and firm cybersecurity policies
+- **account-opening-workflow** (client-operations plugin, Layer 12): Back-office account opening process that receives onboarding outputs; handles operations processing, custodian submission, and account activation

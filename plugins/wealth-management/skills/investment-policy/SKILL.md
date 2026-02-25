@@ -136,6 +136,9 @@ An appropriate benchmark must be:
 - **liquidity-management** (wealth-management plugin, Layer 6): liquidity constraint in IPS depends on cash flow analysis
 - **savings-goals** (wealth-management plugin, Layer 6): return objectives often derived from goal-based planning
 - **emergency-fund** (wealth-management plugin, Layer 6): emergency reserve requirement feeds into IPS liquidity constraint
+- **client-review-prep** (advisory-practice plugin, Layer 10): IPS provides the reference framework for evaluating drift and suitability during reviews
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): the financial plan informs and is codified in the investment policy statement
+- **tax-loss-harvesting** (wealth-management plugin, Layer 5): IPS may specify TLH policy parameters (minimum loss threshold, approved replacement pairs)
 
 ## Reference Implementation
 N/A — this skill is qualitative and does not require a computational script.

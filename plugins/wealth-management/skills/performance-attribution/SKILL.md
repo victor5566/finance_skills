@@ -143,6 +143,8 @@ For international portfolios, returns decompose into:
 - **tax-efficiency** (wealth-management plugin, Layer 5): After-tax attribution requires adjusting returns for tax impact
 - **savings-goals** (wealth-management plugin, Layer 6): Attribution helps assess whether investment strategy is on track to meet goals
 - **liquidity-management** (wealth-management plugin, Layer 6): Cash drag from liquidity reserves affects portfolio-level attribution
+- **client-review-prep** (advisory-practice plugin, Layer 10): attribution analysis highlights are key talking points in client review meetings
+- **tax-loss-harvesting** (wealth-management plugin, Layer 5): tax alpha from TLH should be tracked and attributed separately
 
 ## Reference Implementation
 See `scripts/performance_attribution.py` for computational helpers.

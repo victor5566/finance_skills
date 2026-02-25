@@ -501,3 +501,4 @@ The 5% error rate, while seemingly modest, represents a meaningful compliance an
 - **advisor-dashboards** (Layer 10, advisory-practice) — Dashboards provide real-time portfolio views that complement the periodic snapshots in client reports. Together they form a complete client information ecosystem.
 - **fee-billing** (Layer 10, advisory-practice) — Fee summaries included in client reports draw data from the billing system. Fee calculation accuracy in reports depends on billing system integration.
 - **financial-planning-integration** (Layer 10, advisory-practice) — Financial plan progress reporting is included in comprehensive client reports, connecting portfolio performance to goal achievement.
+- **client-review-prep** (Layer 10, advisory-practice) — Review preparation feeds into and complements the report delivery workflow; reports are a key component of the review meeting package.

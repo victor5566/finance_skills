@@ -1,6 +1,6 @@
 # Finance Skills for Claude Code
 
-A collection of Claude Code skill plugins for financial services. 81 skills across
+A collection of Claude Code skill plugins for financial services. 84 skills across
 7 domain plugins teach Claude investment management, regulatory compliance, advisory
 workflows, trading operations, and more — so it can assist with finance questions,
 build financial tools, and flag compliance concerns.
@@ -56,7 +56,8 @@ Black-Litterman, risk parity, Kelly criterion, position sizing, calendar- and
 threshold-based rebalancing.
 
 **Policy and planning:** IPS construction, tax-aware investing, asset location,
-tax-loss harvesting, performance attribution (Brinson, factor-based).
+tax-loss harvesting (dedicated workflow skill), performance attribution (Brinson,
+factor-based).
 
 **Personal finance:** Debt prioritization, mortgage and loan analysis, emergency fund
 sizing, savings goals, liquidity management.
@@ -66,7 +67,7 @@ sizing, savings goals, liquidity management.
 **Reporting:** Risk-adjusted performance ratios, performance reports, benchmark
 comparison, goal progress tracking.
 
-31 skills. Python scripts for quantitative skills (risk, performance metrics, and core
+32 skills. Python scripts for quantitative skills (risk, performance metrics, and core
 math).
 
 ---
@@ -117,8 +118,10 @@ with them. Covers the full advisor workflow from client onboarding through repor
 | `next-best-action` | Event-driven triggers, prioritization scoring, advisor nudges, automated workflows |
 | `fee-billing` | Fee calculation (tiered, flat, breakpoint), billing cycles, revenue recognition |
 | `client-reporting-delivery` | Report generation, delivery channels, frequency management, compliance review |
+| `client-review-prep` | Pre-meeting review preparation, performance summary, drift analysis, talking points |
+| `financial-planning-workflow` | End-to-end financial plan assembly, retirement modeling, scenario analysis |
 
-10 skills.
+12 skills.
 
 ---
 
@@ -299,7 +302,7 @@ finance_skills/
     ├── wealth-management/
     │   ├── plugin.json
     │   └── skills/
-    │       └── ... (31 skills)
+    │       └── ... (32 skills)
     ├── compliance/
     │   ├── plugin.json
     │   └── skills/
@@ -307,7 +310,7 @@ finance_skills/
     ├── advisory-practice/
     │   ├── plugin.json
     │   └── skills/
-    │       └── ... (10 skills)
+    │       └── ... (12 skills)
     ├── trading-operations/
     │   ├── plugin.json
     │   └── skills/
@@ -452,5 +455,9 @@ See `scripts/<name>.py` for computational helpers.
 | GIPS performance chain | gips-compliance → performance-metrics, performance-attribution, performance-reporting | GIPS constrains calculation, attribution, and presentation |
 | Privacy data flows | privacy-data-security → client-disclosures, know-your-customer, books-and-records | NPI protection overlays disclosure, KYC, and retention |
 | Exam readiness umbrella | examination-readiness → all compliance skills | Exam preparation draws on every compliance domain |
+| Review prep workflow | client-review-prep → performance-reporting, performance-attribution, rebalancing, tax-efficiency, investment-policy | Meeting preparation assembles data from multiple knowledge skills |
+| Financial plan orchestration | financial-planning-workflow → savings-goals, debt-management, emergency-fund, liquidity-management, tax-efficiency, investment-policy | Planning workflow references underlying knowledge skills |
+| TLH workflow depth | tax-loss-harvesting ↔ tax-efficiency, rebalancing | Dedicated TLH workflow extends broader tax-efficiency coverage and coordinates with rebalancing |
+| Plan to review cycle | financial-planning-workflow ↔ client-review-prep | Plan progress is reviewed in client meetings; reviews may trigger plan updates |
 
 ---

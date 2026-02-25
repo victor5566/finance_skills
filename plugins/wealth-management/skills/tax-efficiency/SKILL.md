@@ -149,6 +149,8 @@ The order of withdrawals from different account types in retirement:
 - **debt-management** (wealth-management plugin, Layer 6): Mortgage interest deductibility interacts with tax planning
 - **savings-goals** (wealth-management plugin, Layer 6): Account type selection (Roth vs Traditional) is a core tax decision
 - **liquidity-management** (wealth-management plugin, Layer 6): Tax implications of accessing different account types affect liquidity planning
+- **tax-loss-harvesting** (wealth-management plugin, Layer 5): dedicated TLH workflow skill with detailed candidate identification, wash-sale tracking, and execution planning
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): tax-aware strategies are core recommendations in comprehensive financial plans
 
 ## Reference Implementation
 See `scripts/tax_efficiency.py` for computational helpers.

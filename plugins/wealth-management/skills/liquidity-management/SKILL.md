@@ -139,6 +139,7 @@ Maintain buffer above minimum liquidity requirements:
 - **savings-goals** (wealth-management plugin, Layer 6): multiple goals compete for available cash flow
 - **tax-efficiency** (wealth-management plugin, Layer 5): estimated taxes, tax-loss harvesting timing
 - **fixed-income-sovereign** (wealth-management plugin, Layer 2): T-bill ladder mechanics, Treasury Direct
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): cash flow tier structure informs the liquidity analysis in comprehensive financial plans
 
 ## Reference Implementation
 See `scripts/liquidity_management.py` for computational helpers.

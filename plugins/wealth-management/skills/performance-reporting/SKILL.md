@@ -212,6 +212,7 @@ The most important reporting skill is translating numbers into meaning.
 - **asset-allocation** (wealth-management plugin, Layer 4): benchmark construction for multi-asset portfolios
 - **quantitative-valuation** (wealth-management plugin, Layer 3): forward-looking return assumptions for goal projections
 - **finance-psychology** (wealth-management plugin, Layer 7): framing effects in how performance is presented to clients
+- **client-review-prep** (advisory-practice plugin, Layer 10): performance data is assembled into the client review meeting package
 
 ## Reference Implementation
 See `scripts/performance_reporting.py` for computational helpers.

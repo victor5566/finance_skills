@@ -13,7 +13,9 @@
     "advisor-dashboards",
     "next-best-action",
     "fee-billing",
-    "client-reporting-delivery"
+    "client-reporting-delivery",
+    "client-review-prep",
+    "financial-planning-workflow"
   ],
   "tags": ["advisor", "wealth-management", "front-office", "crm", "billing"],
   "scripts": false,

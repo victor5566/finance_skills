@@ -151,6 +151,7 @@ Amortization calculation with extra payments:
 - **savings-goals** (wealth-management plugin, Layer 6): debt payoff competes with savings goals for cash flow allocation
 - **tax-efficiency** (wealth-management plugin, Layer 5): tax deductibility of certain debt interest affects optimal payoff order
 - **liquidity-management** (wealth-management plugin, Layer 6): debt payments are fixed obligations in cash flow planning
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): debt payoff strategies are evaluated during the cash flow and recommendation phases of financial planning
 
 ## Reference Implementation
 See `scripts/debt_management.py` for computational helpers.

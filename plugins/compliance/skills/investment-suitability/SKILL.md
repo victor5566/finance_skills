@@ -127,3 +127,4 @@ FINRA disciplinary actions frequently target:
 - **investment-policy** (Layer 5): IPS constraints (time horizon, risk tolerance, liquidity) map directly to suitability factors
 - **sales-practices** (Layer 9): Churning/excessive trading enforcement overlaps with quantitative suitability
 - **conflicts-of-interest** (Layer 9): Compensation conflicts can drive unsuitable recommendations
+- **tax-loss-harvesting** (wealth-management plugin, Layer 5): replacement securities selected during TLH must still satisfy suitability requirements

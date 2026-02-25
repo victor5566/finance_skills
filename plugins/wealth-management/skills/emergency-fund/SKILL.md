@@ -167,6 +167,7 @@ After using the emergency fund:
 - **debt-management** (wealth-management plugin, Layer 6): adequate emergency fund prevents taking on new high-interest debt during crises
 - **lending** (wealth-management plugin, Layer 6): emergency reserves are a factor in mortgage qualification
 - **investment-policy** (wealth-management plugin, Layer 5): emergency fund size feeds the liquidity constraint in an IPS
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): emergency fund adequacy is assessed early in the comprehensive financial planning process
 
 ## Reference Implementation
 See `scripts/emergency_fund.py` for computational helpers.

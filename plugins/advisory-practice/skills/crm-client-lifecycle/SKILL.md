@@ -292,3 +292,4 @@ Track the model's effectiveness by monitoring: the percentage of high-risk house
 - **next-best-action** (Layer 10, advisory-practice): CRM activity records, segmentation data, and lifecycle stage are primary inputs for next-best-action triggers; every NBA action updates the CRM activity log
 - **investment-suitability** (Layer 9, compliance): Suitability profiles stored in the CRM must be reviewed and re-confirmed at each client review; CRM tracks when the last suitability confirmation occurred and flags overdue re-certifications
 - **privacy-data-security** (Layer 9, compliance): The CRM stores sensitive nonpublic personal information protected by Regulation S-P and firm cybersecurity policies; access controls, audit logging, and data retention policies apply to all CRM records
+- **client-review-prep** (Layer 10, advisory-practice): CRM provides client segmentation, review scheduling, and activity history used in pre-meeting review preparation

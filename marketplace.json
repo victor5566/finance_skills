@@ -1,7 +1,7 @@
 {
   "name": "finance-skills",
   "version": "1.0.0",
-  "description": "Claude Code skill plugins for financial services — 81 skills across 7 domain plugins covering investment management, compliance, advisory practice, trading, and operations.",
+  "description": "Claude Code skill plugins for financial services — 84 skills across 7 domain plugins covering investment management, compliance, advisory practice, trading, and operations.",
   "plugins": [
     {
       "name": "core",
@@ -24,7 +24,7 @@
       "description": "Investment knowledge for personal and institutional wealth management. Covers risk measurement, asset classes, valuation, portfolio construction, policy and planning, personal finance, behavioral finance, and reporting.",
       "path": "plugins/wealth-management",
       "dependencies": ["core"],
-      "skillCount": 31,
+      "skillCount": 32,
       "skills": [
         "historical-risk",
         "performance-metrics",
@@ -56,7 +56,8 @@
         "savings-goals",
         "liquidity-management",
         "finance-psychology",
-        "performance-reporting"
+        "performance-reporting",
+        "tax-loss-harvesting"
       ],
       "tags": ["investment", "portfolio", "risk", "personal-finance", "asset-classes"],
       "scripts": true
@@ -95,7 +96,7 @@
       "description": "Advisor-facing systems and workflows. Teaches Claude how advisor platforms work so it can help design, evaluate, or integrate with them. Covers the full advisor workflow from onboarding through reporting.",
       "path": "plugins/advisory-practice",
       "dependencies": ["core", "wealth-management"],
-      "skillCount": 10,
+      "skillCount": 12,
       "skills": [
         "client-onboarding",
         "crm-client-lifecycle",
@@ -106,7 +107,9 @@
         "advisor-dashboards",
         "next-best-action",
         "fee-billing",
-        "client-reporting-delivery"
+        "client-reporting-delivery",
+        "client-review-prep",
+        "financial-planning-workflow"
       ],
       "tags": ["advisor", "wealth-management", "front-office", "crm", "billing"],
       "scripts": false

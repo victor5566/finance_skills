@@ -132,6 +132,7 @@ Recommended priority order:
 - **investment-policy** (wealth-management plugin, Layer 5): goal-based allocation aligns with IPS constraints
 - **asset-allocation** (wealth-management plugin, Layer 4): glide paths for target-date retirement savings
 - **finance-psychology** (wealth-management plugin, Layer 7): mental accounting, present bias, commitment devices
+- **financial-planning-workflow** (advisory-practice plugin, Layer 10): savings goals are key inputs to the comprehensive financial planning process
 
 ## Reference Implementation
 See `scripts/savings_goals.py` for computational helpers.

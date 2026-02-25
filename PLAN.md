@@ -7,7 +7,7 @@ self-contained domain of skills that can be installed independently into a proje
 `.claude/skills/` directory. Plugins declare dependencies on other plugins and share
 a common skill template.
 
-All **81 skills** are implemented across seven plugins (`core`, `wealth-management`,
+All **84 skills** are implemented across seven plugins (`core`, `wealth-management`,
 `compliance`, `advisory-practice`, `trading-operations`, `client-operations`,
 `data-integration`).
 
@@ -70,7 +70,7 @@ Mathematical and statistical foundations required by all other plugins.
 | time-value-of-money | PV, FV, NPV, IRR, annuities, amortization | ✅ |
 | statistics-fundamentals | Distributions, covariance, regression, bootstrapping | ✅ |
 
-### 2. `wealth-management` — 31 skills ✅
+### 2. `wealth-management` — 32 skills ✅
 
 Investment knowledge for personal and institutional wealth management. Consumer/advisor-facing investment domain.
 
@@ -81,7 +81,7 @@ Investment knowledge for personal and institutional wealth management. Consumer/
 | 2 — Asset Classes | equities, fixed-income-sovereign, fixed-income-municipal, fixed-income-corporate, fixed-income-structured, commodities, real-assets, alternatives, fund-vehicles, currencies-and-fx, digital-assets | 11 |
 | 3 — Valuation | quantitative-valuation, qualitative-valuation | 2 |
 | 4 — Portfolio Construction | diversification, asset-allocation, bet-sizing, rebalancing | 4 |
-| 5 — Policy & Planning | investment-policy, tax-efficiency, performance-attribution | 3 |
+| 5 — Policy & Planning | investment-policy, tax-efficiency, performance-attribution, tax-loss-harvesting | 4 |
 | 6 — Personal Finance | debt-management, lending, emergency-fund, savings-goals, liquidity-management | 5 |
 | 7 — Behavioral Finance | finance-psychology | 1 |
 | 8 — Reporting | performance-reporting | 1 |
@@ -111,7 +111,7 @@ Regulatory guidance for US securities law compliance. Guidance-only (no Python s
 | privacy-data-security | Reg S-P, Reg S-ID, SEC cybersecurity rules (2023), state privacy law intersections |
 | examination-readiness | SEC/FINRA exam process, document production, deficiency findings, mock exam frameworks |
 
-### 4. `advisory-practice` (Front Office) — 10 skills ✅
+### 4. `advisory-practice` (Front Office) — 12 skills ✅
 
 Advisor-facing systems and workflows. Teaches Claude how advisor platforms work so it can help design, evaluate, or integrate with them.
 
@@ -127,6 +127,8 @@ Advisor-facing systems and workflows. Teaches Claude how advisor platforms work 
 | next-best-action | Event-driven triggers (rebalance, large cash, life event), prioritization, action queuing |
 | fee-billing | Fee calculation (tiered, flat, breakpoint), billing cycles, collection methods, revenue recognition |
 | client-reporting-delivery | Report generation, customization, delivery channels, frequency management |
+| client-review-prep | Pre-meeting review preparation, context assembly, performance summary, drift analysis, talking points, proactive recommendations |
+| financial-planning-workflow | End-to-end financial plan assembly, retirement modeling, education funding, estate planning, scenario modeling, prioritized recommendations |
 
 ### 5. `trading-operations` (Order Lifecycle & Execution) — 9 skills ✅
 
@@ -177,13 +179,13 @@ Data foundations that every system depends on.
 | Plugin | Skills | Status |
 |--------|--------|--------|
 | core | 3 | ✅ |
-| wealth-management | 31 | ✅ |
+| wealth-management | 32 | ✅ |
 | compliance | 16 | ✅ |
-| advisory-practice | 10 | ✅ |
+| advisory-practice | 12 | ✅ |
 | trading-operations | 9 | ✅ |
 | client-operations | 8 | ✅ |
 | data-integration | 4 | ✅ |
-| **Total** | **81** | |
+| **Total** | **84** | |
 
 ---
 
@@ -226,7 +228,7 @@ finance_skills/
     │           └── scripts/statistics_fundamentals.py ✅
     ├── wealth-management/
     │   ├── plugin.json
-    │   └── skills/                      # 31 skills
+    │   └── skills/                      # 32 skills
     │       ├── historical-risk/         # scripts/historical_risk.py ✅
     │       ├── performance-metrics/     # scripts/performance_metrics.py ✅
     │       └── ... (29 more)
@@ -235,7 +237,7 @@ finance_skills/
     │   └── skills/                      # 16 skills, guidance-only
     ├── advisory-practice/
     │   ├── plugin.json
-    │   └── skills/                      # 10 skills
+    │   └── skills/                      # 12 skills
     ├── trading-operations/
     │   ├── plugin.json
     │   └── skills/                      # 9 skills
@@ -326,6 +328,10 @@ See `scripts/<name>.py` for computational helpers.
 | GIPS performance chain | gips-compliance → performance-metrics, performance-attribution, performance-reporting | GIPS constrains calculation, attribution, and presentation |
 | Privacy data flows | privacy-data-security → client-disclosures, know-your-customer, books-and-records | NPI protection overlays disclosure, KYC, and retention |
 | Exam readiness umbrella | examination-readiness → all compliance skills | Exam preparation draws on every compliance domain |
+| Review prep workflow | client-review-prep → performance-reporting, performance-attribution, rebalancing, tax-efficiency, investment-policy | Meeting preparation assembles data from multiple knowledge skills |
+| Financial plan orchestration | financial-planning-workflow → savings-goals, debt-management, emergency-fund, liquidity-management, tax-efficiency, investment-policy | Planning workflow references underlying knowledge skills |
+| TLH workflow depth | tax-loss-harvesting ↔ tax-efficiency, rebalancing | Dedicated TLH workflow extends broader tax-efficiency coverage and coordinates with rebalancing |
+| Plan to review cycle | financial-planning-workflow ↔ client-review-prep | Plan progress is reviewed in client meetings; reviews may trigger plan updates |
 
 ---
 

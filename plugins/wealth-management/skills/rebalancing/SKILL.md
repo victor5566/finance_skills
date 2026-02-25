@@ -119,6 +119,58 @@ Use regular deposits or withdrawals to move toward target weights without explic
 - Process withdrawals from the most overweight asset(s)
 - This "natural rebalancing" is the most cost-effective and tax-efficient approach
 
+### Rebalancing Workflow
+
+The concepts above describe the *what* and *why* of rebalancing. This section covers the operational *how* — the step-by-step process an advisor follows to execute a rebalance for a client household.
+
+**Step 1: Aggregate Household View**
+Assemble the complete picture across all accounts (taxable brokerage, Traditional IRA, Roth IRA, 401(k), 529, trust). Calculate the household-level allocation by summing positions across all accounts, not just individual account allocations. Many drift problems are invisible at the account level but obvious at the household level.
+
+**Step 2: Asset Location Review**
+Before proposing trades, document which account types hold which asset classes:
+- Tax-inefficient assets (bonds, REITs, high-turnover funds) should be in tax-deferred accounts
+- Tax-efficient assets (index equity ETFs, municipal bonds) should be in taxable accounts
+- Highest-growth assets should be in Roth accounts (permanent tax-free growth)
+
+If asset location is suboptimal, the rebalance is an opportunity to improve it — but only if the tax cost of repositioning is justified by the long-term tax savings.
+
+**Step 3: Drift Analysis and Trade Generation**
+For each asset class, calculate drift from target and compare against tolerance bands (from the IPS or firm default):
+- Generate a preliminary trade list: sell overweight positions, buy underweight positions
+- Prioritize trades by drift magnitude — address the largest deviations first
+- Check whether cash flows (pending contributions, withdrawals, dividends) can partially or fully close the drift without explicit trades
+
+**Step 4: Tax-Impact Estimation**
+For each proposed sell trade in a taxable account, estimate the tax consequence:
+- Identify available tax lots and their holding periods (short-term vs long-term)
+- Calculate the estimated capital gain or loss for each lot using specific identification (HIFO preferred)
+- Sum the estimated tax liability across all proposed sells
+- Compare the tax cost against the risk-reduction benefit of rebalancing — defer trades where tax cost outweighs the tracking error reduction
+- Coordinate with any pending tax-loss harvesting opportunities (see **tax-loss-harvesting** skill)
+
+**Step 5: Cross-Account Optimization**
+Minimize total household tax impact by choosing *where* to execute each trade:
+- Execute sells of appreciated positions in tax-deferred accounts when possible (no tax consequence)
+- Execute sells of depreciated positions in taxable accounts (harvest the loss)
+- Use cross-account rebalancing: if equities are overweight in the taxable account and underweight in the IRA, sell equities in the IRA and buy bonds in the IRA, rather than selling equities in the taxable account
+- Check for wash-sale conflicts: if harvesting a loss in the taxable account, ensure no purchase of a substantially identical security occurs within 30 days in any account (including IRA, 401(k), and spouse accounts)
+
+**Step 6: Before/After Comparison**
+Generate a before/after allocation comparison for advisor review and client communication:
+- Current allocation vs target allocation vs post-rebalance allocation (three columns)
+- Estimated transaction costs (commissions, spreads)
+- Estimated tax impact (net gains/losses realized)
+- Expected tracking error reduction
+- Number of trades and accounts affected
+
+This comparison serves as both a decision tool (does the rebalance justify its costs?) and a compliance artifact (documenting the rationale for the trades).
+
+**Step 7: Execution and Confirmation**
+- Submit the approved trade list through the order management system
+- For block trades across multiple accounts, ensure fair allocation per the firm's allocation policy
+- Confirm fills and reconcile actual vs intended post-rebalance weights
+- Document the rebalance event: date, reason (scheduled, threshold trigger, or ad-hoc), trades executed, and resulting allocation
+
 ## Key Formulas
 
 | Formula | Expression | Use Case |
@@ -205,6 +257,9 @@ Note: TLH creates a lower cost basis in the replacement security, so taxes are d
 - **bet-sizing** (wealth-management plugin, Layer 4): position sizes drift and need rebalancing to maintain conviction weighting
 - **historical-risk** (wealth-management plugin, Layer 1a): drift changes portfolio risk profile; rebalancing controls it
 - **financial-statements** (wealth-management plugin, Layer 2): tax implications of rebalancing require understanding of tax accounting
+- **tax-loss-harvesting** (wealth-management plugin, Layer 5): TLH trades should be coordinated with rebalancing to minimize total transaction count and avoid wash-sale conflicts
+- **tax-efficiency** (wealth-management plugin, Layer 5): asset location and tax-lot selection strategies directly affect rebalancing trade decisions
+- **client-review-prep** (advisory-practice plugin, Layer 10): drift analysis and rebalancing recommendations are core agenda items in periodic client reviews
 
 ## Reference Implementation
 See `scripts/rebalancing.py` for computational helpers.

@@ -1,7 +1,8 @@
 ---
 name: account-opening-workflow
-description: "Account opening workflows: account types (individual, joint JTWROS/TIC, trust, entity, IRA/SEP/SIMPLE/inherited, UTMA, estate), required forms (Form CIP, CRS, W-9, W-8BEN, beneficial ownership, trust/LLC docs, Form 5305), approval workflows with supervisory review, NIGO management, regulatory holds, PEP/enhanced due diligence screening, senior investor protections, KYC/CIP verification, straight-through processing (STP), multi-custodian operations (Schwab, Fidelity, Pershing), account numbering/titling/classification, ACAT coordination, 30-day compliance review, funding verification, billing system integration, FINRA Rule 4512."
+description: "Design and operate back-office account opening processes from application intake through activation. Use when building account opening automation or improving STP rates, reducing NIGO rejection rates from custodians or clearing firms, defining document requirements for trusts entities IRAs or estate accounts, implementing approval workflows and regulatory holds for complex account types, setting up multi-custodian account opening across Schwab Fidelity or Pershing, designing account numbering titling or classification schemes, troubleshooting account opening failures or processing delays, integrating with custodian or clearing firm submission systems, or benchmarking account opening cycle times and operational efficiency."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Account Opening Workflow

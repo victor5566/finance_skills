@@ -1,7 +1,8 @@
 ---
 name: client-onboarding
-description: "Digital onboarding flows: document collection, KYC integration, account opening forms, e-signature, custodian submission, advisor-assisted vs self-service, compliance checkpoints."
+description: "Design and implement end-to-end client onboarding workflows from prospect intake through funded account, covering KYC verification, document collection, e-signature, and custodian submission. Use when the user asks about building a digital onboarding flow, integrating identity verification or CIP checks, reducing NIGO rejection rates, opening complex account types like trusts or entities, connecting to custodian APIs, designing suitability questionnaires, or comparing advisor-assisted vs self-service models. Also trigger when users mention 'new account opening', 'onboarding bottleneck', 'KYC integration', 'beneficial ownership', 'OFAC screening', 'account funding', or 'onboarding automation'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Client Onboarding

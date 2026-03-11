@@ -1,7 +1,8 @@
 ---
 name: digital-assets
-description: "Digital assets: crypto fundamentals, blockchain mechanics, DeFi, staking yields, on-chain metrics."
+description: "Analyze digital assets including cryptocurrency fundamentals, blockchain mechanics, DeFi protocols, and on-chain metrics. Use when the user asks about crypto investing, Bitcoin, Ethereum, staking yields, DeFi lending, impermanent loss, or on-chain valuation metrics. Also trigger when users mention 'blockchain', 'proof of stake', 'proof of work', 'smart contracts', 'NFTs', 'stablecoins', 'NVT ratio', 'TVL', 'crypto portfolio allocation', 'halving', or ask about risks and returns of cryptocurrency."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Digital Assets

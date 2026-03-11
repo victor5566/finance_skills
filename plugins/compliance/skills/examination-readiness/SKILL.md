@@ -1,7 +1,8 @@
 ---
 name: examination-readiness
-description: "SEC and FINRA examination process: exam types, document production, deficiency findings, mock exam frameworks, examination priorities, remediation strategies."
+description: "Prepare for and respond to SEC and FINRA regulatory examinations across the full exam lifecycle. Use when the user asks about exam notification letters, document request lists, deficiency letter responses, mock examination programs, annual compliance reviews under Rule 206(4)-7, or SEC/FINRA examination priorities. Also trigger when users mention 'we just got an exam letter', 'preparing for our first SEC exam', 'how to respond to a deficiency finding', 'staff interview preparation', 'what does OCIE look for', 'examination readiness checklist', 'sweep exam on off-channel comms', or ask what to expect during a regulatory audit."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Examination Readiness — SEC & FINRA Regulatory Examinations

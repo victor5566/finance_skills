@@ -1,7 +1,8 @@
 ---
 name: fee-disclosure
-description: "Fee disclosure requirements: ADV Part 2A, prospectus fee tables, Reg BI cost disclosure, 12b-1 fees, revenue sharing, wrap fees, ERISA 408(b)(2)."
+description: "Guide fee disclosure compliance across advisory, brokerage, fund, and retirement plan contexts. Use when the user asks about Form ADV Item 5 fee schedules, prospectus fee table format, Reg BI cost disclosure obligations, 12b-1 fee transparency, revenue sharing arrangements, wrap fee program costs, or ERISA 408(b)(2) service provider fee disclosure. Also trigger when users mention 'hidden fees', 'total cost to the client', 'are we disclosing all layers of fees', 'expense ratio comparison', 'fee billing in advance vs arrears', 'share class selection', 'indirect compensation', or ask whether fee disclosures are complete and compliant."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Fee Disclosure

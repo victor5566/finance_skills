@@ -1,7 +1,8 @@
 ---
 name: integration-patterns
-description: "Financial systems integration: API design, FIX protocol, ISO 20022 messaging, event-driven architecture, batch processing, idempotency, and error handling patterns."
+description: "Design and implement integration architectures connecting financial systems — APIs, FIX protocol, ISO 20022, event-driven patterns, batch feeds, idempotency, and resilience. Use when building custodian integration pipelines, implementing FIX connectivity for order routing, designing ISO 20022 or SWIFT migration messaging, building batch file processing for custodian feeds or EOD reconciliation, implementing idempotency for transaction APIs, designing retry or circuit breaker patterns, mapping data between systems with different schemas, or troubleshooting integration failures causing recon breaks. Trigger on: FIX protocol, ISO 20022, custodian feed, batch processing, API design, idempotency, circuit breaker, dead letter queue, data mapping, integration architecture, SWIFT migration, mTLS, file feed, event-driven, message broker."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Integration Patterns

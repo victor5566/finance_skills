@@ -1,7 +1,8 @@
 ---
 name: commodities
-description: "Commodity markets: futures curve (contango/backwardation), roll yield, commodity indices, storage costs, supply/demand fundamentals."
+description: "Analyze commodity markets including futures curve dynamics, roll yield, and supply/demand fundamentals. Use when the user asks about commodity investing, commodity ETFs, contango, backwardation, roll yield, commodity indices (GSCI, BCOM), or commodities as an inflation hedge. Also trigger when users mention 'oil prices', 'gold as a safe haven', 'agricultural futures', 'convenience yield', 'storage costs', 'natural gas', 'copper demand', or ask why commodity ETF returns differ from spot price changes."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Commodities

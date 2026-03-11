@@ -1,7 +1,8 @@
 ---
 name: investment-suitability
-description: "Investment suitability obligations: FINRA Rules 2111/2090, reasonable-basis/customer-specific/quantitative suitability, product-specific concerns, household considerations."
+description: "Assess investment suitability obligations under FINRA Rules 2111 and 2090 across all three suitability prongs. Use when the user asks about reasonable-basis, customer-specific, or quantitative suitability, product-specific concerns for complex products, leveraged ETFs, variable annuities, or alternatives, household-level suitability, hold recommendations, or the institutional suitability exemption. Also trigger when users mention 'is this investment suitable', 'turnover ratio is too high', 'cost-to-equity ratio', 'churning metrics', 'suitability questionnaire design', 'complex product due diligence', 'customer refused to provide their risk tolerance', or ask whether a recommendation fits a customer's profile."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Investment Suitability

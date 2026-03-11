@@ -1,7 +1,8 @@
 ---
 name: reconciliation
-description: "Reconciliation operations: position/cash/transaction matching with tolerance thresholds, three-way reconciliation (PMS/custodian/clearing), break identification (timing, pricing, corporate action, stock split/merger/DRIP), tolerance rules, STP rates (95-99% position, 85-95% transaction), auto-resolution, cost basis and tax lot matching, accrued income reconciliation, multi-custodian data normalization (Schwab, Fidelity, Pershing), ex-date processing, custodian feed formats, reconciliation scheduling, regulatory compliance (SEC Rule 204-2, ERISA, SOC 1/SOC 2, books and records), 1099-B accuracy, reconciliation automation platforms (Arcesium, Duco, Advent Geneva)."
+description: "Design and operate reconciliation processes that ensure data accuracy across portfolio management custodian and clearing systems. Use when building or evaluating a daily position cash or transaction reconciliation process, investigating discrepancies between internal systems and custodian records, diagnosing recurring break patterns especially from corporate actions or pricing differences, setting tolerance thresholds for position cash or market value matching, implementing three-way reconciliation across advisor system custodian and clearing firm, designing break investigation workflows with aging and escalation, normalizing data across multi-custodian feeds from Schwab Fidelity or Pershing, reconciling cost basis tax lots or accrued income across systems, evaluating reconciliation platforms like Arcesium Duco or Advent Geneva, or preparing for regulatory examinations on books and records accuracy."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Reconciliation

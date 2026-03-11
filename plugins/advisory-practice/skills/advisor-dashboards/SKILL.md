@@ -1,7 +1,8 @@
 ---
 name: advisor-dashboards
-description: "Advisor dashboards for RIAs: practice analytics, AUM/revenue tracking, organic growth, effective fee rate, net flows, client flow analysis, referral tracking, retention rates, attrition analysis, competitive losses, exception alerts (NIGO, rebalancing drift, billing), benchmarking (Schwab, FA Insight), productivity metrics, prospecting conversion, CRM integration (Redtail, Salesforce), PMS integration (Orion, Tamarac), compliance metrics."
+description: "Design, build, and optimize dashboards for RIA practice management with AUM tracking, revenue analytics, and KPI frameworks. Use when the user asks about tracking firm-level metrics, monitoring advisor productivity, measuring organic growth rate, analyzing client retention and attrition, building executive or branch manager views, setting up exception alerts for NIGO or rebalancing drift, benchmarking against industry peers, or designing role-based dashboard access. Also trigger when users mention 'how is the practice doing', 'revenue per advisor', 'client attrition', 'net new assets', 'effective fee rate', 'practice benchmarking', 'AUM growth decomposition', 'advisor capacity', or 'referral tracking'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Advisor Dashboards

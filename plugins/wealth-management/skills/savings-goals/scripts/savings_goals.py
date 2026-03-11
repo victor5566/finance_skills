@@ -1,3 +1,7 @@
+# /// script
+# dependencies = []
+# requires-python = ">=3.11"
+# ///
 """
 Savings Goals
 =============

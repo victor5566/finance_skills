@@ -1,7 +1,8 @@
 ---
 name: performance-metrics
-description: "Compute risk-adjusted performance ratios — Sharpe, Sortino, Information Ratio, Calmar, Treynor, Omega, capture ratios, and M-squared."
+description: "Evaluate investment performance on a risk-adjusted basis using industry-standard ratios and capture analysis. Use when the user asks about Sharpe ratio, Sortino ratio, Information Ratio, Treynor ratio, Calmar ratio, Omega ratio, or upside/downside capture. Also trigger when users mention 'risk-adjusted returns', 'return per unit of risk', 'M-squared', 'is this fund worth the volatility', 'how to compare two managers', 'capture ratio', or ask which investment performed better after accounting for risk."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Performance Metrics

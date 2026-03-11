@@ -1,7 +1,8 @@
 ---
 name: volatility-modeling
-description: "Model and forecast volatility — EWMA, GARCH(1,1), implied volatility, volatility surfaces, term structure, realized vs implied vol."
+description: "Model, forecast, and interpret volatility using time-series models and options-implied measures. Use when the user asks about EWMA, GARCH models, implied volatility, volatility surfaces, volatility term structure, or the VIX. Also trigger when users mention 'volatility smile', 'volatility skew', 'realized vs implied vol', 'volatility risk premium', 'vol clustering', 'mean-reverting volatility', 'options pricing inputs', 'RiskMetrics', 'decay factor', or ask how to forecast future volatility for risk management."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Volatility Modeling

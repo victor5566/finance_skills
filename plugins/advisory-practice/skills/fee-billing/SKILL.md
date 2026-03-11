@@ -1,7 +1,8 @@
 ---
 name: fee-billing
-description: "Advisory fee billing: fee calculation (tiered, flat, breakpoint), billing cycles, AUM valuation, direct-debit/invoice collection, GAAP revenue recognition, ADV Part 2A/Reg BI/ERISA 408(b)(2) disclosure, billing exceptions, system migration, revenue forecasting, concentration analysis."
+description: "Build and manage advisory fee billing operations from fee schedule design through calculation, collection, revenue recognition, and compliance disclosure. Use when the user asks about tiered or breakpoint fee schedules, billing cycle configuration, AUM valuation for billing, direct-debit vs invoice collection, GAAP revenue recognition for fees, ADV Part 2A or Reg BI fee disclosure, diagnosing billing exceptions or refunds, migrating from spreadsheet billing to automated systems, or forecasting advisory revenue. Also trigger when users mention 'fee calculation', 'billing engine', 'effective fee rate', 'household billing aggregation', 'mid-period adjustment', 'billing in advance vs arrears', 'fee compression', or 'ERISA 408(b)(2)'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Fee Billing

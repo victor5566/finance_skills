@@ -1,7 +1,8 @@
 ---
 name: client-disclosures
-description: "Client disclosure documents: Form ADV, Form CRS, prospectus delivery, Reg S-P privacy, trade confirmations, account statements, delivery timing."
+description: "Guide the creation, content, and delivery of required client disclosure documents for investment advisers and broker-dealers. Use when the user asks about Form ADV Part 2A or 2B content, Form CRS requirements, prospectus delivery obligations, privacy notice delivery, trade confirmation timing, account statement distribution, or electronic vs paper delivery compliance. Also trigger when users mention 'onboarding document checklist', 'what disclosures do we owe new clients', 'annual brochure update', 'brochure supplement for a new adviser', 'CRS conversation starters', or ask when and how disclosure documents must be delivered."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Client Disclosures

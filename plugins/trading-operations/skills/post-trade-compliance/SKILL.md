@@ -1,7 +1,8 @@
 ---
 name: post-trade-compliance
-description: "Post-trade compliance and surveillance: trade surveillance, pattern detection, best execution review, allocation fairness, exception-based monitoring, and regulatory reporting triggers."
+description: "Guide post-trade compliance monitoring and trade surveillance system design. Use when building alert logic to detect churning, front-running, cherry-picking, layering, spoofing, wash trading, or marking the close, implementing post-trade best execution review, evaluating allocation fairness with pro-rata verification or dispersion analysis, designing exception-based monitoring workflows with escalation paths, correlating trading with MNPI events for insider trading detection, building personal trading surveillance for preclearance and blackout enforcement, determining SAR or blue sheet or CAT reporting triggers, or tuning surveillance thresholds to reduce false positives. Also covers turnover ratios, cost-to-equity ratios, and investigation case management."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Post-Trade Compliance

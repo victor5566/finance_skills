@@ -1,7 +1,8 @@
 ---
 name: anti-money-laundering
-description: "BSA/AML compliance: CTRs, SARs, OFAC screening, structuring detection, FinCEN requirements, red flags for money laundering."
+description: "Guide BSA/AML compliance program design and operation for broker-dealers, banks, and investment advisers. Use when the user asks about suspicious activity reports, currency transaction reports, OFAC screening, structuring detection, or FinCEN requirements. Also trigger when users mention 'large cash deposit', 'sanctions check', 'money laundering red flags', 'customer risk rating', 'unusual transaction patterns', 'wire to a foreign country', 'SDN list', 'tipping off a client about a SAR', 'AML audit', 'correspondent account due diligence', or ask whether a transaction needs to be reported."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Anti-Money Laundering Compliance

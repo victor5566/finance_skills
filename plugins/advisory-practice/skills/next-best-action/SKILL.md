@@ -1,7 +1,8 @@
 ---
 name: next-best-action
-description: "Next-best-action frameworks for advisor workflows: event-driven triggers, prioritization scoring, action queuing, advisor nudges, automated workflows, personalized recommendations."
+description: "Design and implement next-best-action engines that surface proactive, prioritized recommendations to advisors based on portfolio, life, market, and compliance events. Use when the user asks about building event-driven advisor alerts, designing trigger logic for portfolio drift or large cash movements, prioritizing competing actions across a book of business, routing NBA recommendations to the right team member, measuring NBA acceptance rates, or automating compliance-driven actions like annual review reminders. Also trigger when users mention 'next best action', 'advisor nudges', 'proactive outreach', 'what should I do for this client', 'event-driven triggers', 'action queue', 'client contact gap', 'RMD reminder', or 'advisor productivity tool'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Next-Best-Action — Event-Driven Advisor Recommendations

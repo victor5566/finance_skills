@@ -1,7 +1,8 @@
 ---
 name: proposal-generation
-description: "Investment proposal generation: risk profiling output, model portfolio recommendation, fee illustration, scenario projections, compliance review, and proposal delivery for advisory practices."
+description: "Generate end-to-end investment proposals covering risk profiling, model portfolio recommendation, fee illustration, projections, and compliance review. Use when the user asks about creating a proposal for a prospect, mapping risk questionnaire scores to model portfolios, building fee illustrations with tiered costs, producing Monte Carlo or scenario projections, analyzing a prospect's current portfolio for improvement opportunities, reviewing proposals for SEC Marketing Rule compliance, or designing proposal templates for a multi-advisor firm. Also trigger when users mention 'investment proposal', 'proposal generation', 'risk profiling', 'Riskalyze', 'Nitrogen', 'fee illustration', 'transition analysis', 'current vs proposed portfolio', or 'proposal compliance review'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Proposal Generation

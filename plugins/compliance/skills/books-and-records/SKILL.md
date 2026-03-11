@@ -1,7 +1,8 @@
 ---
 name: books-and-records
-description: "Broker-dealer and investment adviser recordkeeping: SEC Rules 17a-3/17a-4, Rule 204-2, FINRA retention, WORM storage, electronic communications archiving, social media archiving."
+description: "Guide the design and maintenance of recordkeeping programs under SEC Rules 17a-3, 17a-4, and 204-2. Use when the user asks about document retention schedules, how long to keep trade records or customer complaints, WORM storage requirements, email or text message archiving, social media capture, BYOD compliance policies, or electronic storage audit trails. Also trigger when users mention 'we got an exam request for records', 'migrating to a new archiving vendor', 'blotter retention', 'order ticket requirements', 'off-channel communications', 'WhatsApp archiving', or ask how long specific records must be kept."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Books and Records

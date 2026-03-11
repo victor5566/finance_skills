@@ -1,7 +1,8 @@
 ---
 name: liquidity-management
-description: "Liquidity planning: cash flow forecasting, laddering strategies, liquidity tiers, income smoothing for variable earners."
+description: "Plan and manage cash flow to ensure adequate liquidity while minimizing opportunity cost of excess cash. Use when the user asks about cash flow forecasting, CD or bond laddering, liquidity tiers, income smoothing for variable earners, or sweep strategies. Also trigger when users mention 'T-bill ladder', 'where to park cash', 'irregular income budgeting', 'freelancer cash management', 'lumpy expenses', 'liquidity ratio', 'how much cash to hold', or ask how to plan for large upcoming expenses."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Liquidity Management

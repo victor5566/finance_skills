@@ -1,7 +1,8 @@
 ---
 name: qualitative-valuation
-description: "Qualitative assessment: moats, competitive advantage, management quality, ESG, business model analysis."
+description: "Assess business quality, competitive positioning, and sustainability of value creation beyond financial models. Use when the user asks about economic moats, competitive advantages, Porter's Five Forces, management quality, ESG integration, or business model analysis. Also trigger when users mention 'does this company have a moat', 'switching costs', 'network effects', 'brand value', 'management track record', 'capital allocation', 'insider ownership', 'red flags', or ask whether a company's advantage is durable."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Qualitative Valuation

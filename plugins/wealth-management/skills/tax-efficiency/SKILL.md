@@ -1,7 +1,8 @@
 ---
 name: tax-efficiency
-description: "Tax-aware investing: asset location, tax-loss harvesting, gain/loss management, tax-efficient withdrawal sequencing."
+description: "Maximize after-tax returns through strategic asset location, tax-loss harvesting, gain/loss management, and withdrawal sequencing. Use when the user asks about asset location, tax-loss harvesting, Roth conversions, tax-efficient withdrawals, tax lot selection, or charitable giving with appreciated securities. Also trigger when users mention 'which account should I hold bonds in', 'wash-sale rule', 'tax drag', 'Roth vs Traditional', 'RMD planning', 'bracket stuffing', 'HIFO vs FIFO', or ask how to minimize taxes on investments."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Tax-Efficient Investing

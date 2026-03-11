@@ -1,7 +1,8 @@
 ---
 name: advertising-compliance
-description: "Investment advertising and marketing compliance: SEC Marketing Rule, FINRA 2210, performance advertising, testimonials, social media, and recordkeeping."
+description: "Ensure investment advertising and marketing materials comply with SEC Marketing Rule and FINRA Rule 2210. Use when the user asks about performance advertising, showing backtested or hypothetical returns, net vs gross performance presentation, client testimonials or endorsements in marketing, social media posts by advisers or reps, third-party ratings in pitchbooks, or advertising recordkeeping. Also trigger when users mention 'can we show this track record', 'pitchbook compliance review', 'marketing rule violations', 'cherry-picking performance periods', 'predecessor performance portability', 'extracted performance', or ask whether a website, one-pager, or presentation needs compliance approval."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Advertising Compliance — Investment Marketing & Communications

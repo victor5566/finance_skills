@@ -1,7 +1,8 @@
 ---
 name: forward-risk
-description: "Project future risk — parametric VaR, Monte Carlo VaR, CVaR/Expected Shortfall, scenario analysis, stress testing, factor-based risk decomposition."
+description: "Estimate potential future losses using VaR, Expected Shortfall, Monte Carlo simulation, and stress testing. Use when the user asks about Value-at-Risk, CVaR, Expected Shortfall, scenario analysis, stress testing, or factor-based risk decomposition. Also trigger when users mention 'how much could I lose', 'worst-case scenario', 'tail risk', 'risk budget', 'component VaR', 'marginal VaR', '99% confidence loss', 'Monte Carlo simulation', or ask how to project portfolio risk forward."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Forward-Looking Risk Analysis

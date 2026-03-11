@@ -1,7 +1,8 @@
 ---
 name: advice-standards
-description: "Regulatory bright lines between investment education, recommendations, and investment advice under federal and state securities law"
+description: "Determine when a product, platform, or communication crosses the regulatory line from education into investment advice requiring registration. Use when the user asks about the definition of investment advice under the Advisers Act, whether a fintech feature or AI chatbot constitutes advice, the publisher's exclusion for newsletters or model portfolios, broker-dealer solely incidental exclusion, what triggers a 'recommendation' under Reg BI, or DOL education vs advice safe harbors. Also trigger when users ask 'do I need to register as an investment adviser', 'does this app give investment advice', 'is this tool just education or advice', 'robo-adviser registration', or 'disclaimer language for financial content'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Investment Advice Standards & Regulatory Boundaries

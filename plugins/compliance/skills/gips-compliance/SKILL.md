@@ -1,7 +1,8 @@
 ---
 name: gips-compliance
-description: "GIPS compliance: composite construction, performance presentation, verification, error correction, pooled funds, wrap/SMA programs, and advertising guidelines under the CFA Institute Global Investment Performance Standards."
+description: "Ensure investment firms satisfy CFA Institute GIPS requirements for composite construction, performance calculation, presentation, and verification. Use when the user asks about building composites, time-weighted return calculation, GIPS-compliant presentations, error correction policies, pooled fund reporting, wrap fee or SMA program performance, or GIPS advertising guidelines. Also trigger when users mention 'claiming GIPS compliance', 'composite membership rules', 'terminated portfolio returns', 'gross vs net of fees under GIPS', 'GIPS verification findings', 'can we show this track record to prospects', or ask whether a firm's performance reporting meets GIPS standards."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # GIPS Compliance — Global Investment Performance Standards

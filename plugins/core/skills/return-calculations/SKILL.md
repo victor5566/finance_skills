@@ -1,7 +1,8 @@
 ---
 name: return-calculations
-description: "Compute and explain investment return metrics: TWR, MWR/IRR, CAGR, annualization, sub-period linking, arithmetic vs geometric vs log returns."
+description: "Compute and compare investment return metrics including TWR, MWR/IRR, CAGR, and annualized returns. Use when the user asks about portfolio performance calculation, comparing manager returns, linking sub-period returns, understanding why different return methods give different numbers, or converting returns across time periods. Also trigger when users mention 'how much did I make', 'annual return', 'compound growth', 'dollar-weighted vs time-weighted', 'what was my rate of return', 'geometric vs arithmetic mean', 'log returns', or ask about the effect of cash flows on reported returns."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Return Calculations

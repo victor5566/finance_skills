@@ -1,7 +1,8 @@
 ---
 name: tax-loss-harvesting
-description: "Tax-loss harvesting workflow: candidate identification, gain/loss budgeting, replacement selection, wash-sale tracking, execution planning, and post-harvest monitoring."
+description: "Execute a complete tax-loss harvesting workflow from candidate identification through post-harvest monitoring. Use when the user asks about finding TLH candidates, gain/loss budgeting, replacement security selection, wash-sale compliance, or harvest execution planning. Also trigger when users mention 'unrealized losses in my portfolio', 'swap ETFs for tax purposes', 'harvest losses before year-end', 'substantially identical security', 'wash-sale window', 'NIIT offset', 'loss carryforward', or ask how much tax they can save by harvesting."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Tax-Loss Harvesting

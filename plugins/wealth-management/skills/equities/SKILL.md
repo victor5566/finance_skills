@@ -1,7 +1,8 @@
 ---
 name: equities
-description: "Equity market structure, factors, index construction, style analysis, earnings mechanics."
+description: "Analyze equity securities, factor models, and equity portfolio construction. Use when the user asks about stocks, equity valuation ratios, index construction methods, or style analysis. Also trigger when users mention 'P/E ratio', 'growth vs value', 'market cap weighting', 'sector allocation', 'GICS classification', 'earnings per share', 'Fama-French factors', 'CAPM', 'dividend yield', 'PEG ratio', 'EV/EBITDA', or ask which factors explain equity returns."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Equities

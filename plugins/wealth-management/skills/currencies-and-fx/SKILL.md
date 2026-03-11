@@ -1,7 +1,8 @@
 ---
 name: currencies-and-fx
-description: "Currency markets: spot/forward rates, covered/uncovered interest rate parity, FX hedging, cross rates, carry trade."
+description: "Analyze currency markets, exchange rate mechanics, and FX risk management for international portfolios. Use when the user asks about exchange rates, FX hedging, interest rate parity, carry trades, forward premiums, cross rates, or currency overlay programs. Also trigger when users mention 'strong dollar', 'weak euro', 'hedging foreign stocks', 'purchasing power parity', 'currency risk in my portfolio', 'EUR/USD', 'yen carry trade', or ask whether to hedge international investments."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Currencies and FX

@@ -1,7 +1,8 @@
 ---
 name: emergency-fund
-description: "Emergency fund sizing: income replacement, expense-based calculation, variable income adjustments, optimal vehicle selection."
+description: "Size and structure an emergency fund based on individual circumstances, income stability, and expense profile. Use when the user asks about emergency fund sizing, how many months of expenses to save, where to keep emergency savings, or tiered fund structures. Also trigger when users mention 'rainy day fund', 'how much cash should I keep', 'high-yield savings account', 'money market fund', 'freelancer cash reserve', 'variable income buffer', or ask what counts as an emergency expense."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Emergency Fund Planning

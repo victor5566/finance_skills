@@ -1,7 +1,8 @@
 ---
 name: account-opening-compliance
-description: "Account opening compliance: CIP/KYC integration, suitability checks, OFAC screening, beneficial ownership, risk-based review, and compliance automation in account opening."
+description: "Embed compliance controls into account opening workflows and verify regulatory readiness. Use when designing CIP/KYC identity verification gates for new accounts, implementing OFAC and sanctions screening at onboarding, collecting beneficial ownership certification for entity or trust accounts, building risk-based approval tiers that route applications by risk level, adding senior investor protections or trusted contact procedures, automating compliance screening and exception tracking, establishing CDD risk ratings and ongoing monitoring triggers, preparing account opening procedures for SEC or FINRA examination, remediating audit or exam deficiencies in onboarding compliance, or assessing the handoff from opening compliance to ongoing surveillance."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Account Opening Compliance

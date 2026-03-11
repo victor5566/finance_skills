@@ -1,7 +1,8 @@
 ---
 name: corporate-actions
-description: "Corporate actions processing: mandatory and voluntary actions, dividends, stock splits, mergers and acquisitions, tender offers, record dates, and corporate action lifecycle management."
+description: "Process and manage corporate actions from announcement through settlement. Use when handling dividends stock splits reverse splits mergers or spin-offs, managing voluntary elections for tender offers rights offerings or exchange offers, calculating record date and ex-date entitlements under current settlement cycles, building client notification workflows for upcoming corporate actions, collecting and submitting voluntary action elections to DTC or custodians, calculating fractional share handling or proration for reorganization events, adjusting cost basis and tax lots after corporate actions, reconciling expected entitlements against actual receipts, investigating missed or incorrectly processed corporate actions, or designing corporate action processing systems and controls."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Corporate Actions

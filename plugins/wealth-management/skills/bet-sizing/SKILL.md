@@ -1,7 +1,8 @@
 ---
 name: bet-sizing
-description: "Position sizing: Kelly criterion, fractional Kelly, risk budgeting, maximum position sizes, conviction weighting."
+description: "Determine how much capital to allocate to individual positions within a portfolio. Use when the user asks about position sizing, the Kelly criterion, fractional Kelly, risk budgeting, or conviction weighting. Also trigger when users mention 'how much to put in one stock', 'maximum position size', 'how concentrated should my portfolio be', 'number of holdings', 'VaR budget per position', 'how big a bet', or ask about scaling position sizes with volatility."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Bet Sizing

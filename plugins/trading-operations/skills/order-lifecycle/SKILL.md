@@ -1,7 +1,8 @@
 ---
 name: order-lifecycle
-description: "Order lifecycle management: order states, FIX protocol basics, order types, time-in-force, cancel/replace workflows, order validation, and state machine design for trading systems."
+description: "Guide the design and implementation of order lifecycle management in trading systems. Use when building an order state machine for an OMS or EMS, implementing or debugging FIX protocol connectivity to exchanges, handling cancel/replace race conditions, defining pre-submission validation rules (buying power, position limits, restricted lists), selecting order types and time-in-force instructions, designing multi-leg or OCO or bracket orders, building CAT-compliant audit trails, troubleshooting order rejections or unexpected state transitions, hardening an OMS against edge cases, or implementing order persistence and recovery for failover. Also covers FIX message flows, ClOrdID chaining, and partial fill aggregation."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Order Lifecycle

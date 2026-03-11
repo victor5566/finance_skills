@@ -1,7 +1,8 @@
 ---
 name: trade-execution
-description: "Trade execution and best execution: venue selection, smart order routing, execution algorithms, transaction cost analysis (TCA), market microstructure, and best execution obligations."
+description: "Guide the design, evaluation, and monitoring of trade execution quality and best execution practices. Use when assessing best execution obligations under FINRA Rule 5310 or RIA fiduciary duty, designing smart order routing across exchanges and dark pools, selecting execution algorithms (VWAP, TWAP, implementation shortfall, POV), building transaction cost analysis (TCA) for pre-trade estimation or post-trade measurement, analyzing bid-ask spread decomposition or market impact or information leakage, conducting best execution committee reviews, evaluating payment for order flow (PFOF) arrangements, interpreting Rule 605/606 reports, or handling fixed income or ETF execution via RFQ protocols. Also covers Reg NMS Order Protection Rule and venue fee structures."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Trade Execution

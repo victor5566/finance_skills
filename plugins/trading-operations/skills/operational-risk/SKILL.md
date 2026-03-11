@@ -1,7 +1,8 @@
 ---
 name: operational-risk
-description: "Operational risk management: trade breaks, settlement fails, error handling, loss event taxonomy, key risk indicators, incident management, and business continuity for trading operations."
+description: "Guide identification, measurement, and management of operational risk in trading and brokerage operations. Use when designing trade error detection and correction procedures, investigating trade breaks and reconciliation failures, classifying loss events under Basel taxonomy, developing key risk indicators (KRIs) and dashboards, responding to system outages or data feed failures or order routing errors, conducting root cause analysis after a trade error or settlement fail, planning business continuity and disaster recovery for trading desks, preparing for FINRA or SEC operational risk examinations, or assessing technology risk in OMS and market data systems. Also covers fat-finger errors, error account P&L, and corrective action tracking."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Operational Risk

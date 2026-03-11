@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["numpy"]
+# requires-python = ">=3.11"
+# ///
 """
 Return Calculations - Layer 0 (Mathematical Foundations)
 

@@ -1,7 +1,8 @@
 ---
 name: exchange-connectivity
-description: "Exchange and venue connectivity: market data feeds, FIX sessions, trading venue integration, market halts, circuit breakers, symbology, and connectivity architecture."
+description: "Guide the design and management of trading venue connectivity and market data infrastructure. Use when building or troubleshooting FIX sessions for order routing or drop copy, integrating exchange protocols like OUCH, ITCH, PITCH, or Pillar, designing market data feed architecture, handling trading halts or circuit breakers or LULD bands, mapping symbology across CUSIP/ISIN/SEDOL/FIGI, planning co-location or proximity hosting, designing failover and DR for exchange connectivity, implementing Rule 15c3-5 market access controls, building session scheduling for pre-market and post-market windows, resolving FIX sequence number gaps, or planning CAT reporting infrastructure."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Exchange Connectivity

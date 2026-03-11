@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["numpy", "scipy"]
+# requires-python = ">=3.11"
+# ///
 """
 Statistics Fundamentals - Layer 0 (Mathematical Foundations)
 

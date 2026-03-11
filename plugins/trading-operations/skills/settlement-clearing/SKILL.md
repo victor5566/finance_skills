@@ -1,7 +1,8 @@
 ---
 name: settlement-clearing
-description: "Settlement and clearing: T+1 settlement cycle, DTC/NSCC clearing, fails management, corporate actions on settlement, DVP/RVP, continuous net settlement, and settlement risk."
+description: "Guide the understanding and management of trade settlement and clearing processes. Use when designing settlement workflows for T+1 compliance, understanding DTC/NSCC/FICC clearing infrastructure, analyzing continuous net settlement (CNS) netting obligations, setting up institutional trade processing (affirmation, confirmation, allocation, matching), investigating settlement fails and designing fail reduction programs, implementing buy-in procedures under Reg SHO Rule 204, assessing corporate action impact on pending settlements, evaluating DVP/RVP mechanics for institutional deliveries, handling when-issued or as-of trades, or managing settlement bank relationships and intraday liquidity. Also covers FX funding gaps for cross-border T+1 settlement."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Settlement & Clearing

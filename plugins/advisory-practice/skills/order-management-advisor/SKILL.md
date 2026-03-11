@@ -1,7 +1,8 @@
 ---
 name: order-management-advisor
-description: "Advisor order management: order entry, block trading, allocation, order types, pre-trade compliance, custodian routing, model-driven trading, error handling, and audit trail."
+description: "Manage the advisor trade lifecycle from order entry through settlement, covering block trading, allocation, pre-trade compliance, custodian routing, and error correction. Use when the user asks about designing an OMS for an RIA, executing model portfolio changes across many accounts, structuring block trades with fair allocation, configuring pre-trade compliance rules or restricted lists, routing orders to multiple custodians, handling trade errors or corrections, managing cash in trading workflows, or evaluating OMS platforms. Also trigger when users mention 'block trade', 'trade allocation', 'order management system', 'iRebal', 'Orion Trading', 'Tamarac Trading', 'best execution', 'trade error', 'mutual fund vs ETF orders', or 'audit trail'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Order Management — Advisor

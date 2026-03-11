@@ -1,7 +1,8 @@
 ---
 name: crm-client-lifecycle
-description: "Client lifecycle management for RIAs: segmentation models (AUM, revenue, behavioral, strategic importance), household management, multi-generational relationship tracking, service tier SLAs, quarterly/annual review scheduling, lifecycle tracking (prospect→onboarding→accumulation→distribution→estate), engagement analytics (NPS, contact frequency, retention risk scoring), at-risk identification, wallet share, held-away asset consolidation, referral attribution, FINRA Rule 4512 trusted contact, OFAC/enhanced due diligence, CRM platforms (Salesforce, Redtail, Wealthbox, Dynamics)."
+description: "Design and optimize CRM systems and client lifecycle workflows for advisory firms, covering segmentation, household management, service tiers, and retention analytics. Use when the user asks about client segmentation models, building household structures, defining service tier SLAs, scheduling reviews, tracking lifecycle stages from prospect through estate, identifying at-risk clients, analyzing wallet share, consolidating held-away assets, or evaluating CRM platforms. Also trigger when users mention 'client segmentation', 'retention risk', 'at-risk clients', 'household linking', 'multi-generational', 'service tiers', 'Redtail', 'Wealthbox', 'Salesforce for advisors', 'referral tracking', or 'contact gap'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # CRM & Client Lifecycle

@@ -1,7 +1,8 @@
 ---
 name: counterparty-risk
-description: "Counterparty risk management: counterparty exposure measurement, credit risk monitoring, netting agreements, collateral management, ISDA documentation, and central clearing."
+description: "Guide counterparty credit risk measurement and management for OTC and securities trading. Use when measuring current or potential future exposure to a counterparty, setting or reviewing counterparty credit limits, evaluating ISDA Master Agreement netting benefits, designing collateral management or CSA terms, assessing central clearing mandates under Dodd-Frank or EMIR, monitoring counterparty creditworthiness via CDS spreads or ratings, managing Herstatt or settlement risk in FX, quantifying wrong-way risk, or building real-time exposure dashboards. Also use for counterparty default scenarios, credit deterioration events, EAD and SA-CCR calculations, and CVA capital charges."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Counterparty Risk

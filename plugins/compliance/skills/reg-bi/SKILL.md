@@ -1,7 +1,8 @@
 ---
 name: reg-bi
-description: "SEC Regulation Best Interest (Reg BI): disclosure, care, conflict of interest, and compliance obligations for broker-dealer recommendations."
+description: "Analyze broker-dealer recommendations under SEC Regulation Best Interest's four obligations: Disclosure, Care, Conflict of Interest, and Compliance. Use when the user asks whether a recommendation satisfies Reg BI, what triggers the 'recommendation' standard, how to evaluate reasonably available alternatives, rollover recommendation compliance, dual-registrant capacity disclosure, share class or account type recommendations, or Reg BI examination preparation. Also trigger when users mention 'best interest standard for brokers', 'is this a Reg BI recommendation', 'care obligation documentation', 'sales contest elimination requirement', 'Form CRS delivery', or ask how Reg BI differs from suitability or fiduciary duty."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # SEC Regulation Best Interest (Reg BI)

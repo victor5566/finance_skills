@@ -1,7 +1,8 @@
 ---
 name: statistics-fundamentals
-description: "Statistical methods for financial data: distributions, covariance matrices, regression, bootstrapping, shrinkage estimators."
+description: "Apply statistical methods to financial data including descriptive statistics, covariance estimation, regression, hypothesis testing, and resampling. Use when the user asks about return distributions, correlation between assets, building a covariance matrix, running a CAPM regression, testing whether alpha is significant, checking if returns are normal, or estimating confidence intervals. Also trigger when users mention 'volatility', 'how correlated are these', 'fat tails', 'skewness', 'R-squared', 'beta of a fund', 'bootstrap a Sharpe ratio', 'shrinkage estimator', 'Ledoit-Wolf', or ask why their optimizer produces unstable weights."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Statistics Fundamentals

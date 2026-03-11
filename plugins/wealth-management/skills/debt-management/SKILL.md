@@ -1,7 +1,8 @@
 ---
 name: debt-management
-description: "Debt strategy: prioritization (avalanche vs snowball), refinancing analysis, debt-to-income ratios, consolidation."
+description: "Provide frameworks for managing and paying off personal debt effectively. Use when the user asks about debt payoff strategies (avalanche vs snowball), refinancing decisions, debt consolidation, debt-to-income ratios, or the opportunity cost of paying off debt vs investing. Also trigger when users mention 'which debt to pay first', 'should I refinance', 'credit card debt', 'student loan payoff', 'DTI for mortgage', 'balance transfer', 'good debt vs bad debt', or ask how to get out of debt faster."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Debt Management

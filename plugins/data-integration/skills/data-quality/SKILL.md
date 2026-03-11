@@ -1,7 +1,8 @@
 ---
 name: data-quality
-description: "Financial data quality management: golden source architecture, data lineage, validation rules, exception management, profiling, monitoring, and governance frameworks."
+description: "Design and operate data quality programs for financial data — golden source architecture, validation rules, data lineage, exception management, profiling, and governance. Use when building validation rules for pricing or client data pipelines, designing a data quality monitoring framework, establishing golden source designations across systems, implementing data lineage for BCBS 239 or MiFID II, investigating reconciliation breaks or billing errors traced to bad data, preparing for regulatory exams on data accuracy, building data quality scorecards, or defining data stewardship roles. Trigger on: data quality, golden source, data lineage, data validation, data profiling, exception management, data governance, BCBS 239, data completeness, data accuracy, validation rules, data anomaly, data stewardship, data quality scorecard."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Data Quality

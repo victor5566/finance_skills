@@ -1,3 +1,7 @@
+# /// script
+# dependencies = ["numpy"]
+# requires-python = ">=3.11"
+# ///
 """
 Fund Vehicle Analysis
 =====================

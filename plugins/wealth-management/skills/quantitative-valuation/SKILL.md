@@ -1,7 +1,8 @@
 ---
 name: quantitative-valuation
-description: "Quantitative valuation models: DCF, DDM, comparable multiples, residual income, real options."
+description: "Estimate intrinsic value of stocks and companies using DCF, dividend discount models, comparable multiples, and residual income. Use when the user asks about discounted cash flow, DCF models, WACC, terminal value, dividend discount models, comparable multiples, or sum-of-the-parts valuation. Also trigger when users mention 'what is this stock worth', 'fair value estimate', 'Gordon growth model', 'free cash flow valuation', 'cost of equity', 'sensitivity analysis', 'exit multiple', or ask whether a stock is overvalued or undervalued."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Quantitative Valuation

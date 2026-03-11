@@ -1,7 +1,8 @@
 ---
 name: asset-allocation
-description: "Asset allocation frameworks: strategic (SAA), tactical (TAA), mean-variance optimization, Black-Litterman, risk parity, glide paths."
+description: "Determine how to distribute capital across asset classes using strategic and tactical allocation frameworks. Use when the user asks about portfolio allocation, mean-variance optimization, Black-Litterman, risk parity, glide paths, or target-date strategies. Also trigger when users mention 'how much in stocks vs bonds', '60/40 portfolio', 'policy portfolio', 'core-satellite', 'liability-driven investing', 'asset-liability matching', or ask how to split their money across investments."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Asset Allocation

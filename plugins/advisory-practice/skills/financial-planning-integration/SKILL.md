@@ -1,7 +1,8 @@
 ---
 name: financial-planning-integration
-description: "Financial planning integration: goal-based plans, Monte Carlo probability-of-success, plan-to-IPS linkage, scenario analysis, tax-aware planning (QCD, tax-loss harvesting, withdrawal sequencing), Roth conversions, RMD management, SECURE 2.0 Act, Social Security optimization, IRMAA Medicare premiums, 529/donor-advised funds, risk capacity, longevity/sequence-of-returns risk, cash flow modeling by life phase, planning tools (eMoney, MoneyGuidePro, RightCapital), assumption synchronization."
+description: "Integrate financial planning engines with the advisor technology stack, covering goal-based frameworks, Monte Carlo simulation, plan-to-portfolio linkage, and tax-aware strategies. Use when the user asks about connecting planning tools to CRM or PMS, building goal-based financial plans, running Monte Carlo probability-of-success analysis, linking plan outputs to portfolio construction, modeling Roth conversions or withdrawal sequencing, optimizing Social Security claiming strategies, projecting RMDs under SECURE 2.0, or synchronizing assumptions across systems. Also trigger when users mention 'eMoney', 'MoneyGuidePro', 'RightCapital', 'plan probability of success', 'what-if scenarios', 'retirement income plan', 'tax-loss harvesting in the plan', 'IRMAA planning', or 'plan-to-IPS linkage'."
 allowed-tools: ["Bash", "Read", "Write", "Edit"]
+compatibility: "Designed for Claude Code"
 ---
 
 # Financial Planning Integration

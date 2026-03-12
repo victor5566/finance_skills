@@ -1,8 +1,6 @@
 ---
 name: client-review-prep
 description: "Prepare advisors for client review meetings by assembling context packages, performance summaries, drift analysis, talking points, and meeting agendas. Use when the user asks about preparing for a client review, building a pre-meeting checklist, generating talking points for an upcoming meeting, identifying allocation drift before a review, automating review prep workflows, or assembling a meeting package with exhibits. Also trigger when users mention 'client meeting prep', 'review preparation', 'what should I discuss with my client', 'proactive recommendations', 'life event triggered review', 'meeting agenda', or 'compliance pre-check before review'."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Client Review Preparation

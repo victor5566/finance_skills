@@ -1,8 +1,6 @@
 ---
 name: fixed-income-corporate
 description: "Analyze corporate bonds and credit instruments including investment grade and high yield debt. Use when the user asks about corporate bonds, credit spreads (OAS, Z-spread, G-spread), credit ratings, default probabilities, callable bonds, or private credit. Also trigger when users mention 'junk bonds', 'fallen angel', 'yield-to-worst', 'covenant analysis', 'CDS spreads', 'recovery rates', 'direct lending', 'mezzanine debt', 'BBB downgrade risk', or ask how to evaluate corporate credit risk."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Fixed Income — Corporate

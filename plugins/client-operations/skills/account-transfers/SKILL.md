@@ -1,8 +1,6 @@
 ---
 name: account-transfers
 description: "Process and manage account transfers between and within financial institutions. Use when handling full or partial ACAT transfers between broker-dealers, troubleshooting ACAT rejection codes or FINRA Rule 11870 timeline issues, setting up non-ACAT transfers like mutual fund direct transfers or DTC free deliveries, processing internal journal entries to move assets between accounts, handling retirement account rollovers or Roth conversions with proper tax reporting, managing estate transfers with cost basis step-up and date-of-death valuations, reconciling assets after transfer completion including residual credits and fractional shares, coordinating multi-account household transfers across different account types, or building transfer tracking dashboards and client communication workflows."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Account Transfers

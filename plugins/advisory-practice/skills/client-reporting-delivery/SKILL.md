@@ -1,8 +1,6 @@
 ---
 name: client-reporting-delivery
 description: "Design, generate, and deliver client performance reports across all channels, covering quarterly reports, tax reporting, portal integration, and compliance review. Use when the user asks about building or redesigning report templates, choosing what to include in quarterly or annual client reports, transitioning from print to digital delivery, integrating a client portal, presenting net-of-fee performance with benchmarks, managing report production timelines, or handling e-delivery consent. Also trigger when users mention 'client reporting', 'quarterly performance report', 'report customization', 'tax lot report', '1099 supplement', 'report disclaimers', 'UHNW reporting', or 'report QA process'."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Client Reporting and Delivery

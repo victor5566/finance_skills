@@ -1,8 +1,6 @@
 ---
 name: stp-automation
 description: "Design and implement straight-through processing and operational automation for securities operations. Use when measuring STP rates and identifying manual touchpoints in an existing process, replacing review-all workflows with exception-based processing, selecting automation patterns for account opening trade processing settlement reconciliation or billing, designing integration between portfolio management custodian CRM and order management systems, building exception queuing categorization and auto-resolution workflows, evaluating RPA vs API-based vs hybrid automation for legacy systems, establishing operational controls and audit trails for automated environments, conducting process mining or root cause analysis on exception volumes, or setting STP rate targets and continuous improvement programs."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # STP & Automation

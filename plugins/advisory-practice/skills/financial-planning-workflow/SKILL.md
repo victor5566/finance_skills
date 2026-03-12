@@ -1,8 +1,6 @@
 ---
 name: financial-planning-workflow
 description: "Orchestrate the complete advisor workflow for assembling and delivering a comprehensive financial plan, from data gathering through recommendations and ongoing monitoring. Use when the user asks about building a financial plan for a client, structuring a planning engagement, coordinating retirement and education and estate goals into one plan, running scenario analysis across a full financial picture, prioritizing competing recommendations, preparing for a plan presentation meeting, or deciding when a plan needs updating. Also trigger when users mention 'comprehensive financial plan', 'discovery meeting', 'cash flow analysis', 'retirement modeling', 'education funding gap', 'plan delivery', 'savings rate', 'plan update trigger', or 'is my client on track'."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Financial Planning Workflow

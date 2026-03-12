@@ -1,8 +1,6 @@
 ---
 name: reference-data
 description: "Design and manage reference data systems — security master, client master, account master, identifier mapping, pricing data, and governance. Use when building or evaluating a security master database, mapping identifiers across systems (CUSIP to ISIN, SEDOL to FIGI), designing client master models for onboarding or KYC, defining account master attributes across custodians, implementing pricing validation with vendor hierarchy, establishing reference data governance and stewardship, handling identifier changes from corporate actions, or troubleshooting data quality issues traced to stale prices or missing identifiers. Trigger on: security master, CUSIP, ISIN, SEDOL, FIGI, client master, account master, pricing data, reference data, golden source, MDM, master data, identifier mapping, data governance, pricing validation."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Reference Data

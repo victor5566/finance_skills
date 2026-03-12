@@ -1,8 +1,6 @@
 ---
 name: rebalancing
 description: "Maintain portfolio allocations over time using calendar-based, threshold-based, and tax-efficient rebalancing strategies. Use when the user asks about when to rebalance, rebalancing bands, transaction cost trade-offs, tax-efficient rebalancing, or the rebalancing premium. Also trigger when users mention 'my portfolio drifted', 'how often should I rebalance', 'rebalancing across taxable and IRA accounts', 'volatility harvesting', 'buy low sell high automatically', or ask whether to use cash flows to rebalance."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Rebalancing

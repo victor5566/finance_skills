@@ -1,8 +1,6 @@
 ---
 name: fixed-income-structured
 description: "Analyze structured fixed income products including mortgage-backed securities, asset-backed securities, and CLOs. Use when the user asks about MBS, ABS, CLOs, CDOs, prepayment risk, tranching, or waterfall structures. Also trigger when users mention 'mortgage bonds', 'agency MBS', 'pass-through securities', 'PSA prepayment speed', 'negative convexity', 'extension risk', 'contraction risk', 'CMO tranches', 'securitization', or ask how structured products redistribute credit and prepayment risk."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Fixed Income — Structured Products

@@ -1,8 +1,6 @@
 ---
 name: sales-practices
 description: "Identify and prevent sales practice violations under FINRA and SEC rules governing broker-dealer conduct. Use when the user asks about churning or excessive trading metrics, mutual fund breakpoint discounts, selling away or private securities transactions, outside business activities, unauthorized trading, supervisory procedure design, senior investor protections, trusted contact persons, variable annuity suitability, or options account approval. Also trigger when users mention 'turnover ratio is high', 'rep did trades without authorization', 'breakpoint abuse', 'trusted contact for elderly client', 'selling away from the firm', 'supervision failure', '1035 exchange review', 'marking the close', or ask whether a broker's conduct violates FINRA rules."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Sales Practices

@@ -1,8 +1,6 @@
 ---
 name: fixed-income-sovereign
 description: "Analyze government bonds including US Treasuries, yield curves, duration, convexity, and TIPS. Use when the user asks about Treasury bonds, sovereign debt, yield curve construction, interest rate risk, duration, convexity, TIPS, or breakeven inflation rates. Also trigger when users mention 'T-bills', 'T-notes', 'bond pricing', 'yield to maturity', 'inverted yield curve', 'forward rates', 'spot rates', 'DV01', 'real yields', or ask how bonds react to interest rate changes."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Fixed Income — Sovereign

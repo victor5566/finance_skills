@@ -1,8 +1,6 @@
 ---
 name: savings-goals
 description: "Plan and track savings for specific financial goals including retirement, education, and home purchase. Use when the user asks about required savings rates, 529 plans, retirement accumulation targets, down payment planning, or goal prioritization. Also trigger when users mention 'how much do I need to save each month', 'am I on track for retirement', 'college savings', 'safe withdrawal rate', '4% rule', 'FIRE savings rate', 'catch-up contributions', 'employer match', or ask how to balance competing savings goals."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Savings Goals

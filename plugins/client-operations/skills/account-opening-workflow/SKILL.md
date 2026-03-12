@@ -1,8 +1,6 @@
 ---
 name: account-opening-workflow
 description: "Design and operate back-office account opening processes from application intake through activation. Use when building account opening automation or improving STP rates, reducing NIGO rejection rates from custodians or clearing firms, defining document requirements for trusts entities IRAs or estate accounts, implementing approval workflows and regulatory holds for complex account types, setting up multi-custodian account opening across Schwab Fidelity or Pershing, designing account numbering titling or classification schemes, troubleshooting account opening failures or processing delays, integrating with custodian or clearing firm submission systems, or benchmarking account opening cycle times and operational efficiency."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Account Opening Workflow

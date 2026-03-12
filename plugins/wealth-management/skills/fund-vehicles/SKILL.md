@@ -1,8 +1,6 @@
 ---
 name: fund-vehicles
 description: "Compare and select investment vehicles including mutual funds, ETFs, index funds, and separately managed accounts. Use when the user asks about ETF vs mutual fund, expense ratios, fund tax efficiency, ETF creation/redemption, tracking error, or share class comparisons. Also trigger when users mention 'which fund should I buy', 'Vanguard vs Fidelity', 'index fund costs', '12b-1 fees', 'load vs no-load', 'SMA vs ETF', 'fund turnover ratio', 'securities lending', or ask how fees compound over time."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Fund Vehicles

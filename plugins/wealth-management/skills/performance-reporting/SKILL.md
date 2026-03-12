@@ -1,8 +1,6 @@
 ---
 name: performance-reporting
 description: "Generate clear, accurate performance reports for investment portfolios with benchmarks, attribution, and risk dashboards. Use when the user asks about portfolio performance reports, return summaries, benchmark comparison, risk dashboards, goal progress tracking, or GIPS-compliant reporting. Also trigger when users mention 'quarterly report', 'how did my portfolio do', 'time-weighted vs money-weighted return', 'annualized returns', 'net-of-fee performance', 'rolling Sharpe', or ask how to present investment results to clients."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Performance Reporting — Reporting & Communication

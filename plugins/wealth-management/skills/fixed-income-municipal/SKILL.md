@@ -1,8 +1,6 @@
 ---
 name: fixed-income-municipal
 description: "Analyze municipal bonds including tax-equivalent yield calculations, GO vs revenue bond evaluation, and muni credit analysis. Use when the user asks about municipal bonds, tax-exempt income, tax-equivalent yield, AMT bonds, or muni credit quality. Also trigger when users mention 'muni bonds', 'tax-free bonds', 'state tax exemption', 'general obligation', 'revenue bonds', 'Build America Bonds', 'muni yield ratio', 'de minimis rule', or ask whether munis make sense for their tax bracket."
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
-compatibility: "Designed for Claude Code"
 ---
 
 # Fixed Income — Municipal

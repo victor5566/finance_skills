@@ -651,6 +651,42 @@ def stock_history(ticker):
         return jsonify({"error": str(e)}), 400
 
 
+@app.route("/api/compare")
+def compare_stocks():
+    """Normalized % change for multiple tickers (comparison overlay)."""
+    tickers_raw = request.args.get("tickers", "")
+    period = request.args.get("period", "1y")
+    tickers = [t.strip().upper() for t in tickers_raw.split(",") if t.strip()][:8]
+    if not tickers:
+        return jsonify({"error": "no tickers"}), 400
+    if period == "1d":
+        interval = "5m"
+    elif period in ("1mo", "3mo", "6mo", "1y"):
+        interval = "1d"
+    else:
+        interval = "1wk"
+    result = {}
+    common_dates = None
+    for ticker in tickers:
+        try:
+            hist = yf.Ticker(ticker).history(period=period, interval=interval)
+            if hist.empty:
+                continue
+            closes = hist["Close"].round(2).tolist()
+            if period == "1d":
+                dates = [d.strftime("%H:%M") for d in hist.index]
+            else:
+                dates = [d.strftime("%Y-%m-%d") for d in hist.index]
+            if common_dates is None:
+                common_dates = dates
+            first = closes[0] if closes else None
+            normalized = [round((c - first) / first * 100, 2) for c in closes] if first else closes
+            result[ticker] = {"dates": dates, "close": closes, "normalized": normalized}
+        except Exception:
+            pass
+    return jsonify({"period": period, "interval": interval, "dates": common_dates or [], "tickers": result})
+
+
 @app.route("/api/stocks/<ticker>/refresh", methods=["POST"])
 def refresh_stock(ticker):
     try:
@@ -832,6 +868,19 @@ tr:hover td{background:#1e293b}
 .cat-add:disabled{background:var(--border);color:var(--dim);cursor:not-allowed}
 .cat-added{font-size:.7rem;color:var(--green)}
 
+/* ── Compare section ────────────────── */
+#compare-section{display:none}
+.cmp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;align-items:center;min-height:30px}
+.cmp-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:.78rem;font-weight:700;border:1.5px solid}
+.cmp-chip .rm{background:none;border:none;cursor:pointer;color:inherit;padding:0 0 0 2px;font-size:.85rem;opacity:.65;line-height:1}
+.cmp-chip .rm:hover{opacity:1}
+.cmp-add-wrap{display:flex;gap:6px;margin-bottom:14px}
+.cmp-add-wrap input{flex:0 0 160px;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:7px;font-size:.83rem;outline:none;text-transform:uppercase}
+.cmp-add-wrap input:focus{border-color:var(--accent)}
+.cmp-add-wrap button{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600}
+.cmp-empty{padding:60px;text-align:center;color:var(--dim);font-size:.9rem}
+.cmp-wrap{height:400px;position:relative;margin-bottom:18px}
+
 /* ── Toast ──────────────────────────── */
 .toast{position:fixed;bottom:22px;right:22px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:9px;font-size:.83rem;z-index:999;opacity:0;transition:.3s;pointer-events:none;max-width:300px}
 .toast.show{opacity:1}
@@ -879,8 +928,9 @@ tr:hover td{background:#1e293b}
     </div>
     <!-- View switcher -->
     <div class="view-tabs">
-      <button class="view-tab active" id="tabCF"    onclick="setView('cf')">現金流分析</button>
-      <button class="view-tab"        id="tabTrend" onclick="setView('trend')">價格趨勢</button>
+      <button class="view-tab active" id="tabCF"      onclick="setView('cf')">現金流分析</button>
+      <button class="view-tab"        id="tabTrend"   onclick="setView('trend')">價格趨勢</button>
+      <button class="view-tab"        id="tabCompare" onclick="setView('compare')">多股比較</button>
     </div>
 
     <!-- Cash flow view -->
@@ -927,6 +977,27 @@ tr:hover td{background:#1e293b}
       <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">成交量</div>
       <div class="vol-wrap"><canvas id="volChart"></canvas></div>
     </div>
+
+    <!-- Compare view -->
+    <div id="compare-section">
+      <div class="cmp-chips" id="cmpChips"></div>
+      <div class="cmp-add-wrap">
+        <input id="cmpInput" placeholder="輸入代碼後按 Enter..." maxlength="10"
+               onkeydown="if(event.key==='Enter')addCmpTicker()">
+        <button onclick="addCmpTicker()">+ 加入</button>
+      </div>
+      <div class="range-row" id="cmpRangeRow">
+        <span style="font-size:.75rem;color:var(--muted);margin-right:4px">區間：</span>
+        <button class="range-btn" data-p="1d"  onclick="setCmpRange(this)">1D</button>
+        <button class="range-btn" data-p="1mo" onclick="setCmpRange(this)">1M</button>
+        <button class="range-btn" data-p="3mo" onclick="setCmpRange(this)">3M</button>
+        <button class="range-btn" data-p="6mo" onclick="setCmpRange(this)">6M</button>
+        <button class="range-btn active" data-p="1y" onclick="setCmpRange(this)">1Y</button>
+        <button class="range-btn" data-p="2y"  onclick="setCmpRange(this)">2Y</button>
+        <button class="range-btn" data-p="5y"  onclick="setCmpRange(this)">5Y</button>
+      </div>
+      <div class="cmp-wrap"><canvas id="cmpChart"></canvas></div>
+    </div>
   </div>
 
   <!-- Popular stocks -->
@@ -949,14 +1020,21 @@ Chart.register(ChartDataLabels);
 let cfChart    = null;
 let trendChart = null;
 let volChart   = null;
+let cmpChart   = null;
 let currentTicker    = null;
 let currentPeriod    = 'annual';
 let currentView      = 'cf';
 let currentRange     = '1y';
+let cmpRange         = '1y';
+let cmpTickers       = [];
 let currentExchange  = 'ALL';
 let currentStockData = null;
 let catalogVisible   = false;
 let searchDebounce   = null;
+const CMP_COLORS = [
+  'rgba(96,165,250,1)','rgba(74,222,128,1)','rgba(248,113,113,1)','rgba(251,191,36,1)',
+  'rgba(167,139,250,1)','rgba(251,146,60,1)','rgba(34,211,238,1)','rgba(244,114,182,1)',
+];
 
 // ── Format helpers ────────────────────────────────────────────
 function fmt(v){
@@ -1142,18 +1220,24 @@ function cardHTML(s){
   </div>`;
 }
 
-// ── View switcher (現金流 / 趨勢) ─────────────────────────────
+// ── View switcher (現金流 / 趨勢 / 比較) ──────────────────────
 function setView(v){
   currentView = v;
-  document.getElementById('tabCF').classList.toggle('active',    v==='cf');
-  document.getElementById('tabTrend').classList.toggle('active', v==='trend');
-  document.getElementById('cf-section').style.display    = v==='cf'    ? 'block' : 'none';
-  document.getElementById('trend-section').style.display = v==='trend' ? 'block' : 'none';
-  // Show period toggle only in CF view
+  document.getElementById('tabCF').classList.toggle('active',      v==='cf');
+  document.getElementById('tabTrend').classList.toggle('active',   v==='trend');
+  document.getElementById('tabCompare').classList.toggle('active', v==='compare');
+  document.getElementById('cf-section').style.display      = v==='cf'      ? 'block' : 'none';
+  document.getElementById('trend-section').style.display   = v==='trend'   ? 'block' : 'none';
+  document.getElementById('compare-section').style.display = v==='compare' ? 'block' : 'none';
   const toggle = document.getElementById('periodToggle');
   if(v==='cf') toggle.style.display = currentStockData?.has_quarterly ? 'flex' : 'none';
   else toggle.style.display = 'none';
   if(v==='trend') loadTrend(currentTicker, currentRange);
+  if(v==='compare'){
+    if(currentTicker && !cmpTickers.includes(currentTicker)) cmpTickers.push(currentTicker);
+    renderCmpChips();
+    loadCompare();
+  }
 }
 
 // ── Show chart ────────────────────────────────────────────────
@@ -1178,6 +1262,8 @@ async function showChart(ticker){
 
   // Show/hide CF tab
   document.getElementById('tabCF').style.display = hasCF ? '' : 'none';
+  document.getElementById('compare-section').style.display = 'none';
+  document.getElementById('tabCompare').classList.remove('active');
 
   // Period toggle visibility
   const toggle = document.getElementById('periodToggle');
@@ -1489,6 +1575,111 @@ async function deleteCard(ticker){
   loadMyStocks();
   loadPopular();
   if(catalogVisible) loadCatalog();
+}
+
+// ── Compare ───────────────────────────────────────────────────
+function setCmpRange(btn){
+  document.querySelectorAll('#cmpRangeRow .range-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  cmpRange = btn.dataset.p;
+  loadCompare();
+}
+
+function addCmpTicker(){
+  const v = document.getElementById('cmpInput').value.trim().toUpperCase();
+  document.getElementById('cmpInput').value = '';
+  if(!v) return;
+  if(cmpTickers.length >= 8){ toast('最多比較 8 檔股票'); return; }
+  if(!cmpTickers.includes(v)) cmpTickers.push(v);
+  renderCmpChips();
+  loadCompare();
+}
+
+function removeCmpTicker(t){
+  cmpTickers = cmpTickers.filter(x => x !== t);
+  renderCmpChips();
+  loadCompare();
+}
+
+function renderCmpChips(){
+  document.getElementById('cmpChips').innerHTML = cmpTickers.map((t,i)=>{
+    const col = CMP_COLORS[i % CMP_COLORS.length];
+    return `<span class="cmp-chip" style="border-color:${col};color:${col}">${t
+      }<button class="rm" onclick="removeCmpTicker('${t}')">✕</button></span>`;
+  }).join('');
+}
+
+async function loadCompare(){
+  if(cmpTickers.length === 0){
+    if(cmpChart){ cmpChart.destroy(); cmpChart = null; }
+    document.getElementById('cmpChart').getContext('2d').clearRect(0,0,9999,9999);
+    return;
+  }
+  const res = await fetch(`/api/compare?tickers=${cmpTickers.join(',')}&period=${cmpRange}`);
+  if(!res.ok){ toast('比較資料載入失敗'); return; }
+  renderCompare(await res.json());
+}
+
+function renderCompare(d){
+  const dates  = d.dates || [];
+  const is1D   = d.period === '1d';
+  const skip   = Math.max(1, Math.floor(dates.length / 8));
+  const entries = Object.entries(d.tickers);
+
+  const datasets = entries.map(([ticker, data], i)=>{
+    const col = CMP_COLORS[i % CMP_COLORS.length];
+    return {
+      label: ticker,
+      data: data.normalized,
+      borderColor: col,
+      backgroundColor: col.replace('1)','0.12)'),
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 5,
+      fill: false,
+      tension: 0.2,
+    };
+  });
+
+  if(cmpChart) cmpChart.destroy();
+  const ctx = document.getElementById('cmpChart').getContext('2d');
+  cmpChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: dates, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position:'bottom', labels:{ color:'#cdd6f4', usePointStyle:true, padding:16, font:{size:11} }},
+        tooltip: {
+          backgroundColor:'#0f3460', titleColor:'#e2e8f0', bodyColor:'#94a3b8',
+          callbacks: {
+            title: items => items[0].label,
+            label: c => {
+              const ticker = c.dataset.label;
+              const norm   = c.parsed.y;
+              const actual = d.tickers[ticker]?.close[c.dataIndex];
+              const sign   = norm >= 0 ? '+' : '';
+              return ` ${ticker}: ${sign}${norm?.toFixed(2)}%  ($${actual?.toFixed(2)})`;
+            }
+          }
+        },
+        datalabels: { display: false },
+      },
+      scales: {
+        x: {
+          ticks: { color:'#94a3b8', font:{size:10}, maxRotation:0,
+            callback: (val,i) => i % skip === 0 ? (is1D ? dates[i] : (dates[i]?.slice(5)||'')) : '' },
+          grid: { color:'rgba(255,255,255,0.04)' },
+        },
+        y: {
+          ticks: { color:'#94a3b8', font:{size:10},
+            callback: v => (v >= 0 ? '+' : '') + v.toFixed(1) + '%' },
+          grid: { color:'rgba(255,255,255,0.06)' },
+        },
+      },
+    },
+  });
 }
 
 // ── Init ──────────────────────────────────────────────────────

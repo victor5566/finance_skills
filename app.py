@@ -706,34 +706,59 @@ def sectors():
 
 @app.route("/api/screener")
 def screener():
-    """Filter stocks by CAGR, FCF conversion, P/E ratio, sector, and exchange."""
-    query = {}
-    ex = request.args.get("exchange", "")
+    """Full-catalog screener: all 307 tickers when no KPI filter; DB-only when filters set."""
+    ex           = request.args.get("exchange", "")
+    sector       = request.args.get("sector", "")
+    min_cagr     = request.args.get("min_cagr",     type=float)
+    max_cagr     = request.args.get("max_cagr",     type=float)
+    min_fcf_conv = request.args.get("min_fcf_conv", type=float)
+    max_fcf_conv = request.args.get("max_fcf_conv", type=float)
+    min_pe       = request.args.get("min_pe",       type=float)
+    max_pe       = request.args.get("max_pe",       type=float)
+
+    has_kpi_filter = any(v is not None for v in
+                         [min_cagr, max_cagr, min_fcf_conv, max_fcf_conv, min_pe, max_pe])
+
+    # Build DB query (always restrict by exchange/sector/KPI as applicable)
+    db_query = {}
     if ex and ex != "ALL":
-        query["exchange"] = ex
-    sector = request.args.get("sector", "")
+        db_query["exchange"] = ex
     if sector:
-        query["sector"] = sector
+        db_query["sector"] = sector
+    if has_kpi_filter:
+        if min_cagr     is not None: db_query.setdefault("kpis.ocf_cagr",      {})["$gte"] = min_cagr
+        if max_cagr     is not None: db_query.setdefault("kpis.ocf_cagr",      {})["$lte"] = max_cagr
+        if min_fcf_conv is not None: db_query.setdefault("kpis.fcf_conversion",{})["$gte"] = min_fcf_conv
+        if max_fcf_conv is not None: db_query.setdefault("kpis.fcf_conversion",{})["$lte"] = max_fcf_conv
+        if min_pe       is not None: db_query.setdefault("kpis.pe_ratio",       {})["$gte"] = min_pe
+        if max_pe       is not None: db_query.setdefault("kpis.pe_ratio",       {})["$lte"] = max_pe
 
-    def add_range(field, param_min, param_max):
-        mn = request.args.get(param_min, type=float)
-        mx = request.args.get(param_max, type=float)
-        if mn is not None or mx is not None:
-            query[field] = {}
-            if mn is not None:
-                query[field]["$gte"] = mn
-            if mx is not None:
-                query[field]["$lte"] = mx
-
-    add_range("kpis.ocf_cagr",      "min_cagr",     "max_cagr")
-    add_range("kpis.fcf_conversion", "min_fcf_conv", "max_fcf_conv")
-    add_range("kpis.pe_ratio",       "min_pe",       "max_pe")
-
-    docs = list(stocks_col.find(query, {
+    db_map = {d["ticker"]: d for d in stocks_col.find(db_query, {
         "_id": 0, "ticker": 1, "name": 1, "exchange": 1, "sector": 1,
         "current_price": 1, "market_cap": 1, "kpis": 1,
-    }).sort("ticker", 1))
-    return jsonify(docs)
+    })}
+
+    if has_kpi_filter or sector:
+        # KPI/sector filters require DB data — return only matching DB rows
+        result = sorted(db_map.values(), key=lambda x: x["ticker"])
+    else:
+        # No KPI filter — show full catalog, merge DB data where available
+        cat_query = {}
+        if ex and ex != "ALL":
+            cat_query["exchange"] = ex
+        cat_docs = sorted(catalog_col.find(cat_query, {"_id": 0}),
+                          key=lambda x: x["ticker"])
+        result = []
+        for c in cat_docs:
+            if c["ticker"] in db_map:
+                result.append(db_map[c["ticker"]])
+            else:
+                result.append({
+                    "ticker": c["ticker"], "name": c["name"],
+                    "exchange": c["exchange"], "in_db": False,
+                })
+
+    return jsonify(result)
 
 
 @app.route("/api/popular")
@@ -1885,27 +1910,35 @@ function resetScreener(){
 }
 
 function renderScreener(stocks){
-  document.getElementById('scrCount').textContent = `找到 ${stocks.length} 檔符合條件`;
+  const inDbCount = stocks.filter(s => s.in_db !== false).length;
+  const note = inDbCount < stocks.length
+    ? `（${inDbCount} 檔已載入數據，其餘點「載入」抓取）`
+    : '';
+  document.getElementById('scrCount').textContent = `共 ${stocks.length} 檔 ${note}`;
   const tbody = document.getElementById('scrBody');
   if(!stocks.length){
     tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:30px">無符合條件的股票</td></tr>`;
     return;
   }
   tbody.innerHTML = stocks.map(s=>{
+    const hasData = s.in_db !== false;
     const k = s.kpis || {};
     const ex = s.exchange || '';
-    const cagrColor  = k.ocf_cagr     >= 10 ? 'var(--green)' : 'var(--text)';
-    const convColor  = k.fcf_conversion >= 70 ? 'var(--green)' : 'var(--text)';
-    return `<tr style="cursor:pointer" onclick="scrPick('${s.ticker}')">
-      <td><strong style="color:#e2e8f0">${s.ticker}</strong></td>
+    const rowStyle = hasData ? 'cursor:pointer' : 'cursor:pointer;opacity:.6';
+    const cagrColor = k.ocf_cagr     >= 10 ? 'var(--green)' : 'var(--text)';
+    const convColor = k.fcf_conversion >= 70 ? 'var(--green)' : 'var(--text)';
+    const dash = `<span style="color:var(--dim)">—</span>`;
+    const btnLabel = hasData ? '查看' : '載入';
+    return `<tr style="${rowStyle}" onclick="scrPick('${s.ticker}')">
+      <td><strong style="color:${hasData?'#e2e8f0':'var(--muted)'}">${s.ticker}</strong></td>
       <td style="color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name||''}</td>
       <td><span class="ex-badge ${ex}" style="font-size:.65rem">${ex}</span></td>
-      <td style="color:var(--dim);font-size:.76rem">${s.sector||'—'}</td>
-      <td>${s.current_price!=null?'$'+s.current_price.toFixed(2):'—'}</td>
-      <td style="color:${cagrColor}">${k.ocf_cagr!=null?k.ocf_cagr.toFixed(1)+'%':'N/A'}</td>
-      <td style="color:${convColor}">${k.fcf_conversion!=null?k.fcf_conversion.toFixed(0)+'%':'N/A'}</td>
-      <td style="color:var(--purple)">${k.pe_ratio!=null?k.pe_ratio.toFixed(1):'N/A'}</td>
-      <td><button class="btn btn-refresh" style="font-size:.7rem;padding:3px 9px" onclick="event.stopPropagation();scrPick('${s.ticker}')">查看</button></td>
+      <td style="color:var(--dim);font-size:.76rem">${s.sector||dash}</td>
+      <td>${hasData&&s.current_price!=null?'$'+s.current_price.toFixed(2):dash}</td>
+      <td style="color:${cagrColor}">${hasData?(k.ocf_cagr!=null?k.ocf_cagr.toFixed(1)+'%':'N/A'):dash}</td>
+      <td style="color:${convColor}">${hasData?(k.fcf_conversion!=null?k.fcf_conversion.toFixed(0)+'%':'N/A'):dash}</td>
+      <td style="color:var(--purple)">${hasData?(k.pe_ratio!=null?k.pe_ratio.toFixed(1):'N/A'):dash}</td>
+      <td><button class="btn btn-refresh" style="font-size:.7rem;padding:3px 9px" onclick="event.stopPropagation();scrPick('${s.ticker}')">${btnLabel}</button></td>
     </tr>`;
   }).join('');
 }
@@ -1919,6 +1952,7 @@ async function scrPick(ticker){
     if(!res.ok){toast('Error: '+d.error);return;}
     toast(`已加入 ${d.name}`);
     await loadMyStocks();
+    runScreener();   // refresh screener rows with newly fetched data
   }
   showChart(ticker);
 }

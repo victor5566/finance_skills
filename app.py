@@ -1417,11 +1417,17 @@ tr:hover td{background:#1e293b}
       <button class="scr-run" onclick="runScreener()">篩選</button>
       <button class="scr-run" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
       <button class="scr-run" id="btnBulk"   style="background:#1a2e1a;border:1px solid #2d4a2d;color:#4ade80"   onclick="startBulkFetch()">&#8987; 載入全部數據</button>
-      <button class="scr-run" id="btnBackup" style="background:#1a1a2e;border:1px solid #2d2d5a;color:#818cf8" onclick="startBackupHistory()">&#128190; 備份歷史資料</button>
+      <button class="scr-run" id="btnBackup"     style="background:#1a1a2e;border:1px solid #2d2d5a;color:#818cf8" onclick="startBackupHistory()">&#128190; 備份歷史資料</button>
+      <button class="scr-run" id="btnStopBackup" style="display:none;background:#2e1a1a;border:1px solid #5a2d2d;color:#f87171" onclick="stopBackupHistory()">&#9646;&#9646; 終止備份</button>
     </div>
     <div class="bulk-bar-wrap" id="bulkBarWrap">
       <div class="bulk-bar-track"><div class="bulk-bar-fill" id="bulkFill"></div></div>
       <div class="bulk-status" id="bulkStatus"></div>
+    </div>
+    <div id="backupDoneInfo" style="display:none;margin:10px 0;padding:10px 14px;background:#0d2818;border:1px solid #2d6a4a;border-radius:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="color:#4ade80;font-size:1rem">&#10003;</span>
+      <span id="backupDoneText" style="color:#86efac;font-size:.82rem;flex:1"></span>
+      <button onclick="document.getElementById('backupDoneInfo').style.display='none'" style="border:none;background:transparent;color:#4ade80;cursor:pointer;font-size:1rem;line-height:1">&#10005;</button>
     </div>
     <div class="scr-count" id="scrCount"></div>
     <div class="scr-wrap">
@@ -2773,38 +2779,76 @@ function startBulkFetch(){
 }
 
 // ── Backup history ────────────────────────────────────────────
+let _backupES   = null;
+let _backupDone = 0;
+let _backupTotal = 0;
+
 function startBackupHistory(){
-  const btn  = document.getElementById('btnBackup');
-  const wrap = document.getElementById('bulkBarWrap');
-  const fill = document.getElementById('bulkFill');
-  const stat = document.getElementById('bulkStatus');
+  const btn     = document.getElementById('btnBackup');
+  const btnStop = document.getElementById('btnStopBackup');
+  const wrap    = document.getElementById('bulkBarWrap');
+  const fill    = document.getElementById('bulkFill');
+  const stat    = document.getElementById('bulkStatus');
+  const doneBox = document.getElementById('backupDoneInfo');
+
   btn.disabled = true;
   btn.textContent = '備份中...';
+  btnStop.style.display = '';
+  doneBox.style.display = 'none';
   wrap.style.display = 'block';
   fill.style.width = '0%';
   stat.textContent = '正在連線...';
+  _backupDone = 0; _backupTotal = 0;
 
-  const es = new EventSource('/api/backup-history');
-  es.onmessage = e => {
+  if(_backupES){ _backupES.close(); }
+  _backupES = new EventSource('/api/backup-history');
+
+  _backupES.onmessage = e => {
     const d = JSON.parse(e.data);
+    _backupDone  = d.done;
+    _backupTotal = d.total;
     const pct = d.total > 0 ? Math.round(d.done / d.total * 100) : 0;
     fill.style.width = pct + '%';
     if(d.finished){
-      stat.textContent = `備份完成！共 ${d.total} 檔（股息 / 財務 / 1y + 5y 價格歷史）`;
+      _backupES.close(); _backupES = null;
       btn.disabled = false;
       btn.textContent = '&#128190; 備份歷史資料';
-      es.close();
+      btnStop.style.display = 'none';
+      stat.textContent = '';
+      wrap.style.display = 'none';
+      // Show persistent completion banner
+      const now = new Date().toLocaleString('zh-TW');
+      document.getElementById('backupDoneText').textContent =
+        `備份完成　${now}　共 ${d.total} 檔　已存入：股息歷史 / 財務報表 / 1y 日線 / 5y 週線`;
+      doneBox.style.display = 'flex';
     } else {
-      const err = d.error ? ` ⚠` : '';
-      stat.textContent = `${d.done} / ${d.total}  備份中 ${d.ticker}${err}`;
+      const warn = d.error ? ' ⚠' : '';
+      stat.textContent = `${d.done} / ${d.total}　備份中 ${d.ticker}${warn}`;
     }
   };
-  es.onerror = () => {
-    stat.textContent = '連線中斷，請重試';
+
+  _backupES.onerror = () => {
+    _backupES.close(); _backupES = null;
     btn.disabled = false;
     btn.textContent = '&#128190; 備份歷史資料';
-    es.close();
+    btnStop.style.display = 'none';
+    stat.textContent = '連線中斷，請重試';
   };
+}
+
+function stopBackupHistory(){
+  if(_backupES){ _backupES.close(); _backupES = null; }
+  const btn     = document.getElementById('btnBackup');
+  const btnStop = document.getElementById('btnStopBackup');
+  const stat    = document.getElementById('bulkStatus');
+  const fill    = document.getElementById('bulkFill');
+  btn.disabled = false;
+  btn.textContent = '&#128190; 備份歷史資料';
+  btnStop.style.display = 'none';
+  const now = new Date().toLocaleTimeString('zh-TW');
+  stat.textContent = `已於 ${now} 終止備份（完成 ${_backupDone} / ${_backupTotal} 檔）`;
+  fill.style.background = 'rgba(248,113,113,0.6)';
+  setTimeout(() => { fill.style.background = ''; }, 3000);
 }
 
 // ── Live price stream (SSE) ───────────────────────────────────

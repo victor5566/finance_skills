@@ -287,12 +287,16 @@ migration needed.
 | v2.3    | 2026-03-24 | ETF support: no-CF tickers stored with `annual: null`, CF tab hidden, auto-opens price trend; fixed BOTZ exchange (AMEX→NASDAQ); verified all 311 tickers against yfinance, corrected 41 exchange misclassifications, removed 4 delisted tickers (COUP/DFS/ABC/PARA), catalog now 307 tickers stored in MongoDB `catalog` collection; `server.ps1` for reliable server management; 1D time range (5-min bars, HH:MM labels, MA5/MA20) |
 | v2.4    | 2026-03-24 | NasdaqGS exchange category (94 NMS-listed equities split from NASDAQ); P/E stored in `kpis.pe_ratio` (fetched via `trailingPE`/`forwardPE`), shown on stock cards and back-filled for existing records on first open; trend tab P/E reads from MongoDB instead of unreliable `fast_info` |
 | v2.5    | 2026-03-25 | Multi-ticker comparison overlay chart: `/api/compare` endpoint (normalised % change), new "多股比較" tab, ticker chips with colour coding, autocomplete dropdown on ticker input (same UX as header search), up to 8 tickers, range selector 1D–5Y |
+| v2.6    | 2026-03-25 | Stock screener panel: `/api/screener` (full-catalog merge — all 307 tickers, KPI filters via MongoDB `$gte`/`$lte`), `/api/sectors` endpoint, filter inputs for OCF CAGR / FCF conversion / P/E / sector / exchange, "篩選器" toggle button in tab bar, unloaded tickers show `—` KPIs with per-row "載入" button |
+| v2.7    | 2026-03-25 | Bulk data loader: `/api/bulk-fetch` SSE endpoint streams per-ticker progress; "載入全部數據" button + progress bar in screener panel; skips already-loaded tickers; refreshes screener and My Stocks on completion |
+| v2.8    | 2026-03-25 | Dividend history chart: `/api/stocks/<ticker>/dividends` endpoint (yfinance `t.dividends`); new "股息歷史" tab; annual bar chart (yellow); KPI stat row (trailing annual dividend, yield %, last payment); payment history table with YoY% per year; shows "不配息" message for non-dividend stocks |
+| v2.9    | 2026-03-25 | Fix dividend yield display (yfinance already returns % — removed erroneous ×100); "全部清除" button in My Stocks header (clears only pinned non-popular stocks); `pinned` field on stocks documents — bulk-fetched stocks get `pinned:false` via `$setOnInsert`, user-added stocks get `pinned:true`; `GET /api/stocks` filters by `pinned != false`; `/api/stocks/<ticker>/pin` endpoint; screener click pins existing bulk-fetched stocks instead of re-fetching |
 
 ## Future Improvements
 
 - [x] Multi-ticker comparison overlay chart
-- [ ] Stock screener (filter by CAGR, FCF conversion, sector)
-- [ ] Dividend history chart
+- [x] Stock screener (filter by CAGR, FCF conversion, sector)
+- [x] Dividend history chart
 - [ ] Revenue / EPS chart tab
 - [ ] Export to CSV / Excel
 - [ ] Docker Compose setup (Flask + MongoDB together)

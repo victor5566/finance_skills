@@ -304,12 +304,16 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.3 | 2026-03-24 | ETF 支援：無現金流股票以 `annual: null` 儲存，CF 頁籤隱藏，自動開啟趨勢；修正 BOTZ 交易所（AMEX→NASDAQ）；核實全部 311 檔股票交易所分類，修正 41 筆錯誤，移除 4 個下市股票（COUP/DFS/ABC/PARA），目錄縮減為 307 檔並存入 MongoDB `catalog` collection；`server.ps1` 可靠啟動管理；新增 1D 時間區間（5 分鐘 K、HH:MM 標籤、MA5/MA20） |
 | v2.4 | 2026-03-24 | 新增 NasdaqGS 交易所類別（94 個 NMS 股票從 NASDAQ 分離）；P/E 存入 `kpis.pe_ratio`（使用 `trailingPE`/`forwardPE`），顯示於股票卡片，舊資料首次開啟時自動補抓；趨勢頁 P/E 改從 MongoDB 讀取，不再依賴不穩定的 `fast_info` |
 | v2.5 | 2026-03-25 | 多股比較疊加圖：`/api/compare` 端點（正規化漲跌幅），新增「多股比較」頁籤，顏色徽章 + ✕ 移除，輸入框自動完成下拉（與標題列搜尋體驗一致），最多 8 檔，區間 1D–5Y |
+| v2.6 | 2026-03-25 | 股票篩選器面板：`/api/screener`（全目錄合併 — 307 檔，KPI 條件透過 MongoDB `$gte`/`$lte` 篩選）、`/api/sectors` 端點、OCF CAGR / FCF 轉換率 / P/E / 產業 / 交易所篩選輸入，分頁列「篩選器」切換按鈕，未載入股票顯示 `—` KPI 並提供逐列「載入」按鈕 |
+| v2.7 | 2026-03-25 | 批量資料載入器：`/api/bulk-fetch` SSE 端點即時串流逐檔進度；篩選器面板內「載入全部數據」按鈕 + 進度條；已載入的股票自動跳過；完成後自動刷新篩選器與我的股票 |
+| v2.8 | 2026-03-25 | 股息歷史圖表：`/api/stocks/<ticker>/dividends` 端點（yfinance `t.dividends`）；新增「股息歷史」頁籤；年度長條圖（黃色）；KPI 統計列（年度股息/股、殖利率%、最近一次股息）；付息日期資料表含年度 YoY%；不配息股票顯示提示訊息 |
+| v2.9 | 2026-03-25 | 修正殖利率顯示（yfinance 已回傳 %，移除多餘 ×100）；「我的股票」標題新增「全部清除」按鈕（只清除 pinned 非熱門股票）；股票文件新增 `pinned` 欄位 — 批量載入用 `$setOnInsert` 設 `pinned:false`，手動加入設 `pinned:true`；`GET /api/stocks` 過濾 `pinned != false`；新增 `/api/stocks/<ticker>/pin` 端點；篩選器點選已批量載入的股票改為直接 pin，不重新抓取資料 |
 
 ## 未來改善方向
 
 - [x] 多股票比較疊加圖
-- [ ] 股票篩選器（依 CAGR、FCF 轉換率、產業篩選）
-- [ ] 股息歷史圖表
+- [x] 股票篩選器（依 CAGR、FCF 轉換率、產業篩選）
+- [x] 股息歷史圖表
 - [ ] 營收 / EPS 圖表頁籤
 - [ ] 匯出 CSV / Excel
 - [ ] Docker Compose 設定（Flask + MongoDB 一鍵啟動）

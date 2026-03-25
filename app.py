@@ -507,7 +507,7 @@ def catalog():
 
 @app.route("/api/stocks")
 def list_stocks():
-    docs = list(stocks_col.find({}, {"_id": 0,
+    docs = list(stocks_col.find({"pinned": {"$ne": False}}, {"_id": 0,
         "ticker": 1, "name": 1, "exchange": 1, "sector": 1,
         "current_price": 1, "market_cap": 1, "kpis": 1,
         "has_quarterly": 1, "last_updated": 1}).sort("ticker", 1))
@@ -524,7 +524,7 @@ def add_stock():
         data = fetch_stock(ticker)
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    stocks_col.update_one({"ticker": ticker}, {"$set": data}, upsert=True)
+    stocks_col.update_one({"ticker": ticker}, {"$set": {**data, "pinned": True}}, upsert=True)
     return jsonify({"ok": True, "ticker": ticker, "name": data["name"]}), 201
 
 
@@ -570,6 +570,14 @@ def get_stock(ticker):
         except Exception:
             pass
     return jsonify(doc)
+
+
+@app.route("/api/stocks", methods=["DELETE"])
+def clear_my_stocks():
+    """Delete all non-popular stocks from MongoDB."""
+    popular = ["AAPL", "MSFT", "NVDA", "TSLA", "AMZN"]
+    r = stocks_col.delete_many({"ticker": {"$nin": popular}, "pinned": {"$ne": False}})
+    return jsonify({"ok": True, "deleted": r.deleted_count})
 
 
 @app.route("/api/stocks/<ticker>", methods=["DELETE"])
@@ -688,6 +696,13 @@ def compare_stocks():
     return jsonify({"period": period, "interval": interval, "dates": common_dates or [], "tickers": result})
 
 
+@app.route("/api/stocks/<ticker>/pin", methods=["POST"])
+def pin_stock(ticker):
+    """Mark a stock as pinned so it appears in My Stocks."""
+    stocks_col.update_one({"ticker": ticker.upper()}, {"$set": {"pinned": True}})
+    return jsonify({"ok": True})
+
+
 @app.route("/api/stocks/<ticker>/refresh", methods=["POST"])
 def refresh_stock(ticker):
     try:
@@ -762,6 +777,46 @@ def screener():
     return jsonify(result)
 
 
+@app.route("/api/stocks/<ticker>/dividends")
+def stock_dividends(ticker):
+    """Dividend payment history from yfinance."""
+    try:
+        t = yf.Ticker(ticker.upper())
+        divs = t.dividends
+        if divs is None or divs.empty:
+            return jsonify({"has_dividends": False})
+
+        dates   = [d.strftime("%Y-%m-%d") for d in divs.index]
+        amounts = [round(float(v), 4) for v in divs.values]
+
+        # Aggregate by calendar year
+        annual_map = {}
+        for d, a in zip(divs.index, divs.values):
+            yr = str(d.year)
+            annual_map[yr] = round(annual_map.get(yr, 0) + float(a), 4)
+        ann_labels  = sorted(annual_map.keys())
+        ann_amounts = [annual_map[y] for y in ann_labels]
+
+        info = t.info
+        div_yield  = safe(info.get("dividendYield"))
+        trailing   = safe(info.get("trailingAnnualDividendRate"))
+
+        return jsonify({
+            "has_dividends": True,
+            "dates":   dates,
+            "amounts": amounts,
+            "annual":  {"labels": ann_labels, "dividends": ann_amounts},
+            "stats": {
+                "trailing_annual": trailing,
+                "yield_pct": round(div_yield, 2) if div_yield else None,
+                "last_amount": amounts[-1] if amounts else None,
+                "last_date":   dates[-1]   if dates   else None,
+            },
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @app.route("/api/bulk-fetch")
 def bulk_fetch():
     """Stream bulk-fetch progress via SSE; fetches all catalog tickers not yet in DB."""
@@ -774,7 +829,11 @@ def bulk_fetch():
         for i, ticker in enumerate(to_fetch):
             try:
                 data = fetch_stock(ticker)
-                stocks_col.update_one({"ticker": ticker}, {"$set": data}, upsert=True)
+                stocks_col.update_one(
+                    {"ticker": ticker},
+                    {"$set": data, "$setOnInsert": {"pinned": False}},
+                    upsert=True,
+                )
                 status = "ok"
             except Exception:
                 status = "error"
@@ -1103,6 +1162,7 @@ tr:hover td{background:#1e293b}
     <div class="view-tabs">
       <button class="view-tab active" id="tabCF"      onclick="setView('cf')">現金流分析</button>
       <button class="view-tab"        id="tabTrend"   onclick="setView('trend')">價格趨勢</button>
+      <button class="view-tab"        id="tabDiv"     onclick="setView('div')">股息歷史</button>
       <button class="view-tab"        id="tabCompare" onclick="setView('compare')">多股比較</button>
     </div>
 
@@ -1151,6 +1211,24 @@ tr:hover td{background:#1e293b}
       <div class="vol-wrap"><canvas id="volChart"></canvas></div>
     </div>
 
+    <!-- Dividend view -->
+    <div id="div-section" style="display:none">
+      <div class="stat-row" id="divStats"></div>
+      <div class="chart-wrap"><canvas id="divChart"></canvas></div>
+      <div class="table-wrap" style="max-height:300px;overflow-y:auto;margin-top:12px">
+        <table>
+          <thead>
+            <tr>
+              <th>付息日期</th>
+              <th style="color:#facc15">每股股息 ($)</th>
+              <th>YoY%（年度）</th>
+            </tr>
+          </thead>
+          <tbody id="divTable"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Compare view -->
     <div id="compare-section">
       <div class="cmp-chips" id="cmpChips"></div>
@@ -1184,7 +1262,10 @@ tr:hover td{background:#1e293b}
 
   <!-- My stocks -->
   <section id="mySection">
-    <h2>我的股票</h2>
+    <h2 style="display:flex;align-items:center;gap:12px">
+      我的股票
+      <button onclick="clearAllMyStocks()" style="font-size:.72rem;padding:4px 12px;background:transparent;border:1px solid #4b5563;border-radius:6px;color:#6b7280;cursor:pointer;font-weight:500" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='#4b5563';this.style.color='#6b7280'">全部清除</button>
+    </h2>
     <div class="stock-grid" id="myGrid"><div class="empty-msg">尚無自訂股票。從搜尋或目錄新增。</div></div>
   </section>
 </main>
@@ -1197,6 +1278,7 @@ let cfChart    = null;
 let trendChart = null;
 let volChart   = null;
 let cmpChart   = null;
+let divChart   = null;
 let currentTicker    = null;
 let currentPeriod    = 'annual';
 let currentView      = 'cf';
@@ -1347,6 +1429,22 @@ async function loadPopular(){
 }
 
 // ── My stocks ─────────────────────────────────────────────────
+async function clearAllMyStocks(){
+  const grid = document.getElementById('myGrid');
+  const count = grid.querySelectorAll('.stock-card').length;
+  if(!count){ toast('沒有可清除的股票'); return; }
+  if(!confirm(`確定要清除全部 ${count} 檔自訂股票嗎？\n（熱門股票不受影響）`)) return;
+  const res = await fetch('/api/stocks', {method:'DELETE'});
+  const d = await res.json();
+  toast(`已清除 ${d.deleted} 檔股票`);
+  if(currentTicker && !["AAPL","MSFT","NVDA","TSLA","AMZN"].includes(currentTicker)){
+    currentTicker = null;
+    document.getElementById('chart-panel').style.display = 'none';
+  }
+  await loadMyStocks();
+  if(screenerVisible) runScreener();
+}
+
 async function loadMyStocks(){
   const res = await fetch('/api/stocks');
   let stocks = await res.json();
@@ -1402,14 +1500,17 @@ function setView(v){
   currentView = v;
   document.getElementById('tabCF').classList.toggle('active',      v==='cf');
   document.getElementById('tabTrend').classList.toggle('active',   v==='trend');
+  document.getElementById('tabDiv').classList.toggle('active',     v==='div');
   document.getElementById('tabCompare').classList.toggle('active', v==='compare');
   document.getElementById('cf-section').style.display      = v==='cf'      ? 'block' : 'none';
   document.getElementById('trend-section').style.display   = v==='trend'   ? 'block' : 'none';
+  document.getElementById('div-section').style.display     = v==='div'     ? 'block' : 'none';
   document.getElementById('compare-section').style.display = v==='compare' ? 'block' : 'none';
   const toggle = document.getElementById('periodToggle');
   if(v==='cf') toggle.style.display = currentStockData?.has_quarterly ? 'flex' : 'none';
   else toggle.style.display = 'none';
   if(v==='trend') loadTrend(currentTicker, currentRange);
+  if(v==='div') loadDividend(currentTicker);
   if(v==='compare'){
     if(currentTicker && !cmpTickers.includes(currentTicker)) cmpTickers.push(currentTicker);
     renderCmpChips();
@@ -1439,7 +1540,9 @@ async function showChart(ticker){
 
   // Show/hide CF tab
   document.getElementById('tabCF').style.display = hasCF ? '' : 'none';
+  document.getElementById('div-section').style.display     = 'none';
   document.getElementById('compare-section').style.display = 'none';
+  document.getElementById('tabDiv').classList.remove('active');
   document.getElementById('tabCompare').classList.remove('active');
 
   // Period toggle visibility
@@ -1544,6 +1647,102 @@ function renderChart(period){
       },
     },
   });
+}
+
+// ── Dividend chart ────────────────────────────────────────────
+async function loadDividend(ticker){
+  if(!ticker) return;
+  document.getElementById('divStats').innerHTML = '<div style="color:var(--muted);font-size:.82rem">載入中…</div>';
+  document.getElementById('divTable').innerHTML = '';
+  if(divChart){ divChart.destroy(); divChart=null; }
+  const res = await fetch(`/api/stocks/${ticker}/dividends`);
+  if(!res.ok){ document.getElementById('divStats').innerHTML='<div style="color:var(--muted)">無法取得股息資料</div>'; return; }
+  const d = await res.json();
+  renderDividend(d);
+}
+
+function renderDividend(d){
+  const statsEl = document.getElementById('divStats');
+  if(!d.has_dividends){
+    statsEl.innerHTML = '<div style="color:var(--muted);font-size:.88rem;padding:20px 0">此股票目前不配息</div>';
+    document.getElementById('divTable').innerHTML = '';
+    return;
+  }
+  const st = d.stats || {};
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="v" style="color:#facc15">$${st.trailing_annual?.toFixed(2) ?? 'N/A'}</div>
+      <div class="l">年度股息 / 股</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:var(--green)">${st.yield_pct!=null ? st.yield_pct.toFixed(2)+'%' : 'N/A'}</div>
+      <div class="l">殖利率</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:#e2e8f0">$${st.last_amount?.toFixed(4) ?? 'N/A'}</div>
+      <div class="l">最近一次股息</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:var(--muted);font-size:.95rem">${st.last_date ?? 'N/A'}</div>
+      <div class="l">最近付息日</div>
+    </div>`;
+
+  // Annual bar chart
+  const ann = d.annual;
+  if(divChart) divChart.destroy();
+  const ctx = document.getElementById('divChart').getContext('2d');
+  divChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ann.labels,
+      datasets: [{
+        label: '年度股息 / 股 ($)',
+        data: ann.dividends,
+        backgroundColor: 'rgba(250,204,21,.72)',
+        borderColor: 'rgba(250,204,21,1)',
+        borderWidth: 1,
+        borderRadius: 4,
+      }],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position:'bottom', labels:{ color:'#cdd6f4', usePointStyle:true, padding:16 }},
+        tooltip: { backgroundColor:'#0f3460', titleColor:'#e2e8f0', bodyColor:'#94a3b8',
+          callbacks:{ label: c => ` $${c.parsed.y.toFixed(4)}` }},
+        datalabels: {
+          display: true, color:'#facc15', anchor:'end', align:'top',
+          font:{size:9, weight:'bold'}, formatter: v => `$${v.toFixed(2)}`,
+        },
+      },
+      scales: {
+        x:{ ticks:{color:'#94a3b8', font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+        y:{ ticks:{color:'#94a3b8', callback: v=>`$${v.toFixed(2)}`}, grid:{color:'rgba(255,255,255,0.06)'} },
+      },
+    },
+  });
+
+  // Payment history table (most recent first)
+  const yoyMap = {};
+  ann.labels.forEach((yr,i)=>{
+    if(i>0) yoyMap[yr] = ann.dividends[i-1] > 0
+      ? ((ann.dividends[i]-ann.dividends[i-1])/ann.dividends[i-1]*100).toFixed(1)
+      : null;
+  });
+
+  const rows = [...d.dates].reverse().map((dt,i)=>{
+    const amt = [...d.amounts].reverse()[i];
+    const yr  = dt.slice(0,4);
+    let yoy   = '–';
+    if(yoyMap[yr]!=null){
+      const p = parseFloat(yoyMap[yr]);
+      const col = p>=0 ? 'var(--green)' : 'var(--red)';
+      yoy = `<span style="color:${col}">${p>=0?'+':''}${p}%</span>`;
+      delete yoyMap[yr]; // show YoY only once per year (first occurrence)
+    }
+    return `<tr><td>${dt}</td><td style="color:#facc15">$${amt.toFixed(4)}</td><td>${yoy}</td></tr>`;
+  }).join('');
+  document.getElementById('divTable').innerHTML = rows;
 }
 
 // ── Range selector (trend) ────────────────────────────────────
@@ -1987,9 +2186,11 @@ async function scrPick(ticker){
     const d = await res.json();
     if(!res.ok){toast('Error: '+d.error);return;}
     toast(`已加入 ${d.name}`);
-    await loadMyStocks();
-    runScreener();   // refresh screener rows with newly fetched data
+  } else {
+    await fetch(`/api/stocks/${ticker}/pin`, {method:'POST'});
   }
+  await loadMyStocks();
+  runScreener();
   showChart(ticker);
 }
 

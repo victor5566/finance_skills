@@ -21,3 +21,11 @@ Thumbs.db
 
 # Node (if using npx tools)
 node_modules/
+
+# Runtime / temp files
+.server.pid
+catalog_check.json
+catalog_result.json
+
+# Claude Code settings
+.claude/

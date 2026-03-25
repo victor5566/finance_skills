@@ -66,3 +66,224 @@ Only quantitative skills (core, wealth-management) get Python scripts. Scripts s
 - **Project**: Finance Skills (team: Joellewis)
 - Reference issue IDs (e.g., JOE-42) in commit messages and PR titles
 - Issues discovered during implementation go to Triage with `agent-drafted` label
+
+---
+
+# Finance Dashboard — Web Application
+
+## Overview
+
+A full-stack financial data dashboard built on top of this skills repo.
+Fetches real-time cash flow data from Yahoo Finance, stores it in MongoDB,
+and renders interactive charts through a dark-themed single-page web app.
+
+**Stack**: Python / Flask · MongoDB (localhost:27017) · yfinance · Chart.js 4
+
+## How to Run
+
+```bash
+# MongoDB must be running first, then:
+python app.py
+# Open: http://localhost:5000
+```
+
+**Install dependencies once:**
+```bash
+pip install flask pymongo yfinance
+```
+
+## File Structure
+
+```
+Finance_skill/
+├── app.py                      # Flask backend + SPA HTML (all-in-one)
+├── server.ps1                  # PowerShell start/stop/status script (kills old instances first)
+├── generate_cashflow_chart.py  # Standalone CLI chart generator (legacy v1)
+├── aapl_cashflow.html          # Example static chart output
+└── .claude/skills/             # 84 installed finance skills (JoelLewis)
+```
+
+## How to Start the Server
+
+Use `server.ps1` — always kills any existing instance on port 5000 before starting:
+
+```powershell
+.\server.ps1          # start (kills old instance automatically)
+.\server.ps1 stop     # stop
+.\server.ps1 status   # show running PID
+```
+
+Do NOT use `Start-Process` directly — it leaves orphaned instances on the same port.
+
+## Stock Catalog
+
+307 tickers across four US exchange categories, stored in both `app.py` (CATALOG dict) and
+MongoDB (`finance_dashboard.catalog` collection). The `/api/catalog` endpoint reads
+from MongoDB. Exchange assignments were verified against yfinance and corrected;
+4 delisted/acquired tickers (COUP, DFS, ABC, PARA) were removed.
+
+| Exchange  | Count | Content |
+|-----------|-------|---------|
+| NasdaqGS  | 94    | NASDAQ Global Select Market — AAPL, MSFT, NVDA and all major NMS-listed equities |
+| NASDAQ    | 18    | NASDAQ Global/Capital Market — ETFs (QQQ/TLT/BND/BOTZ/ICLN…) + MDB, TTD, ENPH, PLUG |
+| NYSE      | 141   | Blue chips, financials (BLK/BX/KKR), industrials/defence (LMT/NOC), energy (SLB/OXY), healthcare, retail |
+| AMEX      | 54    | ETFs: leveraged (SOXL/TECL/TQQQ), thematic (BITO/GBTC/ARKK), sector (XLF/XLE/XLK) |
+
+Popular tickers shown on initial load: `AAPL  MSFT  NVDA  TSLA  AMZN`
+
+## REST API
+
+| Method   | Path                                      | Description                                        |
+|----------|-------------------------------------------|----------------------------------------------------|
+| GET      | `/`                                       | SPA dashboard HTML                                 |
+| GET      | `/api/catalog?exchange=&q=`               | Filter catalog from MongoDB (regex search)         |
+| GET      | `/api/stocks`                             | List all stocks in MongoDB (summary fields only)   |
+| POST     | `/api/stocks`                             | Add stock — body: `{"ticker":"TSLA"}`              |
+| GET      | `/api/stocks/<ticker>`                    | Full data incl. annual + quarterly series          |
+| DELETE   | `/api/stocks/<ticker>`                    | Remove stock from MongoDB                          |
+| POST     | `/api/stocks/<ticker>/refresh`            | Re-fetch all data from Yahoo Finance               |
+| GET      | `/api/popular`                            | Load popular 5 (auto-fetch if not in DB)           |
+| GET      | `/api/stocks/<ticker>/history?period=1y`  | Price history for trend chart (see below)          |
+
+### History endpoint parameters
+
+`period` values: `1d` `1mo` `3mo` `6mo` `1y` (default) `2y` `5y`
+
+Response includes:
+- `dates[]` — `HH:MM` for 1d period; `YYYY-MM-DD` for all others
+- `close[]` — closing prices (5-min bars for 1d, daily for ≤1y, weekly for 2y/5y)
+- `volume[]` — trading volume
+- `ma20[]` — MA5 for 1d period; MA20 otherwise (null for first N-1 points)
+- `ma50[]` — MA20 for 1d period; MA50 otherwise
+- `ma_labels[]` — `["MA5","MA20"]` for 1d; `["MA20","MA50"]` otherwise
+- `stats` — `latest_price`, `pct_change`, `high_52w`, `low_52w`, `pe_ratio` (reads from MongoDB first, falls back to yfinance)
+
+Interval auto-selected: `5m` for 1d · `1d` for 1mo–1y · `1wk` for 2y/5y.
+
+## MongoDB Schema
+
+Database `finance_dashboard`, collections `stocks` and `catalog`:
+
+```json
+{
+  "ticker": "AAPL",
+  "name": "Apple Inc.",
+  "exchange": "NASDAQ",
+  "sector": "Technology",
+  "current_price": 213.49,
+  "market_cap": 3200000000000,
+  "annual":    { "labels": ["FY2021",...], "ocf": [...], "capex": [...], "fcf": [...], "interest": [...] },
+  "quarterly": { "labels": ["Q1'24",...],  "ocf": [...], "capex": [...], "fcf": [...], "interest": [...] },
+  "has_quarterly": true,
+  "kpis": { "latest_ocf": 111482, "latest_fcf": 98767, "ocf_cagr": 1.7, "fcf_conversion": 88.6, "pe_ratio": 31.8 },
+  "last_updated": "2026-03-24T12:00:00Z"
+}
+```
+
+All monetary values stored in **$M (millions)**.
+
+`catalog` collection schema: `{ ticker, name, exchange }` — indexes on `ticker` (unique) and `exchange`.
+
+## Frontend Features
+
+### Navigation
+- **Sticky header** — live search with 220ms debounce, dropdown autocomplete (up to 12 results)
+- **Exchange tabs** — ALL / NASDAQ / NYSE / AMEX — filters both stock cards and catalog browser
+- **Browse catalog** — toggle grid of all tickers in selected exchange; shows "已加入" badge if in DB
+
+### Dashboard sections
+- **Popular stocks** — auto-loads AAPL / MSFT / NVDA / TSLA / AMZN on page open (fetches from Yahoo Finance if not yet cached)
+- **My stocks** — user-added tickers (popular 5 excluded), exchange-filtered, persisted in MongoDB
+- **Stock cards** — ticker, name, exchange badge, current price, market cap, OCF / FCF / CAGR / FCF-conversion / **P/E** KPIs, last-updated date, refresh + delete actions
+
+### Chart panel (click any card)
+
+Tab visibility is determined by data availability:
+- If the stock has cash flow data → both tabs shown, opens on 現金流分析
+- If no cash flow data (ETFs) → 現金流分析 tab hidden, opens directly on 價格趨勢
+
+#### Tab 1 — 現金流分析 (Cash Flow)
+- **Chart.js** bar + line combo chart:
+  - Green bars — Operating Cash Flow
+  - Red bars — Capital Expenditure
+  - Orange bars — Interest Expense
+  - Blue filled line — Free Cash Flow
+- **Period toggle** (年度 / 季度) — only shown when `has_quarterly: true`; hidden for ETFs and low-data tickers
+- **KPI cards** — latest OCF, FCF, OCF CAGR, FCF conversion rate
+- **Data table** — full history with YoY% colour-coded green/red, FCF conversion column
+
+#### Tab 2 — 價格趨勢 (Price Trend)
+- **Stats row** — current price, period % change (green/red), period high, period low, P/E ratio (reads `kpis.pe_ratio` from MongoDB; fetches live only if not yet stored)
+- **Time range buttons** — **1D** / 1M / 3M / 6M / **1Y** (default) / 2Y / 5Y
+  - 1D: 5-minute bars, X-axis shows HH:MM, MA switches to MA5/MA20
+  - 1M–1Y: daily bars, MA20/MA50
+  - 2Y–5Y: weekly bars, MA20/MA50
+- **Price chart** — blue closing price line with gradient fill + MA (yellow dashed) + MA (red dashed); legend updates dynamically
+- **Volume chart** — separate bar chart below price; bars coloured green (up day) or red (down day)
+- Data fetched live from Yahoo Finance on tab switch / range change (not stored in MongoDB)
+
+## kezsmeister/claude-finance-skills (Slash Commands)
+
+Installed in `~/.claude/skills/` — use these in Claude Code directly:
+
+```
+/annual-revenue  <ticker>      10-yr annual revenue + YoY growth table
+/quarterly-revenue <ticker>    Quarterly revenue table
+/annual-eps  <ticker>          Annual diluted EPS
+/quarterly-eps <ticker>        Quarterly EPS
+/annual-dividend <ticker>      Annual dividends per share
+/quarterly-dividend <ticker>   Quarterly dividends
+/annual-capex <ticker>         Annual capital expenditure
+/annual-wads <ticker>          Weighted avg diluted shares
+/cashflow-chart <ticker>       Interactive HTML cash flow chart (opens in Chrome)
+```
+
+These skills require Chrome with remote debugging enabled:
+```powershell
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" `
+  --remote-debugging-port=9222 `
+  --user-data-dir="C:\Users\victo\AppData\Local\chrome-debug-profile"
+```
+
+MCP servers (`chrome-devtools` + `yahoo-finance`) are pre-configured in
+`~/.claude/settings.json`. Restart Claude Code after first setup to activate.
+
+## Schema Migration
+
+`app.py` v1 stored cash flow data as flat top-level fields (`years`, `ocf`, `capex`,
+`fcf`, `interest`). v2 uses a nested structure (`annual.labels`, `annual.ocf`, …).
+
+`migrate_old_schema()` in `get_stock()` auto-detects v1 documents on first read,
+converts them in-place, and writes the new layout back to MongoDB — no manual
+migration needed.
+
+## Known Limitations
+
+- yfinance returns ~4–5 years of cash flow data by default (Yahoo Finance free tier)
+- ETFs have no cash flow data — stored with `annual: null`; frontend auto-opens price trend tab
+- Price history (trend tab) is fetched live; not cached in MongoDB
+- 1D intraday data only available during/after market hours (yfinance limitation)
+- P/E ratio may be `null` for some tickers (yfinance `fast_info` limitation)
+- MongoDB must be running locally before starting Flask
+- Avoid rapid batch-fetching multiple tickers (Yahoo Finance rate limiting)
+
+## Changelog
+
+| Version | Date       | Changes |
+|---------|------------|---------|
+| v1      | 2026-03-24 | Initial Flask app — single AAPL chart, flat MongoDB schema |
+| v2      | 2026-03-24 | Multi-stock dashboard, NYSE/NASDAQ/AMEX catalog (312 tickers), exchange tabs, search dropdown, catalog browser, annual/quarterly toggle, popular stocks section |
+| v2.1    | 2026-03-24 | Schema migration helper (`migrate_old_schema`); bug fix for MSFT/AAPL/TSLA v1 data not displaying |
+| v2.2    | 2026-03-24 | Price trend tab: closing price line, MA20/MA50, volume bars, time range selector (1M–5Y), stats row (price / % change / high / low / P/E) |
+| v2.3    | 2026-03-24 | ETF support: no-CF tickers stored with `annual: null`, CF tab hidden, auto-opens price trend; fixed BOTZ exchange (AMEX→NASDAQ); verified all 311 tickers against yfinance, corrected 41 exchange misclassifications, removed 4 delisted tickers (COUP/DFS/ABC/PARA), catalog now 307 tickers stored in MongoDB `catalog` collection; `server.ps1` for reliable server management; 1D time range (5-min bars, HH:MM labels, MA5/MA20) |
+| v2.4    | 2026-03-24 | NasdaqGS exchange category (94 NMS-listed equities split from NASDAQ); P/E stored in `kpis.pe_ratio` (fetched via `trailingPE`/`forwardPE`), shown on stock cards and back-filled for existing records on first open; trend tab P/E reads from MongoDB instead of unreliable `fast_info` |
+
+## Future Improvements
+
+- [ ] Multi-ticker comparison overlay chart
+- [ ] Stock screener (filter by CAGR, FCF conversion, sector)
+- [ ] Dividend history chart
+- [ ] Revenue / EPS chart tab
+- [ ] Export to CSV / Excel
+- [ ] Docker Compose setup (Flask + MongoDB together)
+- [ ] WebSocket live price push

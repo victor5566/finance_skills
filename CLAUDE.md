@@ -292,6 +292,7 @@ migration needed.
 | v2.8    | 2026-03-25 | Dividend history chart: `/api/stocks/<ticker>/dividends` endpoint (yfinance `t.dividends`); new "股息歷史" tab; annual bar chart (yellow); KPI stat row (trailing annual dividend, yield %, last payment); payment history table with YoY% per year; shows "不配息" message for non-dividend stocks |
 | v2.9    | 2026-03-25 | Fix dividend yield display (yfinance already returns % — removed erroneous ×100); "全部清除" button in My Stocks header (clears only pinned non-popular stocks); `pinned` field on stocks documents — bulk-fetched stocks get `pinned:false` via `$setOnInsert`, user-added stocks get `pinned:true`; `GET /api/stocks` filters by `pinned != false`; `/api/stocks/<ticker>/pin` endpoint; screener click pins existing bulk-fetched stocks instead of re-fetching |
 | v2.10   | 2026-03-25 | Revenue / EPS chart tab: `/api/stocks/<ticker>/financials` endpoint (yfinance `t.income_stmt` + `t.quarterly_income_stmt`); new "營收/EPS" tab; dual-axis Chart.js bar+line (Revenue bars blue left axis, Net Income bars green left axis, Diluted EPS line orange right axis); annual/quarterly toggle; KPI stat row (latest revenue, revenue CAGR, latest net income, diluted EPS); history table with YoY% colour-coded; ETFs show "無財務報表資料" message |
+| v2.11   | 2026-03-25 | Export to CSV / Excel: SheetJS (xlsx@0.18.5) added via CDN; "↓ CSV" and "↓ Excel" buttons in chart panel header; exports data from whichever tab is active (CF, Rev, Div, Trend); cached `currentDivData` and `currentTrendData` globals; filename includes ticker + period; CSV uses UTF-8 BOM for Excel compatibility |
 
 ## Future Improvements
 
@@ -299,6 +300,6 @@ migration needed.
 - [x] Stock screener (filter by CAGR, FCF conversion, sector)
 - [x] Dividend history chart
 - [x] Revenue / EPS chart tab
-- [ ] Export to CSV / Excel
+- [x] Export to CSV / Excel
 - [ ] Docker Compose setup (Flask + MongoDB together)
 - [ ] WebSocket live price push

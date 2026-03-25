@@ -949,6 +949,7 @@ HTML = r"""<!DOCTYPE html>
 <title>Finance Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -1042,6 +1043,9 @@ section h2{font-size:.88rem;color:var(--muted);text-transform:uppercase;letter-s
 .period-toggle{display:flex;gap:4px}
 .period-btn{padding:5px 14px;border-radius:7px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;font-size:.8rem;font-weight:600;transition:.15s}
 .period-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.export-wrap{display:flex;gap:4px}
+.export-btn{padding:5px 11px;border-radius:7px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;font-size:.78rem;font-weight:600;transition:.15s}
+.export-btn:hover{background:var(--border);color:var(--text)}
 .chart-wrap{height:420px;position:relative;margin-bottom:18px}
 .kpi-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
 .kpi-card{background:var(--panel);border-radius:9px;padding:13px;text-align:center}
@@ -1224,6 +1228,10 @@ tr:hover td{background:#1e293b}
         <button class="period-btn active" id="btnAnnual" onclick="setPeriod('annual')">年度</button>
         <button class="period-btn" id="btnQuarterly" onclick="setPeriod('quarterly')">季度</button>
       </div>
+      <div class="export-wrap">
+        <button class="export-btn" onclick="exportData('csv')">↓ CSV</button>
+        <button class="export-btn" onclick="exportData('xlsx')">↓ Excel</button>
+      </div>
     </div>
     <!-- View switcher -->
     <div class="view-tabs">
@@ -1374,7 +1382,9 @@ let cmpChart   = null;
 let divChart   = null;
 let revChart   = null;
 let revPeriod  = 'annual';
-let currentRevData = null;
+let currentRevData  = null;
+let currentDivData  = null;
+let currentTrendData = null;
 let currentTicker    = null;
 let currentPeriod    = 'annual';
 let currentView      = 'cf';
@@ -1645,7 +1655,9 @@ async function showChart(ticker){
   document.getElementById('tabDiv').classList.remove('active');
   document.getElementById('tabRev').classList.remove('active');
   document.getElementById('tabCompare').classList.remove('active');
-  currentRevData = null;
+  currentRevData   = null;
+  currentDivData   = null;
+  currentTrendData = null;
 
   // Period toggle visibility
   const toggle = document.getElementById('periodToggle');
@@ -1760,6 +1772,7 @@ async function loadDividend(ticker){
   const res = await fetch(`/api/stocks/${ticker}/dividends`);
   if(!res.ok){ document.getElementById('divStats').innerHTML='<div style="color:var(--muted)">無法取得股息資料</div>'; return; }
   const d = await res.json();
+  currentDivData = d;
   renderDividend(d);
 }
 
@@ -1990,6 +2003,70 @@ function renderFinancials(d, period){
   });
 }
 
+// ── Export CSV / Excel ────────────────────────────────────────
+function exportData(format){
+  const ticker = currentTicker || 'export';
+  let headers, rows, sheetName, filename;
+
+  if(currentView === 'cf'){
+    const s = currentStockData;
+    if(!s || !s.annual){ toast('無可匯出的現金流資料'); return; }
+    const series = (currentPeriod === 'quarterly' && s.has_quarterly) ? s.quarterly : s.annual;
+    headers = ['期間', 'OCF ($M)', 'CapEx ($M)', '利息費用 ($M)', 'FCF ($M)', 'FCF轉換率'];
+    rows = series.labels.map((lbl, i) => {
+      const conv = (series.fcf[i] != null && series.ocf[i])
+        ? (series.fcf[i] / series.ocf[i] * 100).toFixed(1) + '%' : '';
+      return [lbl, series.ocf[i] ?? '', series.capex[i] ?? '', series.interest[i] ?? '', series.fcf[i] ?? '', conv];
+    });
+    sheetName = '現金流';
+    filename = `${ticker}_cashflow_${currentPeriod}`;
+
+  } else if(currentView === 'rev'){
+    if(!currentRevData || !currentRevData.has_financials){ toast('無可匯出的財務資料'); return; }
+    const series = (revPeriod === 'quarterly' && currentRevData.quarterly) ? currentRevData.quarterly : currentRevData.annual;
+    headers = ['期間', '總營收 ($M)', '淨利 ($M)', '稀釋EPS ($)'];
+    rows = series.labels.map((lbl, i) => [lbl, series.revenue[i] ?? '', series.net_income[i] ?? '', series.eps[i] ?? '']);
+    sheetName = '營收EPS';
+    filename = `${ticker}_revenue_${revPeriod}`;
+
+  } else if(currentView === 'div'){
+    if(!currentDivData || !currentDivData.has_dividends){ toast('此股票不配息，無資料可匯出'); return; }
+    headers = ['付息日', '股息/股 ($)'];
+    rows = currentDivData.dates.map((dt, i) => [dt, currentDivData.amounts[i] ?? '']);
+    sheetName = '股息歷史';
+    filename = `${ticker}_dividends`;
+
+  } else if(currentView === 'trend'){
+    if(!currentTrendData){ toast('請先載入趨勢圖'); return; }
+    const d = currentTrendData;
+    const [lbl1, lbl2] = d.ma_labels || ['MA20', 'MA50'];
+    headers = ['日期', '收盤價 ($)', '成交量', lbl1, lbl2];
+    rows = d.dates.map((dt, i) => [dt, d.close[i] ?? '', d.volume[i] ?? '', d.ma20[i] ?? '', d.ma50[i] ?? '']);
+    sheetName = '價格趨勢';
+    filename = `${ticker}_trend_${currentRange}`;
+
+  } else {
+    toast('此頁籤不支援匯出');
+    return;
+  }
+
+  if(format === 'csv'){
+    const escape = v => { const s = String(v); return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g,'""')}"` : s; };
+    const csv = [headers, ...rows].map(r => r.map(escape).join(',')).join('\r\n');
+    const blob = new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename + '.csv'; a.click();
+    URL.revokeObjectURL(url);
+
+  } else if(format === 'xlsx'){
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    XLSX.writeFile(wb, filename + '.xlsx');
+  }
+}
+
 // ── Range selector (trend) ────────────────────────────────────
 function setRange(btn){
   document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
@@ -2008,6 +2085,7 @@ async function loadTrend(ticker, period){
 }
 
 function renderTrend(d){
+  currentTrendData = d;
   const st = d.stats || {};
   const chgColor = (st.pct_change >= 0) ? 'var(--green)' : 'var(--red)';
   const chgSign  = (st.pct_change >= 0) ? '+' : '';

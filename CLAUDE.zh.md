@@ -325,6 +325,7 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.11 | 2026-03-25 | 匯出 CSV / Excel：透過 CDN 加入 SheetJS（xlsx@0.18.5）；圖表面板標題列新增「↓ CSV」與「↓ Excel」按鈕；依當前頁籤匯出對應資料（現金流、營收/EPS、股息歷史、價格趨勢）；新增 `currentDivData` 與 `currentTrendData` 全域快取；檔名含股票代碼與期間；CSV 使用 UTF-8 BOM 確保 Excel 相容 |
 | v2.12 | 2026-03-25 | Docker Compose 設定：新增 `Dockerfile`（python:3.11-slim）、`docker-compose.yml`（web + mongo:7 服務，命名 volume `mongo_data`，MongoDB healthcheck）、`requirements.txt`、`.dockerignore`；`app.py` 改由 `MONGO_URI` 環境變數設定連線（本機預設 `localhost`） |
 | v2.13 | 2026-03-25 | 即時股價推播（SSE）：`/api/prices/stream` 每 30 秒迭代所有追蹤股票，透過 yfinance `fast_info.last_price` + `previous_close` 計算漲跌幅，串流 JSON 陣列；前端 `startPriceStream()` 頁面載入時連線，`applyPriceUpdate()` 更新股票卡片 `.price` 與 `.price-chg` 漲跌幅標籤，觸發綠/紅閃爍動畫；標題列脈衝綠點顯示連線狀態；錯誤後 10 秒自動重連 |
+| v2.13.1 | 2026-03-25 | 修正趨勢圖 x 軸日期標籤：1D 模式 `HH:MM` 被截成空字串，現已正確顯示時間；2y/5y 改顯示 `YY-MM`（例如 `23-01`）以帶入年份資訊；價格圖與成交量圖兩個 callback 同步修正 |
 
 ## 未來改善方向
 

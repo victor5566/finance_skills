@@ -308,6 +308,7 @@ migration needed.
 | v2.11   | 2026-03-25 | Export to CSV / Excel: SheetJS (xlsx@0.18.5) added via CDN; "↓ CSV" and "↓ Excel" buttons in chart panel header; exports data from whichever tab is active (CF, Rev, Div, Trend); cached `currentDivData` and `currentTrendData` globals; filename includes ticker + period; CSV uses UTF-8 BOM for Excel compatibility |
 | v2.12   | 2026-03-25 | Docker Compose setup: `Dockerfile` (python:3.11-slim), `docker-compose.yml` (web + mongo:7 services, named volume `mongo_data`, healthcheck); `requirements.txt` added; `app.py` reads `MONGO_URI` env var (falls back to `localhost` for local dev); `docker compose up --build` starts everything |
 | v2.13   | 2026-03-25 | Live price push via SSE: `/api/prices/stream` endpoint loops every 30s over all tracked stocks, fetches `fast_info.last_price` + `previous_close` via yfinance, streams JSON array; frontend `startPriceStream()` connects on load, calls `applyPriceUpdate()` per ticker — updates `.price` and `.price-chg` badge, triggers green/red flash animation; pulsing live dot in header shows connection state; auto-reconnects after 10s on error |
+| v2.13.1 | 2026-03-25 | Fix trend chart x-axis date labels: 1D was slicing `HH:MM` to empty string — now shows time correctly; 2y/5y now shows `YY-MM` (e.g. `23-01`) instead of `MM-DD` to include year context; fix applied to both price chart and volume chart callbacks |
 
 ## Future Improvements
 

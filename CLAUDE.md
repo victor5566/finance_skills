@@ -144,6 +144,7 @@ Popular tickers shown on initial load: `AAPL  MSFT  NVDA  TSLA  AMZN`
 | POST     | `/api/stocks/<ticker>/refresh`            | Re-fetch all data from Yahoo Finance               |
 | GET      | `/api/popular`                            | Load popular 5 (auto-fetch if not in DB)           |
 | GET      | `/api/stocks/<ticker>/history?period=1y`  | Price history for trend chart (see below)          |
+| GET      | `/api/compare?tickers=&period=1y`         | Normalized % change for multi-ticker comparison    |
 
 ### History endpoint parameters
 
@@ -188,7 +189,7 @@ All monetary values stored in **$M (millions)**.
 
 ### Navigation
 - **Sticky header** — live search with 220ms debounce, dropdown autocomplete (up to 12 results)
-- **Exchange tabs** — ALL / NASDAQ / NYSE / AMEX — filters both stock cards and catalog browser
+- **Exchange tabs** — ALL / NasdaqGS / NASDAQ / NYSE / AMEX — filters both stock cards and catalog browser
 - **Browse catalog** — toggle grid of all tickers in selected exchange; shows "已加入" badge if in DB
 
 ### Dashboard sections
@@ -198,8 +199,8 @@ All monetary values stored in **$M (millions)**.
 
 ### Chart panel (click any card)
 
-Tab visibility is determined by data availability:
-- If the stock has cash flow data → both tabs shown, opens on 現金流分析
+Three tabs — visibility rules:
+- If the stock has cash flow data → 現金流分析 + 價格趨勢 + 多股比較 shown, opens on 現金流分析
 - If no cash flow data (ETFs) → 現金流分析 tab hidden, opens directly on 價格趨勢
 
 #### Tab 1 — 現金流分析 (Cash Flow)
@@ -221,6 +222,14 @@ Tab visibility is determined by data availability:
 - **Price chart** — blue closing price line with gradient fill + MA (yellow dashed) + MA (red dashed); legend updates dynamically
 - **Volume chart** — separate bar chart below price; bars coloured green (up day) or red (down day)
 - Data fetched live from Yahoo Finance on tab switch / range change (not stored in MongoDB)
+
+#### Tab 3 — 多股比較 (Multi-ticker Comparison)
+- Current ticker auto-added when tab is opened; up to 8 tickers total
+- **Ticker input** — type ticker code or company name, autocomplete dropdown (up to 10 suggestions with exchange badge, same UX as header search); Enter or click to add
+- **Colour-coded chips** — each ticker assigned a distinct colour; click ✕ to remove
+- **Time range buttons** — 1D / 1M / 3M / 6M / 1Y (default) / 2Y / 5Y
+- **Comparison chart** — Y-axis shows % change from the start of the selected period (normalised so different-priced stocks are directly comparable); tooltip shows both % change and actual price per ticker
+- Data fetched live via `/api/compare` (not stored in MongoDB)
 
 ## kezsmeister/claude-finance-skills (Slash Commands)
 
@@ -277,10 +286,11 @@ migration needed.
 | v2.2    | 2026-03-24 | Price trend tab: closing price line, MA20/MA50, volume bars, time range selector (1M–5Y), stats row (price / % change / high / low / P/E) |
 | v2.3    | 2026-03-24 | ETF support: no-CF tickers stored with `annual: null`, CF tab hidden, auto-opens price trend; fixed BOTZ exchange (AMEX→NASDAQ); verified all 311 tickers against yfinance, corrected 41 exchange misclassifications, removed 4 delisted tickers (COUP/DFS/ABC/PARA), catalog now 307 tickers stored in MongoDB `catalog` collection; `server.ps1` for reliable server management; 1D time range (5-min bars, HH:MM labels, MA5/MA20) |
 | v2.4    | 2026-03-24 | NasdaqGS exchange category (94 NMS-listed equities split from NASDAQ); P/E stored in `kpis.pe_ratio` (fetched via `trailingPE`/`forwardPE`), shown on stock cards and back-filled for existing records on first open; trend tab P/E reads from MongoDB instead of unreliable `fast_info` |
+| v2.5    | 2026-03-25 | Multi-ticker comparison overlay chart: `/api/compare` endpoint (normalised % change), new "多股比較" tab, ticker chips with colour coding, autocomplete dropdown on ticker input (same UX as header search), up to 8 tickers, range selector 1D–5Y |
 
 ## Future Improvements
 
-- [ ] Multi-ticker comparison overlay chart
+- [x] Multi-ticker comparison overlay chart
 - [ ] Stock screener (filter by CAGR, FCF conversion, sector)
 - [ ] Dividend history chart
 - [ ] Revenue / EPS chart tab

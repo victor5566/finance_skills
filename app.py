@@ -875,8 +875,20 @@ tr:hover td{background:#1e293b}
 .cmp-chip .rm{background:none;border:none;cursor:pointer;color:inherit;padding:0 0 0 2px;font-size:.85rem;opacity:.65;line-height:1}
 .cmp-chip .rm:hover{opacity:1}
 .cmp-add-wrap{display:flex;gap:6px;margin-bottom:14px}
-.cmp-add-wrap input{flex:0 0 160px;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:7px;font-size:.83rem;outline:none;text-transform:uppercase}
-.cmp-add-wrap input:focus{border-color:var(--accent)}
+.cmp-input-wrap{position:relative;flex:0 0 220px}
+.cmp-input-wrap input{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:7px;font-size:.83rem;outline:none}
+.cmp-input-wrap input:focus{border-color:var(--accent)}
+#cmpDropdown{
+  position:absolute;top:calc(100% + 4px);left:0;right:0;
+  background:var(--card);border:1px solid var(--border);border-radius:8px;
+  max-height:220px;overflow-y:auto;z-index:300;display:none
+}
+#cmpDropdown .dd-item{
+  padding:9px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  font-size:.84rem;border-bottom:1px solid var(--border);
+}
+#cmpDropdown .dd-item:hover{background:var(--panel)}
+#cmpDropdown .dd-item:last-child{border-bottom:none}
 .cmp-add-wrap button{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:600}
 .cmp-empty{padding:60px;text-align:center;color:var(--dim);font-size:.9rem}
 .cmp-wrap{height:400px;position:relative;margin-bottom:18px}
@@ -982,8 +994,11 @@ tr:hover td{background:#1e293b}
     <div id="compare-section">
       <div class="cmp-chips" id="cmpChips"></div>
       <div class="cmp-add-wrap">
-        <input id="cmpInput" placeholder="輸入代碼後按 Enter..." maxlength="10"
-               onkeydown="if(event.key==='Enter')addCmpTicker()">
+        <div class="cmp-input-wrap">
+          <input id="cmpInput" placeholder="輸入代碼或公司名稱..." maxlength="20"
+                 autocomplete="off">
+          <div id="cmpDropdown"></div>
+        </div>
         <button onclick="addCmpTicker()">+ 加入</button>
       </div>
       <div class="range-row" id="cmpRangeRow">
@@ -1578,6 +1593,51 @@ async function deleteCard(ticker){
 }
 
 // ── Compare ───────────────────────────────────────────────────
+// Input autocomplete
+let cmpSearchDebounce = null;
+(function(){
+  const inp = document.getElementById('cmpInput');
+  const ddEl = document.getElementById('cmpDropdown');
+
+  inp.addEventListener('input', ()=>{
+    clearTimeout(cmpSearchDebounce);
+    cmpSearchDebounce = setTimeout(doCmpSearch, 200);
+  });
+  inp.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){ ddEl.style.display='none'; addCmpTicker(); }
+    if(e.key === 'Escape'){ ddEl.style.display='none'; }
+  });
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.cmp-input-wrap')) ddEl.style.display='none';
+  });
+
+  async function doCmpSearch(){
+    const q = inp.value.trim();
+    if(q.length < 1){ ddEl.style.display='none'; return; }
+    const res = await fetch(`/api/catalog?q=${encodeURIComponent(q)}`);
+    const items = await res.json();
+    if(!items.length){ ddEl.style.display='none'; return; }
+    ddEl.innerHTML = items.slice(0,10).map(s=>`
+      <div class="dd-item" onclick="pickCmpSearch('${s.ticker}')">
+        <div>
+          <span style="font-weight:700;color:#e2e8f0">${s.ticker}</span>
+          <span class="dd-in"> &nbsp;${s.name}</span>
+        </div>
+        <span class="dd-ex ${s.exchange}">${s.exchange}</span>
+      </div>`).join('');
+    ddEl.style.display = 'block';
+  }
+})();
+
+function pickCmpSearch(ticker){
+  document.getElementById('cmpDropdown').style.display = 'none';
+  document.getElementById('cmpInput').value = '';
+  if(cmpTickers.length >= 8){ toast('最多比較 8 檔股票'); return; }
+  if(!cmpTickers.includes(ticker)) cmpTickers.push(ticker);
+  renderCmpChips();
+  loadCompare();
+}
+
 function setCmpRange(btn){
   document.querySelectorAll('#cmpRangeRow .range-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -1586,6 +1646,7 @@ function setCmpRange(btn){
 }
 
 function addCmpTicker(){
+  document.getElementById('cmpDropdown').style.display = 'none';
   const v = document.getElementById('cmpInput').value.trim().toUpperCase();
   document.getElementById('cmpInput').value = '';
   if(!v) return;

@@ -2164,10 +2164,11 @@ function renderTrend(d){
     `<span style="color:#fbbf24">&#9644;</span> ${maA} &nbsp;` +
     `<span style="color:#f87171">&#9644;</span> ${maB}`;
 
-  // Thin date labels (for 1D show HH:MM as-is, else trim to MM-DD)
+  // Thin date labels
   const is1D = d.period === '1d';
+  const isMultiYear = d.period === '2y' || d.period === '5y';
   const skip = Math.max(1, Math.floor(d.dates.length / 8));
-  const labels = d.dates.map((dt, i) => i % skip === 0 ? (is1D ? dt : dt.slice(5)) : '');
+  const fmtTick = dt => is1D ? dt : isMultiYear ? dt.slice(2,7) : dt.slice(5);
 
   // Gradient fill
   const makeGrad = (ctx, color) => {
@@ -2235,7 +2236,7 @@ function renderTrend(d){
       scales: {
         x: {
           ticks: { color:'#94a3b8', font:{size:10}, maxRotation:0,
-            callback: (val, i) => i % skip === 0 ? d.dates[i].slice(5) : '' },
+            callback: (val, i) => i % skip === 0 ? fmtTick(d.dates[i]) : '' },
           grid: { color: 'rgba(255,255,255,0.04)' },
         },
         y: {
@@ -2283,7 +2284,7 @@ function renderTrend(d){
       scales: {
         x: {
           ticks: { color:'#94a3b8', font:{size:9}, maxRotation:0,
-            callback: (val, i) => i % skip === 0 ? d.dates[i].slice(5) : '' },
+            callback: (val, i) => i % skip === 0 ? fmtTick(d.dates[i]) : '' },
           grid: { display: false },
         },
         y: {

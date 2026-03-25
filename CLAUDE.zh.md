@@ -308,13 +308,14 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.7 | 2026-03-25 | 批量資料載入器：`/api/bulk-fetch` SSE 端點即時串流逐檔進度；篩選器面板內「載入全部數據」按鈕 + 進度條；已載入的股票自動跳過；完成後自動刷新篩選器與我的股票 |
 | v2.8 | 2026-03-25 | 股息歷史圖表：`/api/stocks/<ticker>/dividends` 端點（yfinance `t.dividends`）；新增「股息歷史」頁籤；年度長條圖（黃色）；KPI 統計列（年度股息/股、殖利率%、最近一次股息）；付息日期資料表含年度 YoY%；不配息股票顯示提示訊息 |
 | v2.9 | 2026-03-25 | 修正殖利率顯示（yfinance 已回傳 %，移除多餘 ×100）；「我的股票」標題新增「全部清除」按鈕（只清除 pinned 非熱門股票）；股票文件新增 `pinned` 欄位 — 批量載入用 `$setOnInsert` 設 `pinned:false`，手動加入設 `pinned:true`；`GET /api/stocks` 過濾 `pinned != false`；新增 `/api/stocks/<ticker>/pin` 端點；篩選器點選已批量載入的股票改為直接 pin，不重新抓取資料 |
+| v2.10 | 2026-03-25 | 營收/EPS 圖表頁籤：`/api/stocks/<ticker>/financials` 端點（yfinance `t.income_stmt` + `t.quarterly_income_stmt`）；新增「營收/EPS」頁籤；雙軸 Chart.js 組合圖（總營收藍色長條＋淨利綠色長條對應左軸，稀釋 EPS 橘色折線對應右軸）；年度/季度切換；KPI 統計列（最新年度營收、營收 CAGR、最新淨利、稀釋 EPS）；資料表含 YoY% 色碼標示；ETF 顯示「無財務報表資料」提示 |
 
 ## 未來改善方向
 
 - [x] 多股票比較疊加圖
 - [x] 股票篩選器（依 CAGR、FCF 轉換率、產業篩選）
 - [x] 股息歷史圖表
-- [ ] 營收 / EPS 圖表頁籤
+- [x] 營收 / EPS 圖表頁籤
 - [ ] 匯出 CSV / Excel
 - [ ] Docker Compose 設定（Flask + MongoDB 一鍵啟動）
 - [ ] WebSocket 即時股價推播

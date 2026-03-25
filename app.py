@@ -817,6 +817,73 @@ def stock_dividends(ticker):
         return jsonify({"error": str(e)}), 400
 
 
+@app.route("/api/stocks/<ticker>/financials")
+def stock_financials(ticker):
+    """Revenue, Net Income, EPS history from yfinance income statement."""
+    try:
+        t = yf.Ticker(ticker.upper())
+
+        def build_fin_series(income, quarterly=False):
+            if income is None or income.empty:
+                return None
+            rev_k, _  = extract_series(income, income, ("total", "revenue"), ("revenue",))
+            ni_k,  _  = extract_series(income, income, ("net", "income",))
+            eps_k, _  = extract_series(income, income, ("diluted", "eps"), ("basic", "eps"), ("eps",))
+            labels, rev_v, ni_v, eps_v = [], [], [], []
+            for col in reversed(income.columns):
+                if quarterly:
+                    labels.append(f"Q{((col.month - 1) // 3) + 1}'{str(col.year)[2:]}")
+                else:
+                    labels.append(f"FY{col.year}")
+
+                def get_val(key, c=col, divisor=1e6):
+                    if key and key in income.index and c in income.columns:
+                        v = safe(income.loc[key, c])
+                        return round(v / divisor, 2) if v is not None else None
+                    return None
+
+                rev_v.append(get_val(rev_k))
+                ni_v.append(get_val(ni_k))
+                eps_v.append(get_val(eps_k, divisor=1))
+            return {"labels": labels, "revenue": rev_v, "net_income": ni_v, "eps": eps_v}
+
+        annual   = build_fin_series(t.income_stmt)
+        qinc     = t.quarterly_income_stmt
+        quarterly = build_fin_series(qinc, quarterly=True) if qinc is not None and not qinc.empty else None
+
+        if annual is None:
+            return jsonify({"has_financials": False})
+
+        rev_valid = [v for v in annual["revenue"]    if v is not None and v > 0]
+        eps_valid = [v for v in annual["eps"]        if v is not None]
+        ni_valid  = [v for v in annual["net_income"] if v is not None]
+        latest_rev = rev_valid[-1] if rev_valid else None
+        latest_eps = eps_valid[-1] if eps_valid else None
+        latest_ni  = ni_valid[-1]  if ni_valid  else None
+        rev_cagr   = None
+        if len(rev_valid) >= 2:
+            n = len(rev_valid) - 1
+            try:
+                rev_cagr = round(((rev_valid[-1] / rev_valid[0]) ** (1 / n) - 1) * 100, 2)
+            except Exception:
+                pass
+
+        return jsonify({
+            "has_financials": True,
+            "has_quarterly":  quarterly is not None,
+            "annual":    annual,
+            "quarterly": quarterly,
+            "kpis": {
+                "latest_rev": latest_rev,
+                "rev_cagr":   rev_cagr,
+                "latest_eps": latest_eps,
+                "latest_ni":  latest_ni,
+            },
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @app.route("/api/bulk-fetch")
 def bulk_fetch():
     """Stream bulk-fetch progress via SSE; fetches all catalog tickers not yet in DB."""
@@ -1163,6 +1230,7 @@ tr:hover td{background:#1e293b}
       <button class="view-tab active" id="tabCF"      onclick="setView('cf')">現金流分析</button>
       <button class="view-tab"        id="tabTrend"   onclick="setView('trend')">價格趨勢</button>
       <button class="view-tab"        id="tabDiv"     onclick="setView('div')">股息歷史</button>
+      <button class="view-tab"        id="tabRev"     onclick="setView('rev')">營收/EPS</button>
       <button class="view-tab"        id="tabCompare" onclick="setView('compare')">多股比較</button>
     </div>
 
@@ -1229,6 +1297,31 @@ tr:hover td{background:#1e293b}
       </div>
     </div>
 
+    <!-- Revenue / EPS view -->
+    <div id="rev-section" style="display:none">
+      <div class="stat-row" id="revStats"></div>
+      <div class="range-row" id="revPeriodRow" style="margin-bottom:10px">
+        <span style="font-size:.75rem;color:var(--muted);margin-right:4px">期間：</span>
+        <button class="period-btn active" id="revBtnAnnual"    onclick="setRevPeriod('annual')">年度</button>
+        <button class="period-btn"        id="revBtnQuarterly" onclick="setRevPeriod('quarterly')">季度</button>
+      </div>
+      <div class="chart-wrap"><canvas id="revChart"></canvas></div>
+      <div class="table-wrap" style="max-height:300px;overflow-y:auto;margin-top:12px">
+        <table>
+          <thead>
+            <tr>
+              <th>期間</th>
+              <th style="color:#60a5fa">總營收 ($M)</th>
+              <th>YoY%</th>
+              <th style="color:#4ade80">淨利 ($M)</th>
+              <th style="color:#fb923c">稀釋 EPS ($)</th>
+            </tr>
+          </thead>
+          <tbody id="revTable"></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Compare view -->
     <div id="compare-section">
       <div class="cmp-chips" id="cmpChips"></div>
@@ -1279,6 +1372,9 @@ let trendChart = null;
 let volChart   = null;
 let cmpChart   = null;
 let divChart   = null;
+let revChart   = null;
+let revPeriod  = 'annual';
+let currentRevData = null;
 let currentTicker    = null;
 let currentPeriod    = 'annual';
 let currentView      = 'cf';
@@ -1501,16 +1597,19 @@ function setView(v){
   document.getElementById('tabCF').classList.toggle('active',      v==='cf');
   document.getElementById('tabTrend').classList.toggle('active',   v==='trend');
   document.getElementById('tabDiv').classList.toggle('active',     v==='div');
+  document.getElementById('tabRev').classList.toggle('active',     v==='rev');
   document.getElementById('tabCompare').classList.toggle('active', v==='compare');
   document.getElementById('cf-section').style.display      = v==='cf'      ? 'block' : 'none';
   document.getElementById('trend-section').style.display   = v==='trend'   ? 'block' : 'none';
   document.getElementById('div-section').style.display     = v==='div'     ? 'block' : 'none';
+  document.getElementById('rev-section').style.display     = v==='rev'     ? 'block' : 'none';
   document.getElementById('compare-section').style.display = v==='compare' ? 'block' : 'none';
   const toggle = document.getElementById('periodToggle');
   if(v==='cf') toggle.style.display = currentStockData?.has_quarterly ? 'flex' : 'none';
   else toggle.style.display = 'none';
   if(v==='trend') loadTrend(currentTicker, currentRange);
   if(v==='div') loadDividend(currentTicker);
+  if(v==='rev') loadFinancials(currentTicker, revPeriod);
   if(v==='compare'){
     if(currentTicker && !cmpTickers.includes(currentTicker)) cmpTickers.push(currentTicker);
     renderCmpChips();
@@ -1541,9 +1640,12 @@ async function showChart(ticker){
   // Show/hide CF tab
   document.getElementById('tabCF').style.display = hasCF ? '' : 'none';
   document.getElementById('div-section').style.display     = 'none';
+  document.getElementById('rev-section').style.display     = 'none';
   document.getElementById('compare-section').style.display = 'none';
   document.getElementById('tabDiv').classList.remove('active');
+  document.getElementById('tabRev').classList.remove('active');
   document.getElementById('tabCompare').classList.remove('active');
+  currentRevData = null;
 
   // Period toggle visibility
   const toggle = document.getElementById('periodToggle');
@@ -1743,6 +1845,149 @@ function renderDividend(d){
     return `<tr><td>${dt}</td><td style="color:#facc15">$${amt.toFixed(4)}</td><td>${yoy}</td></tr>`;
   }).join('');
   document.getElementById('divTable').innerHTML = rows;
+}
+
+// ── Revenue / EPS chart ───────────────────────────────────────
+async function loadFinancials(ticker, period){
+  if(!ticker) return;
+  if(currentRevData){
+    renderFinancials(currentRevData, period);
+    return;
+  }
+  document.getElementById('revStats').innerHTML = '<div style="color:var(--muted);font-size:.82rem">載入中…</div>';
+  document.getElementById('revTable').innerHTML = '';
+  if(revChart){ revChart.destroy(); revChart=null; }
+  const res = await fetch(`/api/stocks/${ticker}/financials`);
+  if(!res.ok){ document.getElementById('revStats').innerHTML='<div style="color:var(--muted)">無法取得財務資料</div>'; return; }
+  const d = await res.json();
+  currentRevData = d;
+  // Show/hide quarterly toggle
+  document.getElementById('revPeriodRow').style.display = d.has_financials && d.has_quarterly ? 'flex' : 'none';
+  renderFinancials(d, period);
+}
+
+function setRevPeriod(p){
+  revPeriod = p;
+  document.getElementById('revBtnAnnual').classList.toggle('active',    p==='annual');
+  document.getElementById('revBtnQuarterly').classList.toggle('active', p==='quarterly');
+  renderFinancials(currentRevData, p);
+}
+
+function renderFinancials(d, period){
+  const statsEl = document.getElementById('revStats');
+  if(!d || !d.has_financials){
+    statsEl.innerHTML = '<div style="color:var(--muted);font-size:.88rem;padding:20px 0">此股票無財務報表資料（如 ETF）</div>';
+    document.getElementById('revTable').innerHTML = '';
+    return;
+  }
+  const k = d.kpis || {};
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="v" style="color:#60a5fa">${k.latest_rev!=null ? (k.latest_rev>=1000?'$'+(k.latest_rev/1000).toFixed(2)+'B':'$'+k.latest_rev.toFixed(0)+'M') : 'N/A'}</div>
+      <div class="l">最新年度營收</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:var(--orange)">${k.rev_cagr!=null ? k.rev_cagr.toFixed(1)+'%' : 'N/A'}</div>
+      <div class="l">營收 CAGR</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:#4ade80">${k.latest_ni!=null ? (k.latest_ni>=1000?'$'+(k.latest_ni/1000).toFixed(2)+'B':'$'+k.latest_ni.toFixed(0)+'M') : 'N/A'}</div>
+      <div class="l">最新年度淨利</div>
+    </div>
+    <div class="stat-card">
+      <div class="v" style="color:#fb923c">${k.latest_eps!=null ? '$'+k.latest_eps.toFixed(2) : 'N/A'}</div>
+      <div class="l">稀釋 EPS</div>
+    </div>`;
+
+  const series = (period==='quarterly' && d.quarterly) ? d.quarterly : d.annual;
+
+  // Table
+  const rows = series.labels.map((lbl, i) => {
+    const rev = series.revenue[i], prev = i > 0 ? series.revenue[i-1] : null;
+    let yoy = '–';
+    if(rev!=null && prev!=null && prev!==0){
+      const p = ((rev - prev) / Math.abs(prev) * 100).toFixed(1);
+      const col = p >= 0 ? 'var(--green)' : 'var(--red)';
+      yoy = `<span style="color:${col}">${p>=0?'+':''}${p}%</span>`;
+    }
+    const fmtRev = v => v==null ? 'N/A' : (Math.abs(v)>=1000 ? '$'+(v/1000).toFixed(2)+'B' : '$'+v.toFixed(0)+'M');
+    const eps = series.eps[i];
+    return `<tr>
+      <td>${lbl}</td>
+      <td style="color:#60a5fa">${fmtRev(series.revenue[i])}</td>
+      <td>${yoy}</td>
+      <td style="color:#4ade80">${fmtRev(series.net_income[i])}</td>
+      <td style="color:#fb923c">${eps!=null ? '$'+eps.toFixed(2) : 'N/A'}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('revTable').innerHTML = rows;
+
+  // Chart (dual axis: revenue bars left, EPS line right)
+  if(revChart) revChart.destroy();
+  const ctx = document.getElementById('revChart').getContext('2d');
+  revChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: series.labels,
+      datasets: [
+        {
+          label: '總營收', data: series.revenue,
+          backgroundColor: 'rgba(96,165,250,.65)', borderColor: 'rgba(96,165,250,1)',
+          borderWidth: 1, borderRadius: 3, yAxisID: 'yRev',
+          datalabels: { display: false },
+        },
+        {
+          label: '淨利', data: series.net_income,
+          backgroundColor: 'rgba(74,222,128,.55)', borderColor: 'rgba(74,222,128,1)',
+          borderWidth: 1, borderRadius: 3, yAxisID: 'yRev',
+          datalabels: { display: false },
+        },
+        {
+          label: '稀釋 EPS', data: series.eps,
+          type: 'line', borderColor: 'rgba(251,146,60,1)', backgroundColor: 'rgba(251,146,60,.12)',
+          borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 7, fill: false, tension: .3,
+          yAxisID: 'yEps',
+          datalabels: {
+            display: c => series.labels.length <= 8 || c.dataIndex % 2 === 0,
+            color: '#fb923c', anchor: 'end', align: 'top', font: {size:9, weight:'bold'},
+            formatter: v => v!=null ? '$'+v.toFixed(2) : '',
+          },
+        },
+      ],
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#cdd6f4', usePointStyle: true, padding: 18 }},
+        tooltip: {
+          backgroundColor: '#0f3460', titleColor: '#e2e8f0', bodyColor: '#94a3b8',
+          callbacks: {
+            label: c => {
+              const v = c.parsed.y;
+              if(v == null) return `${c.dataset.label}: N/A`;
+              if(c.dataset.yAxisID === 'yEps') return ` ${c.dataset.label}: $${v.toFixed(2)}`;
+              return ` ${c.dataset.label}: ${Math.abs(v)>=1000 ? '$'+(v/1000).toFixed(2)+'B' : '$'+v.toFixed(0)+'M'}`;
+            }
+          }
+        },
+        datalabels: { display: false },
+      },
+      scales: {
+        x: { ticks:{color:'#94a3b8', font:{size:10}}, grid:{color:'rgba(255,255,255,0.04)'} },
+        yRev: {
+          position: 'left',
+          ticks: { color:'#94a3b8', callback: v => Math.abs(v)>=1000 ? `$${(v/1000).toFixed(0)}B` : `$${v}M` },
+          grid: { color:'rgba(255,255,255,0.06)' },
+        },
+        yEps: {
+          position: 'right',
+          ticks: { color:'#fb923c', callback: v => `$${v.toFixed(1)}` },
+          grid: { display: false },
+        },
+      },
+    },
+  });
 }
 
 // ── Range selector (trend) ────────────────────────────────────

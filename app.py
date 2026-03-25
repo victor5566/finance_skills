@@ -4,7 +4,8 @@ Flask + MongoDB + yfinance
 NYSE / NASDAQ / AMEX  |  Annual & Quarterly  |  Popular stocks on load
 """
 
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template_string, Response, stream_with_context
+import json
 from pymongo import MongoClient
 from datetime import datetime, timezone
 import yfinance as yf
@@ -761,6 +762,32 @@ def screener():
     return jsonify(result)
 
 
+@app.route("/api/bulk-fetch")
+def bulk_fetch():
+    """Stream bulk-fetch progress via SSE; fetches all catalog tickers not yet in DB."""
+    def generate():
+        all_tickers = sorted(c["ticker"] for c in catalog_col.find({}, {"ticker": 1, "_id": 0}))
+        in_db       = {d["ticker"] for d in stocks_col.find({}, {"ticker": 1, "_id": 0})}
+        to_fetch    = [t for t in all_tickers if t not in in_db]
+        total       = len(to_fetch)
+        yield f"data: {json.dumps({'total': total, 'done': 0, 'ticker': ''})}\n\n"
+        for i, ticker in enumerate(to_fetch):
+            try:
+                data = fetch_stock(ticker)
+                stocks_col.update_one({"ticker": ticker}, {"$set": data}, upsert=True)
+                status = "ok"
+            except Exception:
+                status = "error"
+            yield f"data: {json.dumps({'total': total, 'done': i + 1, 'ticker': ticker, 'status': status})}\n\n"
+        yield f"data: {json.dumps({'total': total, 'done': total, 'finished': True})}\n\n"
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @app.route("/api/popular")
 def popular():
     """Return popular tickers, fetching if not in DB."""
@@ -973,6 +1000,10 @@ tr:hover td{background:#1e293b}
 .scr-count{font-size:.78rem;color:var(--muted);margin-bottom:10px}
 .scr-wrap{overflow-x:auto;max-height:460px;overflow-y:auto}
 .scr-wrap table{width:100%;border-collapse:collapse;font-size:.8rem}
+.bulk-bar-wrap{display:none;margin-bottom:14px}
+.bulk-bar-track{background:var(--panel);border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px}
+.bulk-bar-fill{height:100%;background:var(--accent);border-radius:6px;width:0%;transition:width .3s}
+.bulk-status{font-size:.76rem;color:var(--muted)}
 
 /* ── Toast ──────────────────────────── */
 .toast{position:fixed;bottom:22px;right:22px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:9px;font-size:.83rem;z-index:999;opacity:0;transition:.3s;pointer-events:none;max-width:300px}
@@ -1039,6 +1070,11 @@ tr:hover td{background:#1e293b}
       </div>
       <button class="scr-run" onclick="runScreener()">篩選</button>
       <button class="scr-run" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
+      <button class="scr-run" id="btnBulk" style="background:#1a2e1a;border:1px solid #2d4a2d;color:#4ade80" onclick="startBulkFetch()">&#8987; 載入全部數據</button>
+    </div>
+    <div class="bulk-bar-wrap" id="bulkBarWrap">
+      <div class="bulk-bar-track"><div class="bulk-bar-fill" id="bulkFill"></div></div>
+      <div class="bulk-status" id="bulkStatus"></div>
     </div>
     <div class="scr-count" id="scrCount"></div>
     <div class="scr-wrap">
@@ -1955,6 +1991,42 @@ async function scrPick(ticker){
     runScreener();   // refresh screener rows with newly fetched data
   }
   showChart(ticker);
+}
+
+// ── Bulk fetch ────────────────────────────────────────────────
+function startBulkFetch(){
+  const btn  = document.getElementById('btnBulk');
+  const wrap = document.getElementById('bulkBarWrap');
+  const fill = document.getElementById('bulkFill');
+  const stat = document.getElementById('bulkStatus');
+  btn.disabled = true;
+  btn.textContent = '載入中...';
+  wrap.style.display = 'block';
+  fill.style.width = '0%';
+  stat.textContent = '正在連線...';
+
+  const es = new EventSource('/api/bulk-fetch');
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    const pct = d.total > 0 ? Math.round(d.done / d.total * 100) : 0;
+    fill.style.width = pct + '%';
+    if(d.finished){
+      stat.textContent = `完成！已載入 ${d.total} 檔數據`;
+      btn.disabled = false;
+      btn.textContent = '&#8987; 載入全部數據';
+      es.close();
+      loadMyStocks();
+      runScreener();
+    } else {
+      stat.textContent = `${d.done} / ${d.total}  正在載入 ${d.ticker}...`;
+    }
+  };
+  es.onerror = () => {
+    stat.textContent = '連線中斷，請重試';
+    btn.disabled = false;
+    btn.textContent = '&#8987; 載入全部數據';
+    es.close();
+  };
 }
 
 // ── Init ──────────────────────────────────────────────────────

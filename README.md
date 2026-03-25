@@ -1,463 +1,305 @@
-# Finance Skills for Claude Code
+# Finance Skills — 專案說明文件
 
-A collection of Claude Code skill plugins for financial services. 84 skills across
-7 domain plugins teach Claude investment management, regulatory compliance, advisory
-workflows, trading operations, and more — so it can assist with finance questions,
-build financial tools, and flag compliance concerns.
-
-Built by [Joel Lewis](https://joelelewis.com?ref=finance_skills).
-
-**Contributions welcome!** Found a way to improve a skill or have a new one to add?
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-> **Disclaimer:** These skills are provided as-is for educational and informational
-> purposes only. The authors make no representations or warranties regarding the
-> accuracy, completeness, or currentness of this content. Nothing in these skills
-> constitutes financial, legal, tax, or investment advice. Users should independently
-> verify any information before relying on it in a professional or personal context.
-> See [LICENSE](LICENSE) for full terms.
+> 中文版 | [English](README.en.md)
 
 ---
 
-## Plugins
+# Finance Skills — 技能插件
 
-### `core` — Mathematical Foundations
+## 這是什麼
 
-Always installed. Provides the math that every other plugin builds on.
+一個 Claude Code 金融服務技能插件的 mono-repo。技能讓 Claude 學習金融領域知識，
+協助回答金融問題、建立金融工具，並標記合規疑慮。完整架構與路線圖請參閱 `PLAN.md`。
 
-| Skill | What Claude can do |
-|-------|-------------------|
-| `return-calculations` | Compute TWR, MWR/IRR, CAGR, sub-period linking, annualization |
-| `time-value-of-money` | PV, FV, NPV, IRR, annuities, amortization schedules |
-| `statistics-fundamentals` | Distributions, covariance matrices, regression, bootstrapping |
+## 目前狀態
 
-Python reference scripts included for all three skills.
+共 81 個技能，分布於 7 個插件領域，存放於 `plugins/` 下：
 
----
+- **core**（3 個技能）— 數學基礎（報酬率、貨幣時間價值、統計）
+- **wealth-management**（31 個技能）— 投資知識、資產類別、投資組合建構、個人理財
+- **compliance**（16 個技能）— 美國證券法規指引（FINRA、SEC、ERISA、FinCEN、CFA Institute GIPS）
+- **advisory-practice**（10 個技能）— 顧問系統、客戶開戶、CRM、投資組合管理、提案、計費
+- **trading-operations**（9 個技能）— 委託單生命週期、執行、交割、保證金、交易所連線、操作風險
+- **client-operations**（8 個技能）— 帳戶開設、維護、轉帳、對帳、公司行動、STP
+- **data-integration**（4 個技能）— 參考資料、市場資料、整合模式、資料品質
 
-### `wealth-management` — Investment Knowledge
+技能透過 `install.sh` 安裝至專案的 `.claude/skills/`。
 
-Investment knowledge for personal and institutional wealth management. Covers the full
-investment lifecycle from risk measurement through reporting.
+## 使用技能
 
-**Risk measurement:** Historical volatility estimators, drawdown analysis, historical
-VaR, parametric VaR, Monte Carlo VaR, CVaR/Expected Shortfall, GARCH, implied
-volatility surfaces.
+### 技能結構
 
-**Asset classes:** Equities (factors, index construction, earnings), fixed income
-(sovereign, municipal, corporate, structured), commodities, real assets, alternatives,
-fund vehicles, currencies and FX, digital assets.
+每個技能是 `plugins/<plugin-name>/skills/` 下的一個目錄，包含 `SKILL.md`，
+以及可選的 `scripts/` 子目錄（Python 參考實作）。SKILL.md 教授領域知識；scripts 提供可執行的計算。
 
-**Valuation:** Quantitative models (DCF, DDM, comparables, residual income) and
-qualitative assessment (moats, management quality, ESG).
+### 模板
 
-**Portfolio construction:** Diversification theory, mean-variance optimization,
-Black-Litterman, risk parity, Kelly criterion, position sizing, calendar- and
-threshold-based rebalancing.
+所有技能遵循 `PLAN.md` 中的模板，主要章節：
 
-**Policy and planning:** IPS construction, tax-aware investing, asset location,
-tax-loss harvesting (dedicated workflow skill), performance attribution (Brinson,
-factor-based).
+- **Purpose**（目的）— 技能的用途
+- **When to Use**（使用時機）— 觸發詞與情境
+- **Core Concepts**（核心概念）— 領域知識
+- **Worked Examples**（實作範例）— 具體場景與分析
+- **Common Pitfalls**（常見錯誤）— 應避免的錯誤
+- **Cross-References**（交叉參考）— 相關技能連結
 
-**Personal finance:** Debt prioritization, mortgage and loan analysis, emergency fund
-sizing, savings goals, liquidity management.
+### 建立新技能
 
-**Behavioral finance:** Cognitive biases, nudges, emotional discipline.
+1. 確認 `PLAN.md` 中的技能列表與插件分配
+2. 在 `plugins/<plugin-name>/skills/<skill-name>/` 下建立技能目錄
+3. 嚴格遵循 SKILL.md 模板
+4. 量化技能：包含關鍵公式與數值範例
+5. 合規/操作技能：使用情境範例（情境 / 合規問題 / 分析），引用具體規則編號，省略公式與參考實作章節
+6. 雙向新增相關技能的交叉參考
+7. 完成後更新 `PLAN.md` 的實作狀態
 
-**Reporting:** Risk-adjusted performance ratios, performance reports, benchmark
-comparison, goal progress tracking.
+### Python 腳本
 
-32 skills. Python scripts for quantitative skills (risk, performance metrics, and core
-math).
+僅量化技能（core、wealth-management）附 Python 腳本。腳本規範：
 
----
+- 使用 Python 3.11+，僅限 numpy/scipy/pandas 相依套件
+- 獨立可執行（不需安裝）
+- 採用類別組織，使用靜態方法
+- 包含完整 docstrings 與型別提示
+- 公式須與對應 SKILL.md 一致
 
-### `compliance` — US Securities Regulatory Guidance
+## 命名慣例
 
-Guidance-only (no Python scripts). Skills teach Claude how to flag problems and share
-distilled knowledge from public compliance guides, SEC/FINRA enforcement actions, and
-industry practice. All skills cite specific rule numbers and act sections.
+- 技能目錄：`小寫-連字號`（例：`fixed-income-sovereign`）
+- Python 檔案：`小寫_底線`（例：`fixed_income_sovereign.py`）
+- 技能內容不使用 emoji
+- 合規技能須在行內引用具體規則編號與法案條文
+- 交叉參考需包含層級/插件名稱及關係說明
+- 不新增超出明確需求的功能、測試或工具
 
-| Skill | Coverage |
-|-------|----------|
-| `investment-suitability` | FINRA Rules 2111/2090, reasonable-basis/customer-specific/quantitative suitability |
-| `know-your-customer` | CIP, CDD, beneficial ownership, customer profiling, EDD |
-| `anti-money-laundering` | BSA/AML, CTRs, SARs, OFAC screening, structuring detection |
-| `reg-bi` | SEC Reg BI disclosure, care, conflict of interest, and compliance obligations |
-| `fiduciary-standards` | IA Act §206, SEC 2019 Interpretation, ERISA §404, DOL rules |
-| `fee-disclosure` | ADV Part 2A Item 5, Reg BI cost disclosure, 12b-1, wrap fees, ERISA 408(b)(2) |
-| `advice-standards` | IA Act §202(a)(11), the investment advice vs. education bright line |
-| `sales-practices` | Churning, breakpoint abuse, selling away, unauthorized trading, supervision |
-| `advertising-compliance` | SEC Marketing Rule (206(4)-1), FINRA Rule 2210, performance advertising |
-| `client-disclosures` | Form ADV, Form CRS, Reg S-P, trade confirmations, delivery timing |
-| `conflicts-of-interest` | Reg BI COI obligation, fiduciary duty, FINRA compensation rules |
-| `books-and-records` | SEC 17a-3/17a-4, Rule 204-2, WORM storage, electronic communications archiving |
-| `regulatory-reporting` | Form PF, 13F/13H, Form ADV amendments, FOCUS reports, CAT reporting |
-| `gips-compliance` | CFA Institute GIPS: composites, performance presentation, verification |
-| `privacy-data-security` | Reg S-P, Reg S-ID, SEC cybersecurity rules (2023), state privacy law |
-| `examination-readiness` | SEC/FINRA exam process, document production, deficiency findings, mock exam frameworks |
+## Linear 議題追蹤
 
-16 skills.
+- **專案**：Finance Skills（團隊：Joellewis）
+- commit 訊息與 PR 標題須引用議題 ID（例：JOE-42）
+- 實作過程中發現的議題送至 Triage，標記 `agent-drafted`
 
 ---
 
-### `advisory-practice` — Front Office Systems
+# Finance Dashboard — 網頁應用程式
 
-Teaches Claude how advisor platforms work so it can help design, evaluate, or integrate
-with them. Covers the full advisor workflow from client onboarding through reporting.
+## 概覽
 
-| Skill | Coverage |
-|-------|----------|
-| `client-onboarding` | Digital onboarding, document collection, KYC integration, e-signature, NIGO handling |
-| `crm-client-lifecycle` | Client segmentation, household management, service tiers, review scheduling |
-| `portfolio-management-systems` | Model portfolios, sleeve/UMA/SMA management, drift monitoring, held-away aggregation |
-| `order-management-advisor` | Advisor order entry, block trading, allocation, pre-trade compliance |
-| `financial-planning-integration` | Planning tool data flows, goal-based plans, Monte Carlo, plan-to-portfolio linkage |
-| `proposal-generation` | Risk profiling output, model recommendation, fee illustration, compliance review |
-| `advisor-dashboards` | Practice analytics, AUM/revenue/flows, exception and alert dashboards |
-| `next-best-action` | Event-driven triggers, prioritization scoring, advisor nudges, automated workflows |
-| `fee-billing` | Fee calculation (tiered, flat, breakpoint), billing cycles, revenue recognition |
-| `client-reporting-delivery` | Report generation, delivery channels, frequency management, compliance review |
-| `client-review-prep` | Pre-meeting review preparation, performance summary, drift analysis, talking points |
-| `financial-planning-workflow` | End-to-end financial plan assembly, retirement modeling, scenario analysis |
+建立在技能 repo 之上的全端金融資料儀表板。
+從 Yahoo Finance 抓取即時現金流資料，儲存至 MongoDB，
+並透過深色主題的單頁應用程式呈現互動圖表。
 
-12 skills.
+**技術棧**：Python / Flask · MongoDB (localhost:27017) · yfinance · Chart.js 4
 
----
-
-### `trading-operations` — Order Lifecycle and Execution
-
-Order lifecycle from entry through settlement. Serves advisor, algorithmic, and
-client-direct trading contexts.
-
-| Skill | Coverage |
-|-------|----------|
-| `order-lifecycle` | Order states, FIX protocol basics, order types, time-in-force, cancel/replace |
-| `trade-execution` | Best execution, venues, smart order routing, TCA |
-| `pre-trade-compliance` | Rule engines, concentration limits, restricted lists, hard/soft blocks |
-| `post-trade-compliance` | Trade surveillance, pattern detection, best execution review, allocation fairness |
-| `settlement-clearing` | T+1, DTC/NSCC, fails management, corporate actions on settlement, DVP/RVP |
-| `exchange-connectivity` | Venue connectivity, market data feeds, FIX sessions, trading halts, circuit breakers |
-| `margin-operations` | Reg T, maintenance margin, portfolio margin, margin calls, liquidation waterfall |
-| `operational-risk` | Trade breaks, settlement fails, error handling, loss event taxonomy, KRIs |
-| `counterparty-risk` | Counterparty exposure, credit risk monitoring, netting, collateral management |
-
-9 skills.
-
----
-
-### `client-operations` — Account Lifecycle and Servicing
-
-Back-office account operations and servicing workflows.
-
-| Skill | Coverage |
-|-------|----------|
-| `account-opening-workflow` | Account types, required docs, approval workflows, NIGO management, regulatory holds |
-| `account-opening-compliance` | CIP/KYC integration, suitability checks, OFAC screening, beneficial ownership |
-| `account-maintenance` | Address changes, beneficiary updates, re-registration, cost basis, restrictions |
-| `account-transfers` | ACAT, non-ACAT, partial transfers, journal entries, rollovers, estate transfers |
-| `reconciliation` | Position/cash/transaction recon, break identification, three-way reconciliation |
-| `corporate-actions` | Mandatory/voluntary actions, dividends, splits, M&A, tender offers, record dates |
-| `stp-automation` | STP design, exception-based workflow, STP rate metrics, integration patterns |
-| `workflow-automation` | BPM concepts, task routing, approval chains, escalation, SLA monitoring |
-
-8 skills.
-
----
-
-### `data-integration` — Reference Data and Integration
-
-Data foundations that every financial system depends on.
-
-| Skill | Coverage |
-|-------|----------|
-| `reference-data` | Security master, client master, account master, CUSIP/ISIN/SEDOL/FIGI, pricing |
-| `market-data` | Real-time vs delayed, Level 1/2/3, data vendors, consolidated tape, licensing |
-| `integration-patterns` | API design for financial systems, FIX, ISO 20022, event-driven, idempotency |
-| `data-quality` | Golden source, data lineage, validation rules, exception management, governance |
-
-4 skills.
-
----
-
-## Installation
-
-### Option 1: Claude Code Marketplace (Recommended)
-
-Install via Claude Code's built-in plugin system:
+## 啟動方式
 
 ```bash
-/install JoelLewis/finance_skills
+# 先確認 MongoDB 已啟動，再執行：
+python app.py
+# 開啟瀏覽器：http://localhost:5000
 ```
 
-### Option 2: npx skills
-
-Use [npx skills](https://github.com/anthropics/skills) to install skills directly:
+**一次性安裝相依套件：**
 
 ```bash
-# Install all skills
-npx skills add JoelLewis/finance_skills
-
-# Install specific plugins
-npx skills add JoelLewis/finance_skills --plugin wealth-management
-
-# List available plugins
-npx skills add JoelLewis/finance_skills --list
+pip install flask pymongo yfinance
 ```
 
-### Option 3: install.sh (Symlink)
-
-Clone the repo and use the included installer, which symlinks skills into your
-project so updates are reflected immediately:
-
-```bash
-git clone https://github.com/JoelLewis/finance_skills.git
-cd finance_skills
-
-# Install a single plugin
-./install.sh --plugin wealth-management --target /path/to/your/project
-
-# Install all plugins
-./install.sh --plugin all --target /path/to/your/project
-
-# List available plugins
-./install.sh --list
-```
-
-The installer always installs `core` first (implicit dependency), then any declared
-plugin dependencies, then symlinks each skill into `<target>/.claude/skills/`.
-
-### Option 4: Clone and Copy
-
-Copy skills directly without symlinks:
-
-```bash
-git clone https://github.com/JoelLewis/finance_skills.git
-mkdir -p /path/to/your/project/.claude/skills
-
-# Copy a single plugin
-cp -r finance_skills/plugins/core/skills/* /path/to/your/project/.claude/skills/
-cp -r finance_skills/plugins/wealth-management/skills/* /path/to/your/project/.claude/skills/
-
-# Or copy everything
-for plugin in finance_skills/plugins/*/; do
-  cp -r "$plugin"skills/* /path/to/your/project/.claude/skills/
-done
-```
-
-### What Gets Installed
+## 檔案結構
 
 ```
-your-project/
-└── .claude/
-    └── skills/
-        ├── return-calculations/    # from core
-        ├── time-value-of-money/    # from core
-        ├── statistics-fundamentals/ # from core
-        ├── historical-risk/        # from wealth-management
-        └── ...
+Finance_skill/
+├── app.py                      # Flask 後端 + SPA HTML（單一檔案）
+├── server.ps1                  # PowerShell 啟動/停止/狀態腳本（自動清除舊實例）
+├── generate_cashflow_chart.py  # 獨立 CLI 圖表產生器（舊版 v1）
+├── aapl_cashflow.html          # 靜態圖表輸出範例
+└── .claude/skills/             # 已安裝的 84 個金融技能（JoelLewis）
 ```
 
-After installing, Claude will automatically pick up the skills. Verify with:
+## 啟動 Server
 
-```bash
-ls /path/to/your/project/.claude/skills/
+使用 `server.ps1` — 啟動前自動清除 port 5000 上的舊實例：
+
+```powershell
+.\server.ps1          # 啟動（自動清除舊實例）
+.\server.ps1 stop     # 停止
+.\server.ps1 status   # 顯示執行中的 PID
 ```
 
----
+**請勿直接使用 `Start-Process`** — 會在同一 port 留下殭屍進程，導致 API 回應舊版程式碼。
 
-## Plugin Dependency Graph
+## 股票目錄
 
-```
-core (implicit — always installed)
-  ├── wealth-management
-  ├── compliance  ←── (recommended for all plugins)
-  ├── advisory-practice  ←── depends on wealth-management
-  ├── trading-operations
-  ├── client-operations
-  └── data-integration
-```
+307 個股票代號跨四個美國交易所類別，同時儲存於 `app.py`（CATALOG dict）與
+MongoDB（`finance_dashboard.catalog` collection）。`/api/catalog` 端點從 MongoDB 讀取。
+所有交易所分類已透過 yfinance 核實並修正；4 個下市/被收購股票（COUP、DFS、ABC、PARA）已移除。
 
-Installing `advisory-practice` automatically installs `core` and `wealth-management`.
-Installing any plugin automatically installs `core`.
+| 交易所    | 數量 | 內容 |
+|-----------|------|------|
+| NasdaqGS  | 94   | NASDAQ Global Select Market — AAPL、MSFT、NVDA 等大型 NMS 掛牌股票 |
+| NASDAQ    | 18   | NASDAQ Global/Capital Market — ETF（QQQ/TLT/BND/BOTZ/ICLN…）+ MDB、TTD、ENPH、PLUG |
+| NYSE      | 141  | 藍籌股、金融（BLK/BX/KKR）、工業/國防（LMT/NOC）、能源（SLB/OXY）、醫療、零售 |
+| AMEX      | 54   | ETF：槓桿型（SOXL/TECL/TQQQ）、主題型（BITO/GBTC/ARKK）、產業型（XLF/XLE/XLK） |
 
----
+初始頁面顯示熱門股票：`AAPL  MSFT  NVDA  TSLA  AMZN`
 
-## Repository Structure
+## REST API
 
-```
-finance_skills/
-├── README.md
-├── PLAN.md                    # Architecture and implementation roadmap
-├── CLAUDE.md                  # Claude Code project instructions
-├── marketplace.json           # Machine-readable catalog of all plugins
-├── install.sh                 # Plugin installer
-└── plugins/
-    ├── core/
-    │   ├── plugin.json
-    │   └── skills/
-    │       ├── return-calculations/
-    │       ├── time-value-of-money/
-    │       └── statistics-fundamentals/
-    ├── wealth-management/
-    │   ├── plugin.json
-    │   └── skills/
-    │       └── ... (32 skills)
-    ├── compliance/
-    │   ├── plugin.json
-    │   └── skills/
-    │       └── ... (16 skills)
-    ├── advisory-practice/
-    │   ├── plugin.json
-    │   └── skills/
-    │       └── ... (12 skills)
-    ├── trading-operations/
-    │   ├── plugin.json
-    │   └── skills/
-    │       └── ... (9 skills)
-    ├── client-operations/
-    │   ├── plugin.json
-    │   └── skills/
-    │       └── ... (8 skills)
-    └── data-integration/
-        ├── plugin.json
-        └── skills/
-            └── ... (4 skills)
-```
+| 方法   | 路徑                                      | 說明                                               |
+|--------|-------------------------------------------|----------------------------------------------------|
+| GET    | `/`                                       | SPA 儀表板 HTML                                    |
+| GET    | `/api/catalog?exchange=&q=`               | 從 MongoDB 篩選目錄（支援 regex 搜尋）             |
+| GET    | `/api/stocks`                             | 列出 MongoDB 中所有股票（僅摘要欄位）              |
+| POST   | `/api/stocks`                             | 新增股票 — body: `{"ticker":"TSLA"}`               |
+| GET    | `/api/stocks/<ticker>`                    | 完整資料，含年度 + 季度序列                        |
+| DELETE | `/api/stocks/<ticker>`                    | 從 MongoDB 刪除股票                                |
+| POST   | `/api/stocks/<ticker>/refresh`            | 重新從 Yahoo Finance 抓取所有資料                  |
+| GET    | `/api/popular`                            | 載入熱門 5 檔（若不在 DB 中則自動抓取）           |
+| GET    | `/api/stocks/<ticker>/history?period=1y`  | 股價歷史（用於趨勢圖，詳見下方）                   |
 
----
+### History 端點參數
 
-## Skill Template
+`period` 可選值：`1d` `1mo` `3mo` `6mo` `1y`（預設）`2y` `5y`
 
-Each SKILL.md follows a consistent structure:
+回應欄位：
 
-- **Purpose** — what the skill enables Claude to do
-- **When to Use** — trigger phrases and situations
-- **Core Concepts** — the domain knowledge, with formulas where applicable
-- **Key Formulas** — reference table (quantitative skills only)
-- **Worked Examples** — concrete scenarios with step-by-step analysis
-- **Common Pitfalls** — mistakes to watch for
-- **Cross-References** — links to related skills in other plugins
-- **Reference Implementation** — pointer to Python script (quantitative skills only)
+- `dates[]` — 1d 時為 `HH:MM`；其他期間為 `YYYY-MM-DD`
+- `close[]` — 收盤價（1d 為 5 分鐘 K，≤1y 為日線，2y/5y 為週線）
+- `volume[]` — 成交量
+- `ma20[]` — 1d 時為 MA5；其他期間為 MA20（前 N-1 個點為 null）
+- `ma50[]` — 1d 時為 MA20；其他期間為 MA50
+- `ma_labels[]` — 1d 時為 `["MA5","MA20"]`；其他為 `["MA20","MA50"]`
+- `stats` — `latest_price`、`pct_change`、`high_52w`、`low_52w`、`pe_ratio`（優先讀 MongoDB，無資料才呼叫 yfinance）
 
-Compliance and operations skills use scenario-based examples
-(**Scenario / Compliance Issues / Analysis**) and cite specific rule numbers inline.
-Quantitative skills include worked numerical examples and runnable Python scripts.
+Interval 自動選擇：`5m`（1d）· `1d`（1mo–1y）· `1wk`（2y/5y）
 
-## What Are Plugins?
+## MongoDB Schema
 
-Each plugin is a collection of SKILL.md files (and optional Python reference scripts)
-that teach Claude domain knowledge. When installed, Claude can:
+資料庫 `finance_dashboard`，collections：`stocks` 與 `catalog`
 
-- Answer domain-specific questions with regulatory citations and worked examples
-- Flag compliance concerns during design discussions
-- Generate and explain financial computations
-- Assist with building, evaluating, or integrating with financial systems
-
-Plugins are independently installable — pull only the domains your project needs. The
-`core` plugin is implicit and always included.
-
-## Plugin Architecture
-
-### Design Principles
-- **`core` is implicit** — always installed; every plugin depends on it
-- **Plugins are independently installable** — a project pulls only the domains it needs
-- **Cross-plugin references are allowed** — skills reference related skills in other plugins via cross-references section
-- **Skills live in `.claude/skills/`** — installation symlinks a plugin's skills into the target project's skill directory
-- **No Python scripts for guidance-only skills** — compliance/operations plugins are guidance-only; quantitative plugins may have `scripts/` subdirectories
-
-### Plugin Dependency Graph
-
-```
-core (implicit — always installed)
-  ├── wealth-management
-  ├── compliance  ←── (recommended for all plugins)
-  ├── advisory-practice  ←── depends on wealth-management
-  ├── trading-operations
-  ├── client-operations
-  └── data-integration
+```json
+{
+  "ticker": "AAPL",
+  "name": "Apple Inc.",
+  "exchange": "NASDAQ",
+  "sector": "Technology",
+  "current_price": 213.49,
+  "market_cap": 3200000000000,
+  "annual":    { "labels": ["FY2021",...], "ocf": [...], "capex": [...], "fcf": [...], "interest": [...] },
+  "quarterly": { "labels": ["Q1'24",...],  "ocf": [...], "capex": [...], "fcf": [...], "interest": [...] },
+  "has_quarterly": true,
+  "kpis": { "latest_ocf": 111482, "latest_fcf": 98767, "ocf_cagr": 1.7, "fcf_conversion": 88.6, "pe_ratio": 31.8 },
+  "last_updated": "2026-03-24T12:00:00Z"
+}
 ```
 
-## SKILL.md Template
+所有金額以**百萬美元（$M）**儲存。ETF 無現金流資料，`annual` 欄位為 `null`。
 
-Each skill follows this structure:
+`catalog` collection schema：`{ ticker, name, exchange }` — 索引：`ticker`（唯一）與 `exchange`。
 
-```markdown
----
-name: <skill-name>
-description: <one-line description used for skill matching>
-allowed-tools: ["Bash", "Read", "Write", "Edit"]
----
+## 前端功能
 
-# <Skill Title>
+### 導覽列
 
-## Purpose
-What this skill enables Claude to do.
+- **固定標題列** — 即時搜尋（220ms 防抖），下拉自動完成（最多 12 筆）
+- **交易所分頁** — ALL / NasdaqGS / NASDAQ / NYSE / AMEX — 同時過濾股票卡片與目錄瀏覽器
+- **瀏覽目錄** — 切換顯示所選交易所的所有股票格狀列表；已加入的顯示「已加入」徽章
 
-## Layer
-N — Layer Name
+### 儀表板區塊
 
-## Direction
-retrospective | prospective | both
+- **熱門股票** — 頁面開啟時自動載入 AAPL / MSFT / NVDA / TSLA / AMZN（若尚未快取則從 Yahoo Finance 抓取）
+- **我的股票** — 使用者自行新增的股票（不含熱門 5 檔），依交易所過濾，持久化至 MongoDB
+- **股票卡片** — 顯示：代號、名稱、交易所徽章、現價、市值、OCF / FCF / CAGR / FCF 轉換率 / **P/E 本益比** KPI、最後更新時間、刷新與刪除操作
 
-## When to Use
-- Trigger phrases and situations
+### 圖表面板（點擊任意卡片開啟）
 
-## Core Concepts
-### <Concept>
-Explanation with formulas.
+頁籤顯示依資料可用性決定：
+- 有現金流資料 → 顯示兩個頁籤，預設開啟**現金流分析**
+- 無現金流資料（ETF）→ 現金流分析頁籤隱藏，直接開啟**價格趨勢**
 
-## Key Formulas (optional — omit for non-quantitative skills)
-| Formula | Expression | Use Case |
+#### 頁籤一 — 現金流分析
 
-## Worked Examples
-### Example 1: <title>
-**Given:** ... **Calculate:** ... **Solution:** ...
-(Compliance/operations skills use scenario-based examples:
-**Scenario:** ... **Compliance Issues:** ... **Analysis:** ...)
+- **Chart.js** 長條圖 + 折線圖混合圖表：
+  - 綠色長條 — 營業現金流（OCF）
+  - 紅色長條 — 資本支出（CapEx）
+  - 橘色長條 — 利息費用
+  - 藍色填充折線 — 自由現金流（FCF）
+- **期間切換**（年度 / 季度）— 僅在 `has_quarterly: true` 時顯示；ETF 與資料不足的股票隱藏
+- **KPI 卡片** — 最新 OCF、FCF、OCF CAGR、FCF 轉換率
+- **資料表格** — 完整歷史，YoY% 以綠/紅標色，含 FCF 轉換率欄位
 
-## Common Pitfalls
-- Things to watch out for
+#### 頁籤二 — 價格趨勢
 
-## Cross-References
-- Related skills
+- **統計列** — 目前價格、區間漲跌幅（綠/紅）、區間最高、區間最低、P/E 本益比（從 MongoDB `kpis.pe_ratio` 讀取；未儲存時才即時抓取）
+- **時間區間按鈕** — **1D** / 1M / 3M / 6M / **1Y**（預設）/ 2Y / 5Y
+  - 1D：5 分鐘 K 線，X 軸顯示 HH:MM，MA 切換為 MA5/MA20
+  - 1M–1Y：日線，MA20/MA50
+  - 2Y–5Y：週線，MA20/MA50
+- **價格圖** — 藍色收盤價折線（漸層填充）+ MA（黃色虛線）+ MA（紅色虛線）；圖例動態更新
+- **成交量圖** — 價格圖下方獨立長條圖；上漲日綠色，下跌日紅色
+- 資料在切換頁籤 / 更改區間時即時從 Yahoo Finance 抓取（不儲存至 MongoDB）
 
-## Reference Implementation (optional — omit for guidance-only skills)
-See `scripts/<name>.py` for computational helpers.
+## kezsmeister/claude-finance-skills（斜線指令）
+
+安裝於 `~/.claude/skills/`，可在 Claude Code 中直接使用：
+
+```
+/annual-revenue  <ticker>      10 年年度營收 + YoY 成長表
+/quarterly-revenue <ticker>    季度營收表
+/annual-eps  <ticker>          年度稀釋 EPS
+/quarterly-eps <ticker>        季度 EPS
+/annual-dividend <ticker>      年度每股股息
+/quarterly-dividend <ticker>   季度股息
+/annual-capex <ticker>         年度資本支出
+/annual-wads <ticker>          加權平均稀釋股數
+/cashflow-chart <ticker>       互動式 HTML 現金流圖表（在 Chrome 開啟）
 ```
 
----
+這些技能需要開啟遠端除錯的 Chrome：
 
-## Cross-Plugin Connection Registry
+```powershell
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" `
+  --remote-debugging-port=9222 `
+  --user-data-dir="C:\Users\victo\AppData\Local\chrome-debug-profile"
+```
 
-| Connection | Skills Involved | Nature |
-|-----------|----------------|--------|
-| Amortization math | time-value-of-money → lending, debt-management | Shared formulas |
-| Margin/SBLOC liquidity | lending ↔ liquidity-management | Cross-reference |
-| Borrowing vs repayment | lending ↔ debt-management | Cross-reference |
-| Behavioral valuation | qualitative-valuation ↔ finance-psychology | Cross-reference |
-| Retro/prospective chain | performance-metrics → performance-attribution → performance-reporting | Data flow |
-| Prospective → allocation | forward-risk, volatility-modeling → asset-allocation | Input/output |
-| Covariance matrix flow | statistics-fundamentals → historical-risk, forward-risk, diversification, asset-allocation | Shared computation |
-| Return math flow | return-calculations → nearly every skill | Foundation |
-| Suitability → policy | investment-suitability → investment-policy | Suitability obligations inform IPS constraints |
-| KYC → suitability | know-your-customer → investment-suitability, reg-bi | Customer profile feeds suitability/BI analysis |
-| KYC → AML | know-your-customer → anti-money-laundering | CDD/CIP feeds AML monitoring |
-| Fiduciary vs Reg BI | fiduciary-standards ↔ reg-bi | Parallel standards for IAs vs BDs |
-| Advice line | advice-standards → fiduciary-standards, reg-bi | Determines which standard applies |
-| Fee transparency | fee-disclosure → fund-vehicles, investment-policy | Fee rules constrain product/policy design |
-| Sales oversight | sales-practices → investment-suitability, reg-bi | Supervision enforces suitability/BI |
-| Marketing rules | advertising-compliance → performance-reporting, performance-metrics | Constrains how performance can be presented |
-| Disclosure docs | client-disclosures → fee-disclosure, conflicts-of-interest | Delivery vehicles for fee and COI disclosures |
-| COI across layer | conflicts-of-interest → reg-bi, fiduciary-standards, sales-practices | COI obligation embedded in multiple standards |
-| Records foundation | books-and-records → client-disclosures, sales-practices, anti-money-laundering | Retention rules underpin all compliance recordkeeping |
-| Reporting mechanics | regulatory-reporting → anti-money-laundering, client-disclosures, know-your-customer | Filing obligations tie to KYC, AML, and disclosure data |
-| GIPS performance chain | gips-compliance → performance-metrics, performance-attribution, performance-reporting | GIPS constrains calculation, attribution, and presentation |
-| Privacy data flows | privacy-data-security → client-disclosures, know-your-customer, books-and-records | NPI protection overlays disclosure, KYC, and retention |
-| Exam readiness umbrella | examination-readiness → all compliance skills | Exam preparation draws on every compliance domain |
-| Review prep workflow | client-review-prep → performance-reporting, performance-attribution, rebalancing, tax-efficiency, investment-policy | Meeting preparation assembles data from multiple knowledge skills |
-| Financial plan orchestration | financial-planning-workflow → savings-goals, debt-management, emergency-fund, liquidity-management, tax-efficiency, investment-policy | Planning workflow references underlying knowledge skills |
-| TLH workflow depth | tax-loss-harvesting ↔ tax-efficiency, rebalancing | Dedicated TLH workflow extends broader tax-efficiency coverage and coordinates with rebalancing |
-| Plan to review cycle | financial-planning-workflow ↔ client-review-prep | Plan progress is reviewed in client meetings; reviews may trigger plan updates |
+MCP 伺服器（`chrome-devtools` + `yahoo-finance`）已預先設定於 `~/.claude/settings.json`。
+首次設定後需重新啟動 Claude Code 才能生效。
 
----
+## Schema 遷移
+
+`app.py` v1 將現金流資料以平坦欄位儲存（`years`、`ocf`、`capex`、`fcf`、`interest` 於頂層）。
+v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
+
+`get_stock()` 中的 `migrate_old_schema()` 在首次讀取時自動偵測 v1 文件，
+就地轉換並寫回 MongoDB — 無需手動遷移。
+
+## 已知限制
+
+- yfinance 預設僅回傳約 4–5 年的現金流資料（Yahoo Finance 免費版限制）
+- ETF 無現金流資料 — 以 `annual: null` 儲存；前端自動開啟價格趨勢頁籤
+- 股價歷史（趨勢頁籤）即時抓取，不快取至 MongoDB
+- 1D 盤中資料僅在開盤期間或收盤後可用（yfinance 限制）
+- 部分股票 P/E 可能為 `null`（yfinance `fast_info` 限制）
+- Flask 啟動前須先確認 MongoDB 在本地執行
+- 避免快速批量抓取多檔股票（Yahoo Finance 頻率限制）
+
+## 版本紀錄
+
+| 版本 | 日期       | 變更內容 |
+|------|------------|---------|
+| v1   | 2026-03-24 | 初始 Flask 應用 — 單一 AAPL 圖表，平坦 MongoDB schema |
+| v2   | 2026-03-24 | 多股票儀表板、NYSE/NASDAQ/AMEX 目錄（312 檔），交易所分頁、搜尋下拉、目錄瀏覽、年度/季度切換、熱門股票區塊 |
+| v2.1 | 2026-03-24 | 新增 `migrate_old_schema` 遷移工具；修正 MSFT/AAPL/TSLA v1 資料無法顯示的問題 |
+| v2.2 | 2026-03-24 | 價格趨勢頁籤：收盤價折線、MA20/MA50、成交量長條、時間區間選擇器（1M–5Y）、統計列 |
+| v2.3 | 2026-03-24 | ETF 支援：無現金流股票以 `annual: null` 儲存，CF 頁籤隱藏，自動開啟趨勢；修正 BOTZ 交易所（AMEX→NASDAQ）；核實全部 311 檔股票交易所分類，修正 41 筆錯誤，移除 4 個下市股票（COUP/DFS/ABC/PARA），目錄縮減為 307 檔並存入 MongoDB `catalog` collection；`server.ps1` 可靠啟動管理；新增 1D 時間區間（5 分鐘 K、HH:MM 標籤、MA5/MA20） |
+| v2.4 | 2026-03-24 | 新增 NasdaqGS 交易所類別（94 個 NMS 股票從 NASDAQ 分離）；P/E 存入 `kpis.pe_ratio`（使用 `trailingPE`/`forwardPE`），顯示於股票卡片，舊資料首次開啟時自動補抓；趨勢頁 P/E 改從 MongoDB 讀取，不再依賴不穩定的 `fast_info` |
+
+## 未來改善方向
+
+- [ ] 多股票比較疊加圖
+- [ ] 股票篩選器（依 CAGR、FCF 轉換率、產業篩選）
+- [ ] 股息歷史圖表
+- [ ] 營收 / EPS 圖表頁籤
+- [ ] 匯出 CSV / Excel
+- [ ] Docker Compose 設定（Flask + MongoDB 一鍵啟動）
+- [ ] WebSocket 即時股價推播

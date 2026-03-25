@@ -92,16 +92,25 @@
 
 ## 啟動方式
 
+**方案 A — Docker Compose（推薦，無需本機安裝）：**
+```bash
+docker compose up --build
+# 開啟瀏覽器：http://localhost:5000
+# 停止：docker compose down
+# 清除資料：docker compose down -v
+```
+
+**方案 B — 本機 Python：**
 ```bash
 # 先確認 MongoDB 已啟動，再執行：
 python app.py
 # 開啟瀏覽器：http://localhost:5000
 ```
 
-**一次性安裝相依套件：**
+**一次性安裝相依套件（方案 B）：**
 
 ```bash
-pip install flask pymongo yfinance
+pip install -r requirements.txt
 ```
 
 ## 檔案結構
@@ -109,6 +118,10 @@ pip install flask pymongo yfinance
 ```
 Finance_skill/
 ├── app.py                      # Flask 後端 + SPA HTML（單一檔案）
+├── requirements.txt            # Python 相依套件（flask、pymongo、yfinance）
+├── Dockerfile                  # Flask 應用容器映像
+├── docker-compose.yml          # Flask + MongoDB 一鍵啟動設定
+├── .dockerignore               # Docker build context 排除清單
 ├── server.ps1                  # PowerShell 啟動/停止/狀態腳本（自動清除舊實例）
 ├── generate_cashflow_chart.py  # 獨立 CLI 圖表產生器（舊版 v1）
 ├── aapl_cashflow.html          # 靜態圖表輸出範例
@@ -310,6 +323,7 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.9 | 2026-03-25 | 修正殖利率顯示（yfinance 已回傳 %，移除多餘 ×100）；「我的股票」標題新增「全部清除」按鈕（只清除 pinned 非熱門股票）；股票文件新增 `pinned` 欄位 — 批量載入用 `$setOnInsert` 設 `pinned:false`，手動加入設 `pinned:true`；`GET /api/stocks` 過濾 `pinned != false`；新增 `/api/stocks/<ticker>/pin` 端點；篩選器點選已批量載入的股票改為直接 pin，不重新抓取資料 |
 | v2.10 | 2026-03-25 | 營收/EPS 圖表頁籤：`/api/stocks/<ticker>/financials` 端點（yfinance `t.income_stmt` + `t.quarterly_income_stmt`）；新增「營收/EPS」頁籤；雙軸 Chart.js 組合圖（總營收藍色長條＋淨利綠色長條對應左軸，稀釋 EPS 橘色折線對應右軸）；年度/季度切換；KPI 統計列（最新年度營收、營收 CAGR、最新淨利、稀釋 EPS）；資料表含 YoY% 色碼標示；ETF 顯示「無財務報表資料」提示 |
 | v2.11 | 2026-03-25 | 匯出 CSV / Excel：透過 CDN 加入 SheetJS（xlsx@0.18.5）；圖表面板標題列新增「↓ CSV」與「↓ Excel」按鈕；依當前頁籤匯出對應資料（現金流、營收/EPS、股息歷史、價格趨勢）；新增 `currentDivData` 與 `currentTrendData` 全域快取；檔名含股票代碼與期間；CSV 使用 UTF-8 BOM 確保 Excel 相容 |
+| v2.12 | 2026-03-25 | Docker Compose 設定：新增 `Dockerfile`（python:3.11-slim）、`docker-compose.yml`（web + mongo:7 服務，命名 volume `mongo_data`，MongoDB healthcheck）、`requirements.txt`、`.dockerignore`；`app.py` 改由 `MONGO_URI` 環境變數設定連線（本機預設 `localhost`） |
 
 ## 未來改善方向
 
@@ -318,5 +332,5 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 - [x] 股息歷史圖表
 - [x] 營收 / EPS 圖表頁籤
 - [x] 匯出 CSV / Excel
-- [ ] Docker Compose 設定（Flask + MongoDB 一鍵啟動）
+- [x] Docker Compose 設定（Flask + MongoDB 一鍵啟動）
 - [ ] WebSocket 即時股價推播

@@ -81,15 +81,24 @@ and renders interactive charts through a dark-themed single-page web app.
 
 ## How to Run
 
+**Option A — Docker Compose (recommended, no local installs needed):**
+```bash
+docker compose up --build
+# Open: http://localhost:5000
+# Stop: docker compose down
+# Wipe data: docker compose down -v
+```
+
+**Option B — local Python:**
 ```bash
 # MongoDB must be running first, then:
 python app.py
 # Open: http://localhost:5000
 ```
 
-**Install dependencies once:**
+**Install dependencies once (Option B only):**
 ```bash
-pip install flask pymongo yfinance
+pip install -r requirements.txt
 ```
 
 ## File Structure
@@ -97,6 +106,10 @@ pip install flask pymongo yfinance
 ```
 Finance_skill/
 ├── app.py                      # Flask backend + SPA HTML (all-in-one)
+├── requirements.txt            # Python dependencies (flask, pymongo, yfinance)
+├── Dockerfile                  # Flask app container image
+├── docker-compose.yml          # Flask + MongoDB one-command setup
+├── .dockerignore               # Files excluded from Docker build context
 ├── server.ps1                  # PowerShell start/stop/status script (kills old instances first)
 ├── generate_cashflow_chart.py  # Standalone CLI chart generator (legacy v1)
 ├── aapl_cashflow.html          # Example static chart output
@@ -293,6 +306,7 @@ migration needed.
 | v2.9    | 2026-03-25 | Fix dividend yield display (yfinance already returns % — removed erroneous ×100); "全部清除" button in My Stocks header (clears only pinned non-popular stocks); `pinned` field on stocks documents — bulk-fetched stocks get `pinned:false` via `$setOnInsert`, user-added stocks get `pinned:true`; `GET /api/stocks` filters by `pinned != false`; `/api/stocks/<ticker>/pin` endpoint; screener click pins existing bulk-fetched stocks instead of re-fetching |
 | v2.10   | 2026-03-25 | Revenue / EPS chart tab: `/api/stocks/<ticker>/financials` endpoint (yfinance `t.income_stmt` + `t.quarterly_income_stmt`); new "營收/EPS" tab; dual-axis Chart.js bar+line (Revenue bars blue left axis, Net Income bars green left axis, Diluted EPS line orange right axis); annual/quarterly toggle; KPI stat row (latest revenue, revenue CAGR, latest net income, diluted EPS); history table with YoY% colour-coded; ETFs show "無財務報表資料" message |
 | v2.11   | 2026-03-25 | Export to CSV / Excel: SheetJS (xlsx@0.18.5) added via CDN; "↓ CSV" and "↓ Excel" buttons in chart panel header; exports data from whichever tab is active (CF, Rev, Div, Trend); cached `currentDivData` and `currentTrendData` globals; filename includes ticker + period; CSV uses UTF-8 BOM for Excel compatibility |
+| v2.12   | 2026-03-25 | Docker Compose setup: `Dockerfile` (python:3.11-slim), `docker-compose.yml` (web + mongo:7 services, named volume `mongo_data`, healthcheck); `requirements.txt` added; `app.py` reads `MONGO_URI` env var (falls back to `localhost` for local dev); `docker compose up --build` starts everything |
 
 ## Future Improvements
 
@@ -301,5 +315,5 @@ migration needed.
 - [x] Dividend history chart
 - [x] Revenue / EPS chart tab
 - [x] Export to CSV / Excel
-- [ ] Docker Compose setup (Flask + MongoDB together)
+- [x] Docker Compose setup (Flask + MongoDB together)
 - [ ] WebSocket live price push

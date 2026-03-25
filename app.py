@@ -12,7 +12,8 @@ import yfinance as yf
 import math
 
 app = Flask(__name__)
-client = MongoClient("mongodb://localhost:27017/")
+import os as _os
+client = MongoClient(_os.environ.get("MONGO_URI", "mongodb://localhost:27017/"))
 db = client["finance_dashboard"]
 stocks_col  = db["stocks"]
 catalog_col = db["catalog"]

@@ -1,0 +1,12 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.git/
+.claude/
+node_modules/
+*.html
+*.json
+plugins/

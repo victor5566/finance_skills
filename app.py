@@ -697,6 +697,45 @@ def refresh_stock(ticker):
     return jsonify({"ok": True, "name": data["name"]})
 
 
+@app.route("/api/sectors")
+def sectors():
+    """Return unique sectors from the stocks collection."""
+    result = stocks_col.distinct("sector")
+    return jsonify(sorted([s for s in result if s]))
+
+
+@app.route("/api/screener")
+def screener():
+    """Filter stocks by CAGR, FCF conversion, P/E ratio, sector, and exchange."""
+    query = {}
+    ex = request.args.get("exchange", "")
+    if ex and ex != "ALL":
+        query["exchange"] = ex
+    sector = request.args.get("sector", "")
+    if sector:
+        query["sector"] = sector
+
+    def add_range(field, param_min, param_max):
+        mn = request.args.get(param_min, type=float)
+        mx = request.args.get(param_max, type=float)
+        if mn is not None or mx is not None:
+            query[field] = {}
+            if mn is not None:
+                query[field]["$gte"] = mn
+            if mx is not None:
+                query[field]["$lte"] = mx
+
+    add_range("kpis.ocf_cagr",      "min_cagr",     "max_cagr")
+    add_range("kpis.fcf_conversion", "min_fcf_conv", "max_fcf_conv")
+    add_range("kpis.pe_ratio",       "min_pe",       "max_pe")
+
+    docs = list(stocks_col.find(query, {
+        "_id": 0, "ticker": 1, "name": 1, "exchange": 1, "sector": 1,
+        "current_price": 1, "market_cap": 1, "kpis": 1,
+    }).sort("ticker", 1))
+    return jsonify(docs)
+
+
 @app.route("/api/popular")
 def popular():
     """Return popular tickers, fetching if not in DB."""
@@ -893,6 +932,23 @@ tr:hover td{background:#1e293b}
 .cmp-empty{padding:60px;text-align:center;color:var(--dim);font-size:.9rem}
 .cmp-wrap{height:400px;position:relative;margin-bottom:18px}
 
+/* ── Screener panel ─────────────────── */
+#screener-panel{background:var(--card);border-radius:14px;padding:20px;margin-bottom:24px;display:none}
+#screener-panel h3{font-size:.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
+.scr-filters{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:16px}
+.scr-field{display:flex;flex-direction:column;gap:4px}
+.scr-field label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.scr-field input,.scr-field select{
+  background:var(--panel);border:1px solid var(--border);color:var(--text);
+  padding:6px 10px;border-radius:7px;font-size:.83rem;outline:none;width:128px
+}
+.scr-field select{width:160px}
+.scr-field input:focus,.scr-field select:focus{border-color:var(--accent)}
+.scr-run{padding:7px 20px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:.83rem;font-weight:600}
+.scr-count{font-size:.78rem;color:var(--muted);margin-bottom:10px}
+.scr-wrap{overflow-x:auto;max-height:460px;overflow-y:auto}
+.scr-wrap table{width:100%;border-collapse:collapse;font-size:.8rem}
+
 /* ── Toast ──────────────────────────── */
 .toast{position:fixed;bottom:22px;right:22px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:9px;font-size:.83rem;z-index:999;opacity:0;transition:.3s;pointer-events:none;max-width:300px}
 .toast.show{opacity:1}
@@ -919,7 +975,10 @@ tr:hover td{background:#1e293b}
   <button class="ex-tab" data-ex="NASDAQ"   onclick="setExchange(this)">NASDAQ</button>
   <button class="ex-tab" data-ex="NYSE"     onclick="setExchange(this)">NYSE</button>
   <button class="ex-tab" data-ex="AMEX"     onclick="setExchange(this)">AMEX</button>
-  <button class="ex-tab" style="margin-left:auto;background:#1a2e1a;border-color:#2d4a2d;color:#4ade80" onclick="toggleCatalog()">+ 瀏覽股票目錄</button>
+  <div style="margin-left:auto;display:flex;gap:6px">
+    <button class="ex-tab" style="background:#1e1a2e;border-color:#3d2d5a;color:#a78bfa" onclick="toggleScreener()">&#9783; 篩選器</button>
+    <button class="ex-tab" style="background:#1a2e1a;border-color:#2d4a2d;color:#4ade80" onclick="toggleCatalog()">+ 瀏覽股票目錄</button>
+  </div>
 </div>
 
 <main>
@@ -927,6 +986,47 @@ tr:hover td{background:#1e293b}
   <div id="catalog-panel">
     <h3 id="catalog-title">NYSE 股票目錄</h3>
     <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- Screener panel -->
+  <div id="screener-panel">
+    <h3>股票篩選器</h3>
+    <div class="scr-filters">
+      <div class="scr-field">
+        <label>產業</label>
+        <select id="scrSector"><option value="">全部產業</option></select>
+      </div>
+      <div class="scr-field">
+        <label>最低 OCF CAGR (%)</label>
+        <input id="scrMinCagr" type="number" step="0.1" placeholder="例：10">
+      </div>
+      <div class="scr-field">
+        <label>最低 FCF 轉換率 (%)</label>
+        <input id="scrMinFcfConv" type="number" step="1" placeholder="例：70">
+      </div>
+      <div class="scr-field">
+        <label>P/E 下限</label>
+        <input id="scrMinPe" type="number" step="0.1" placeholder="例：10">
+      </div>
+      <div class="scr-field">
+        <label>P/E 上限</label>
+        <input id="scrMaxPe" type="number" step="0.1" placeholder="例：50">
+      </div>
+      <button class="scr-run" onclick="runScreener()">篩選</button>
+      <button class="scr-run" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
+    </div>
+    <div class="scr-count" id="scrCount"></div>
+    <div class="scr-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>代碼</th><th>公司名稱</th><th>交易所</th><th>產業</th>
+            <th>股價</th><th>OCF CAGR</th><th>FCF 轉換率</th><th>P/E</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="scrBody"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Chart panel -->
@@ -1078,6 +1178,7 @@ function setExchange(btn){
   currentExchange = btn.dataset.ex;
   loadMyStocks();
   if(catalogVisible) loadCatalog();
+  if(screenerVisible) runScreener();
 }
 
 // ── Catalog browser ───────────────────────────────────────────
@@ -1741,6 +1842,85 @@ function renderCompare(d){
       },
     },
   });
+}
+
+// ── Screener ───────────────────────────────────────────────────
+let screenerVisible = false;
+
+async function toggleScreener(){
+  screenerVisible = !screenerVisible;
+  const panel = document.getElementById('screener-panel');
+  panel.style.display = screenerVisible ? 'block' : 'none';
+  if(screenerVisible){
+    const res = await fetch('/api/sectors');
+    const sects = await res.json();
+    const sel = document.getElementById('scrSector');
+    sel.innerHTML = '<option value="">全部產業</option>' +
+      sects.map(s=>`<option value="${s}">${s}</option>`).join('');
+    runScreener();
+  }
+}
+
+async function runScreener(){
+  const params = new URLSearchParams();
+  const sect     = document.getElementById('scrSector').value;
+  const minCagr  = document.getElementById('scrMinCagr').value;
+  const minFcf   = document.getElementById('scrMinFcfConv').value;
+  const minPe    = document.getElementById('scrMinPe').value;
+  const maxPe    = document.getElementById('scrMaxPe').value;
+  if(currentExchange !== 'ALL') params.set('exchange', currentExchange);
+  if(sect)    params.set('sector',       sect);
+  if(minCagr) params.set('min_cagr',    minCagr);
+  if(minFcf)  params.set('min_fcf_conv', minFcf);
+  if(minPe)   params.set('min_pe',      minPe);
+  if(maxPe)   params.set('max_pe',      maxPe);
+  const res = await fetch('/api/screener?' + params.toString());
+  renderScreener(await res.json());
+}
+
+function resetScreener(){
+  ['scrMinCagr','scrMinFcfConv','scrMinPe','scrMaxPe'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('scrSector').value = '';
+  runScreener();
+}
+
+function renderScreener(stocks){
+  document.getElementById('scrCount').textContent = `找到 ${stocks.length} 檔符合條件`;
+  const tbody = document.getElementById('scrBody');
+  if(!stocks.length){
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:30px">無符合條件的股票</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = stocks.map(s=>{
+    const k = s.kpis || {};
+    const ex = s.exchange || '';
+    const cagrColor  = k.ocf_cagr     >= 10 ? 'var(--green)' : 'var(--text)';
+    const convColor  = k.fcf_conversion >= 70 ? 'var(--green)' : 'var(--text)';
+    return `<tr style="cursor:pointer" onclick="scrPick('${s.ticker}')">
+      <td><strong style="color:#e2e8f0">${s.ticker}</strong></td>
+      <td style="color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name||''}</td>
+      <td><span class="ex-badge ${ex}" style="font-size:.65rem">${ex}</span></td>
+      <td style="color:var(--dim);font-size:.76rem">${s.sector||'—'}</td>
+      <td>${s.current_price!=null?'$'+s.current_price.toFixed(2):'—'}</td>
+      <td style="color:${cagrColor}">${k.ocf_cagr!=null?k.ocf_cagr.toFixed(1)+'%':'N/A'}</td>
+      <td style="color:${convColor}">${k.fcf_conversion!=null?k.fcf_conversion.toFixed(0)+'%':'N/A'}</td>
+      <td style="color:var(--purple)">${k.pe_ratio!=null?k.pe_ratio.toFixed(1):'N/A'}</td>
+      <td><button class="btn btn-refresh" style="font-size:.7rem;padding:3px 9px" onclick="event.stopPropagation();scrPick('${s.ticker}')">查看</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function scrPick(ticker){
+  const inDb = await isInDb(ticker);
+  if(!inDb){
+    toast('載入中...');
+    const res = await fetch('/api/stocks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker})});
+    const d = await res.json();
+    if(!res.ok){toast('Error: '+d.error);return;}
+    toast(`已加入 ${d.name}`);
+    await loadMyStocks();
+  }
+  showChart(ticker);
 }
 
 // ── Init ──────────────────────────────────────────────────────

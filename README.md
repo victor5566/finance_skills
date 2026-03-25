@@ -324,6 +324,7 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.10 | 2026-03-25 | 營收/EPS 圖表頁籤：`/api/stocks/<ticker>/financials` 端點（yfinance `t.income_stmt` + `t.quarterly_income_stmt`）；新增「營收/EPS」頁籤；雙軸 Chart.js 組合圖（總營收藍色長條＋淨利綠色長條對應左軸，稀釋 EPS 橘色折線對應右軸）；年度/季度切換；KPI 統計列（最新年度營收、營收 CAGR、最新淨利、稀釋 EPS）；資料表含 YoY% 色碼標示；ETF 顯示「無財務報表資料」提示 |
 | v2.11 | 2026-03-25 | 匯出 CSV / Excel：透過 CDN 加入 SheetJS（xlsx@0.18.5）；圖表面板標題列新增「↓ CSV」與「↓ Excel」按鈕；依當前頁籤匯出對應資料（現金流、營收/EPS、股息歷史、價格趨勢）；新增 `currentDivData` 與 `currentTrendData` 全域快取；檔名含股票代碼與期間；CSV 使用 UTF-8 BOM 確保 Excel 相容 |
 | v2.12 | 2026-03-25 | Docker Compose 設定：新增 `Dockerfile`（python:3.11-slim）、`docker-compose.yml`（web + mongo:7 服務，命名 volume `mongo_data`，MongoDB healthcheck）、`requirements.txt`、`.dockerignore`；`app.py` 改由 `MONGO_URI` 環境變數設定連線（本機預設 `localhost`） |
+| v2.13 | 2026-03-25 | 即時股價推播（SSE）：`/api/prices/stream` 每 30 秒迭代所有追蹤股票，透過 yfinance `fast_info.last_price` + `previous_close` 計算漲跌幅，串流 JSON 陣列；前端 `startPriceStream()` 頁面載入時連線，`applyPriceUpdate()` 更新股票卡片 `.price` 與 `.price-chg` 漲跌幅標籤，觸發綠/紅閃爍動畫；標題列脈衝綠點顯示連線狀態；錯誤後 10 秒自動重連 |
 
 ## 未來改善方向
 
@@ -333,4 +334,4 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 - [x] 營收 / EPS 圖表頁籤
 - [x] 匯出 CSV / Excel
 - [x] Docker Compose 設定（Flask + MongoDB 一鍵啟動）
-- [ ] WebSocket 即時股價推播
+- [x] WebSocket 即時股價推播

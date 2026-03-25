@@ -885,6 +885,40 @@ def stock_financials(ticker):
         return jsonify({"error": str(e)}), 400
 
 
+@app.route("/api/prices/stream")
+def price_stream():
+    """SSE: push live prices every 30s for all tracked stocks."""
+    import time as _time
+    def generate():
+        while True:
+            try:
+                tickers = [d["ticker"] for d in stocks_col.find(
+                    {"pinned": {"$ne": False}}, {"ticker": 1, "_id": 0}
+                )]
+                updates = []
+                for t in tickers:
+                    try:
+                        fi = yf.Ticker(t).fast_info
+                        price = getattr(fi, "last_price", None)
+                        prev  = getattr(fi, "previous_close", None)
+                        if price is None:
+                            continue
+                        price = float(price)
+                        chg   = round((price - float(prev)) / float(prev) * 100, 2) if prev else None
+                        updates.append({"ticker": t, "price": round(price, 2), "change_pct": chg})
+                    except Exception:
+                        pass
+                yield f"data: {json.dumps(updates)}\n\n"
+            except Exception:
+                yield "data: []\n\n"
+            _time.sleep(30)
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
 @app.route("/api/bulk-fetch")
 def bulk_fetch():
     """Stream bulk-fetch progress via SSE; fetches all catalog tickers not yet in DB."""
@@ -1020,6 +1054,14 @@ section h2{font-size:.88rem;color:var(--muted);text-transform:uppercase;letter-s
 .card-name{font-size:.76rem;color:var(--muted);margin-top:2px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-price{text-align:right}
 .card-price .price{font-size:1.05rem;font-weight:600;color:var(--green)}
+.price-chg{font-size:.68rem;margin-top:1px;transition:color .4s}
+@keyframes flash-up{0%,100%{background:transparent}40%{background:rgba(74,222,128,.28);border-radius:4px}}
+@keyframes flash-dn{0%,100%{background:transparent}40%{background:rgba(248,113,113,.28);border-radius:4px}}
+.price-up{animation:flash-up .7s ease}
+.price-dn{animation:flash-dn .7s ease}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:6px;vertical-align:middle;cursor:default}
+.live-dot.active{animation:live-pulse 2.4s ease-in-out infinite}
+@keyframes live-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}60%{opacity:.7;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
 .ex-badge{font-size:.68rem;padding:2px 7px;border-radius:20px;font-weight:600;display:inline-block;margin-top:4px}
 .ex-badge.NasdaqGS{background:#0f2d4a;color:#38bdf8}
 .ex-badge.NASDAQ{background:#1e3a5f;color:#60a5fa}
@@ -1145,7 +1187,7 @@ tr:hover td{background:#1e293b}
 <body>
 
 <header>
-  <h1>Finance Dashboard</h1>
+  <h1>Finance Dashboard<span class="live-dot" id="liveDot" title="即時報價：連線中"></span></h1>
   <div class="header-sep"></div>
   <!-- Search box -->
   <div class="search-wrap">
@@ -1584,6 +1626,7 @@ function cardHTML(s){
       </div>
       <div class="card-price">
         <div class="price">${s.current_price!=null?'$'+s.current_price.toFixed(2):'—'}</div>
+        <div class="price-chg" style="color:var(--dim)">—</div>
         <div style="font-size:.68rem;color:var(--dim);margin-top:3px">市值 ${mc}</div>
       </div>
     </div>
@@ -2554,10 +2597,59 @@ function startBulkFetch(){
   };
 }
 
+// ── Live price stream (SSE) ───────────────────────────────────
+let priceSSE = null;
+
+function startPriceStream(){
+  if(priceSSE){ priceSSE.close(); priceSSE = null; }
+  const dot = document.getElementById('liveDot');
+  if(dot){ dot.title = '即時報價：連線中'; dot.classList.remove('active'); }
+  priceSSE = new EventSource('/api/prices/stream');
+  priceSSE.onopen = () => {
+    if(dot){ dot.classList.add('active'); dot.title = '即時報價：已連線（每30秒更新）'; }
+  };
+  priceSSE.onmessage = e => {
+    try {
+      const updates = JSON.parse(e.data);
+      if(!Array.isArray(updates) || !updates.length) return;
+      updates.forEach(applyPriceUpdate);
+      if(dot){ dot.title = '即時報價：最後更新 ' + new Date().toLocaleTimeString('zh-TW'); }
+    } catch(err){}
+  };
+  priceSSE.onerror = () => {
+    if(dot){ dot.classList.remove('active'); dot.title = '即時報價：連線中斷，10秒後重試'; }
+    priceSSE.close(); priceSSE = null;
+    setTimeout(startPriceStream, 10000);
+  };
+}
+
+function applyPriceUpdate(u){
+  const card = document.getElementById('card-' + u.ticker);
+  if(!card) return;
+  const priceEl = card.querySelector('.price');
+  if(priceEl && u.price != null){
+    const prev = parseFloat(priceEl.textContent.replace('$',''));
+    const newTxt = '$' + u.price.toFixed(2);
+    if(priceEl.textContent !== newTxt){
+      priceEl.textContent = newTxt;
+      priceEl.classList.remove('price-up','price-dn');
+      void priceEl.offsetWidth;
+      if(!isNaN(prev)) priceEl.classList.add(u.price >= prev ? 'price-up' : 'price-dn');
+    }
+  }
+  const chgEl = card.querySelector('.price-chg');
+  if(chgEl && u.change_pct != null){
+    const sign = u.change_pct >= 0 ? '+' : '';
+    chgEl.textContent = sign + u.change_pct.toFixed(2) + '%';
+    chgEl.style.color = u.change_pct >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────────
 (async function(){
   await loadPopular();
   await loadMyStocks();
+  startPriceStream();
 })();
 </script>
 </body>

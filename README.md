@@ -326,6 +326,7 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.12 | 2026-03-25 | Docker Compose 設定：新增 `Dockerfile`（python:3.11-slim）、`docker-compose.yml`（web + mongo:7 服務，命名 volume `mongo_data`，MongoDB healthcheck）、`requirements.txt`、`.dockerignore`；`app.py` 改由 `MONGO_URI` 環境變數設定連線（本機預設 `localhost`） |
 | v2.13 | 2026-03-25 | 即時股價推播（SSE）：`/api/prices/stream` 每 30 秒迭代所有追蹤股票，透過 yfinance `fast_info.last_price` + `previous_close` 計算漲跌幅，串流 JSON 陣列；前端 `startPriceStream()` 頁面載入時連線，`applyPriceUpdate()` 更新股票卡片 `.price` 與 `.price-chg` 漲跌幅標籤，觸發綠/紅閃爍動畫；標題列脈衝綠點顯示連線狀態；錯誤後 10 秒自動重連 |
 | v2.13.1 | 2026-03-25 | 修正趨勢圖 x 軸日期標籤：1D 模式 `HH:MM` 被截成空字串，現已正確顯示時間；2y/5y 改顯示 `YY-MM`（例如 `23-01`）以帶入年份資訊；價格圖與成交量圖兩個 callback 同步修正 |
+| v2.14 | 2026-03-25 | 歷史資料備份至 MongoDB：新增 `_fetch_dividends_payload()`、`_fetch_financials_payload()`、`_fetch_history_payload()` 模組層級輔助函式；`/api/backup-history` SSE 端點逐一迭代資料庫中所有股票，將 `dividends_cache`、`financials_cache`、`history_cache_1y`、`history_cache_5y` 及 `history_cache_at` 時間戳記存入 MongoDB；現有 `/dividends`、`/financials`、`/history` 端點優先讀取 MongoDB 快取（加 `?refresh=1` 可強制重抓）；篩選器面板新增「備份歷史資料」按鈕，重用批量載入的進度條 |
 
 ## 未來改善方向
 

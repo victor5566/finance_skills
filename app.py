@@ -591,6 +591,12 @@ def delete_stock(ticker):
 def stock_history(ticker):
     """Price history + volume + MA20 + MA50 for trend chart."""
     period   = request.args.get("period", "1y")   # 1d 1mo 3mo 6mo 1y 2y 5y
+    # Serve from MongoDB cache when available (skip 1d — always live)
+    if period != "1d" and request.args.get("refresh") != "1":
+        cache_field = f"history_cache_{period}"
+        doc = stocks_col.find_one({"ticker": ticker.upper()}, {cache_field: 1, "_id": 0})
+        if doc and doc.get(cache_field):
+            return jsonify(doc[cache_field])
     if period == "1d":
         interval = "5m"
     elif period in ("1mo","3mo","6mo","1y"):
@@ -781,6 +787,10 @@ def screener():
 @app.route("/api/stocks/<ticker>/dividends")
 def stock_dividends(ticker):
     """Dividend payment history from yfinance."""
+    if request.args.get("refresh") != "1":
+        doc = stocks_col.find_one({"ticker": ticker.upper()}, {"dividends_cache": 1, "_id": 0})
+        if doc and doc.get("dividends_cache"):
+            return jsonify(doc["dividends_cache"])
     try:
         t = yf.Ticker(ticker.upper())
         divs = t.dividends
@@ -821,6 +831,10 @@ def stock_dividends(ticker):
 @app.route("/api/stocks/<ticker>/financials")
 def stock_financials(ticker):
     """Revenue, Net Income, EPS history from yfinance income statement."""
+    if request.args.get("refresh") != "1":
+        doc = stocks_col.find_one({"ticker": ticker.upper()}, {"financials_cache": 1, "_id": 0})
+        if doc and doc.get("financials_cache"):
+            return jsonify(doc["financials_cache"])
     try:
         t = yf.Ticker(ticker.upper())
 
@@ -912,6 +926,165 @@ def price_stream():
             except Exception:
                 yield "data: []\n\n"
             _time.sleep(30)
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# ── Historical-data helpers (used by both live endpoints and backup) ──────────
+
+def _fetch_dividends_payload(ticker_str):
+    """Fetch dividend history from yfinance and return serialisable dict."""
+    t    = yf.Ticker(ticker_str)
+    divs = t.dividends
+    if divs is None or divs.empty:
+        return {"has_dividends": False}
+    dates   = [d.strftime("%Y-%m-%d") for d in divs.index]
+    amounts = [round(float(v), 4)     for v in divs.values]
+    annual_map = {}
+    for d, a in zip(divs.index, divs.values):
+        yr = str(d.year)
+        annual_map[yr] = round(annual_map.get(yr, 0) + float(a), 4)
+    ann_labels  = sorted(annual_map.keys())
+    ann_amounts = [annual_map[y] for y in ann_labels]
+    info      = t.info
+    div_yield = safe(info.get("dividendYield"))
+    trailing  = safe(info.get("trailingAnnualDividendRate"))
+    return {
+        "has_dividends": True,
+        "dates":   dates,
+        "amounts": amounts,
+        "annual":  {"labels": ann_labels, "dividends": ann_amounts},
+        "stats": {
+            "trailing_annual": trailing,
+            "yield_pct":   round(div_yield, 2) if div_yield else None,
+            "last_amount": amounts[-1] if amounts else None,
+            "last_date":   dates[-1]   if dates   else None,
+        },
+    }
+
+
+def _fetch_financials_payload(ticker_str):
+    """Fetch income-statement history from yfinance and return serialisable dict."""
+    t = yf.Ticker(ticker_str)
+
+    def build_fin_series(income, quarterly=False):
+        if income is None or income.empty:
+            return None
+        rev_k, _ = extract_series(income, income, ("total", "revenue"), ("revenue",))
+        ni_k,  _ = extract_series(income, income, ("net", "income",))
+        eps_k, _ = extract_series(income, income, ("diluted", "eps"), ("basic", "eps"), ("eps",))
+        labels, rev_v, ni_v, eps_v = [], [], [], []
+        for col in reversed(income.columns):
+            labels.append(f"Q{((col.month-1)//3)+1}'{str(col.year)[2:]}" if quarterly else f"FY{col.year}")
+            def get_val(key, c=col, divisor=1e6):
+                if key and key in income.index and c in income.columns:
+                    v = safe(income.loc[key, c])
+                    return round(v / divisor, 2) if v is not None else None
+                return None
+            rev_v.append(get_val(rev_k))
+            ni_v.append(get_val(ni_k))
+            eps_v.append(get_val(eps_k, divisor=1))
+        return {"labels": labels, "revenue": rev_v, "net_income": ni_v, "eps": eps_v}
+
+    annual   = build_fin_series(t.income_stmt)
+    qinc     = t.quarterly_income_stmt
+    quarterly = build_fin_series(qinc, quarterly=True) if qinc is not None and not qinc.empty else None
+    if annual is None:
+        return {"has_financials": False}
+    rev_valid = [v for v in annual["revenue"]    if v is not None and v > 0]
+    eps_valid = [v for v in annual["eps"]        if v is not None]
+    ni_valid  = [v for v in annual["net_income"] if v is not None]
+    latest_rev = rev_valid[-1] if rev_valid else None
+    latest_eps = eps_valid[-1] if eps_valid else None
+    latest_ni  = ni_valid[-1]  if ni_valid  else None
+    rev_cagr   = None
+    if len(rev_valid) >= 2:
+        n = len(rev_valid) - 1
+        try:
+            rev_cagr = round(((rev_valid[-1] / rev_valid[0]) ** (1 / n) - 1) * 100, 2)
+        except Exception:
+            pass
+    return {
+        "has_financials": True,
+        "has_quarterly":  quarterly is not None,
+        "annual":    annual,
+        "quarterly": quarterly,
+        "kpis": {"latest_rev": latest_rev, "rev_cagr": rev_cagr,
+                 "latest_eps": latest_eps, "latest_ni": latest_ni},
+    }
+
+
+def _fetch_history_payload(ticker_str, period):
+    """Fetch OHLCV + MA price history from yfinance (skip 1d — too ephemeral)."""
+    if period == "1d":
+        return None
+    interval = "1d" if period in ("1mo","3mo","6mo","1y") else "1wk"
+    hist = yf.Ticker(ticker_str).history(period=period, interval=interval)
+    if hist.empty:
+        return None
+    closes  = hist["Close"].round(2).tolist()
+    volumes = hist["Volume"].tolist()
+    highs   = hist["High"].round(2).tolist()
+    lows    = hist["Low"].round(2).tolist()
+    dates   = [d.strftime("%Y-%m-%d") for d in hist.index]
+    def ma(n):
+        out = []
+        for i in range(len(closes)):
+            out.append(None if i < n-1 else round(sum(closes[i-n+1:i+1]) / n, 2))
+        return out
+    c_latest = closes[-1] if closes else None
+    c_first  = closes[0]  if closes else None
+    pct_chg  = round((c_latest - c_first) / c_first * 100, 2) if c_first else None
+    db_doc   = stocks_col.find_one({"ticker": ticker_str}, {"kpis.pe_ratio": 1, "_id": 0})
+    pe       = db_doc.get("kpis", {}).get("pe_ratio") if db_doc else None
+    return {
+        "ticker": ticker_str, "period": period, "interval": interval,
+        "dates": dates, "close": closes, "volume": volumes,
+        "ma20": ma(20), "ma50": ma(50), "ma_labels": ["MA20","MA50"],
+        "stats": {
+            "latest_price": c_latest, "pct_change": pct_chg,
+            "high_52w": round(max(h for h in highs if h), 2) if highs else None,
+            "low_52w":  round(min(l for l in lows  if l), 2) if lows  else None,
+            "pe_ratio": pe,
+        },
+    }
+
+
+@app.route("/api/backup-history")
+def backup_history():
+    """SSE: fetch & persist dividends, financials, 1y+5y price history for all DB stocks."""
+    import time as _time
+    def generate():
+        tickers = sorted(d["ticker"] for d in stocks_col.find({}, {"ticker": 1, "_id": 0}))
+        total   = len(tickers)
+        yield f"data: {json.dumps({'total': total, 'done': 0, 'ticker': ''})}\n\n"
+        for i, ticker in enumerate(tickers):
+            try:
+                update = {"history_cache_at": datetime.now(timezone.utc).isoformat()}
+                try:
+                    update["dividends_cache"] = _fetch_dividends_payload(ticker)
+                except Exception:
+                    pass
+                try:
+                    update["financials_cache"] = _fetch_financials_payload(ticker)
+                except Exception:
+                    pass
+                for p in ("1y", "5y"):
+                    try:
+                        h = _fetch_history_payload(ticker, p)
+                        if h:
+                            update[f"history_cache_{p}"] = h
+                    except Exception:
+                        pass
+                stocks_col.update_one({"ticker": ticker}, {"$set": update})
+                yield f"data: {json.dumps({'total': total, 'done': i+1, 'ticker': ticker})}\n\n"
+            except Exception as e:
+                yield f"data: {json.dumps({'total': total, 'done': i+1, 'ticker': ticker, 'error': str(e)})}\n\n"
+            _time.sleep(0.3)
+        yield f"data: {json.dumps({'total': total, 'done': total, 'finished': True})}\n\n"
     return Response(
         stream_with_context(generate()),
         mimetype="text/event-stream",
@@ -1243,7 +1416,8 @@ tr:hover td{background:#1e293b}
       </div>
       <button class="scr-run" onclick="runScreener()">篩選</button>
       <button class="scr-run" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
-      <button class="scr-run" id="btnBulk" style="background:#1a2e1a;border:1px solid #2d4a2d;color:#4ade80" onclick="startBulkFetch()">&#8987; 載入全部數據</button>
+      <button class="scr-run" id="btnBulk"   style="background:#1a2e1a;border:1px solid #2d4a2d;color:#4ade80"   onclick="startBulkFetch()">&#8987; 載入全部數據</button>
+      <button class="scr-run" id="btnBackup" style="background:#1a1a2e;border:1px solid #2d2d5a;color:#818cf8" onclick="startBackupHistory()">&#128190; 備份歷史資料</button>
     </div>
     <div class="bulk-bar-wrap" id="bulkBarWrap">
       <div class="bulk-bar-track"><div class="bulk-bar-fill" id="bulkFill"></div></div>
@@ -2594,6 +2768,41 @@ function startBulkFetch(){
     stat.textContent = '連線中斷，請重試';
     btn.disabled = false;
     btn.textContent = '&#8987; 載入全部數據';
+    es.close();
+  };
+}
+
+// ── Backup history ────────────────────────────────────────────
+function startBackupHistory(){
+  const btn  = document.getElementById('btnBackup');
+  const wrap = document.getElementById('bulkBarWrap');
+  const fill = document.getElementById('bulkFill');
+  const stat = document.getElementById('bulkStatus');
+  btn.disabled = true;
+  btn.textContent = '備份中...';
+  wrap.style.display = 'block';
+  fill.style.width = '0%';
+  stat.textContent = '正在連線...';
+
+  const es = new EventSource('/api/backup-history');
+  es.onmessage = e => {
+    const d = JSON.parse(e.data);
+    const pct = d.total > 0 ? Math.round(d.done / d.total * 100) : 0;
+    fill.style.width = pct + '%';
+    if(d.finished){
+      stat.textContent = `備份完成！共 ${d.total} 檔（股息 / 財務 / 1y + 5y 價格歷史）`;
+      btn.disabled = false;
+      btn.textContent = '&#128190; 備份歷史資料';
+      es.close();
+    } else {
+      const err = d.error ? ` ⚠` : '';
+      stat.textContent = `${d.done} / ${d.total}  備份中 ${d.ticker}${err}`;
+    }
+  };
+  es.onerror = () => {
+    stat.textContent = '連線中斷，請重試';
+    btn.disabled = false;
+    btn.textContent = '&#128190; 備份歷史資料';
     es.close();
   };
 }

@@ -1667,7 +1667,7 @@ async function loadCatalog(){
   const items = await res.json();
   const grid = document.getElementById('catGrid');
   grid.innerHTML = items.map(s=>`
-    <div class="cat-item ${s.in_db?'in-db':''}" id="catitem-${s.ticker}">
+    <div class="cat-item ${s.in_db?'in-db':''}" id="catitem-${s.ticker}" ${s.in_db?`onclick="showChart('${s.ticker}')"`:''}>
       <div>
         <div class="cat-ticker">${s.ticker}</div>
         <div class="cat-name">${s.name}</div>

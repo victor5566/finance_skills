@@ -311,6 +311,7 @@ migration needed.
 | v2.13.1 | 2026-03-25 | Fix trend chart x-axis date labels: 1D was slicing `HH:MM` to empty string — now shows time correctly; 2y/5y now shows `YY-MM` (e.g. `23-01`) instead of `MM-DD` to include year context; fix applied to both price chart and volume chart callbacks |
 | v2.14   | 2026-03-25 | Historical data backup to MongoDB: `_fetch_dividends_payload()`, `_fetch_financials_payload()`, `_fetch_history_payload()` module-level helpers; `/api/backup-history` SSE endpoint iterates all DB stocks and stores `dividends_cache`, `financials_cache`, `history_cache_1y`, `history_cache_5y` + `history_cache_at` timestamp; existing `/dividends`, `/financials`, `/history` endpoints read from MongoDB cache first (pass `?refresh=1` to force live); "備份歷史資料" button in screener panel reuses bulk-fetch progress bar |
 | v2.14.1 | 2026-03-25 | Backup UX: "▮▮ 終止備份" stop button (visible only while running, closes SSE, shows red flash + aborted count); persistent green completion banner shows timestamp + stock count + data types; dismissable with ✕; verified 307/307 stocks fully backed up (dividends_cache, financials_cache, history_cache_1y 252 rows, history_cache_5y 262 rows) |
+| v2.14.2 | 2026-03-26 | Fix catalog click: already-added tickers in catalog browser were not clickable — added `onclick="showChart()"` to `in_db` items so clicking opens the chart panel directly |
 
 ## Future Improvements
 

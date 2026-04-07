@@ -1360,26 +1360,28 @@ tr:hover td{background:#1e293b}
 <body>
 
 <header>
-  <h1>Finance Dashboard<span class="live-dot" id="liveDot" title="即時報價：連線中"></span></h1>
+  <h1>Finance Dashboard<span class="live-dot" id="liveDot"></span></h1>
   <div class="header-sep"></div>
   <!-- Search box -->
   <div class="search-wrap">
     <span class="ico">&#128269;</span>
-    <input id="searchInput" placeholder="搜尋股票代碼或公司名稱..." autocomplete="off">
+    <input id="searchInput" autocomplete="off">
     <div id="dropdown"></div>
   </div>
+  <!-- Language toggle -->
+  <button id="langToggle" onclick="toggleLang()" style="padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;font-size:.8rem;font-weight:700;transition:.15s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">EN</button>
 </header>
 
 <!-- Exchange filter tabs -->
 <div class="ex-tabs">
-  <button class="ex-tab active" data-ex="ALL"      onclick="setExchange(this)">全部</button>
+  <button class="ex-tab active" data-ex="ALL"      onclick="setExchange(this)" id="tabAll">全部</button>
   <button class="ex-tab" data-ex="NasdaqGS" onclick="setExchange(this)">NasdaqGS</button>
   <button class="ex-tab" data-ex="NASDAQ"   onclick="setExchange(this)">NASDAQ</button>
   <button class="ex-tab" data-ex="NYSE"     onclick="setExchange(this)">NYSE</button>
   <button class="ex-tab" data-ex="AMEX"     onclick="setExchange(this)">AMEX</button>
   <div style="margin-left:auto;display:flex;gap:6px">
-    <button class="ex-tab" style="background:#1e1a2e;border-color:#3d2d5a;color:#a78bfa" onclick="toggleScreener()">&#9783; 篩選器</button>
-    <button class="ex-tab" style="background:#1a2e1a;border-color:#2d4a2d;color:#4ade80" onclick="toggleCatalog()">+ 瀏覽股票目錄</button>
+    <button class="ex-tab" id="btnScreenerToggle" style="background:#1e1a2e;border-color:#3d2d5a;color:#a78bfa" onclick="toggleScreener()">&#9783; 篩選器</button>
+    <button class="ex-tab" id="btnCatalogToggle" style="background:#1a2e1a;border-color:#2d4a2d;color:#4ade80" onclick="toggleCatalog()">+ 瀏覽股票目錄</button>
   </div>
 </div>
 
@@ -1392,30 +1394,30 @@ tr:hover td{background:#1e293b}
 
   <!-- Screener panel -->
   <div id="screener-panel">
-    <h3>股票篩選器</h3>
+    <h3 id="screenerTitle">股票篩選器</h3>
     <div class="scr-filters">
       <div class="scr-field">
-        <label>產業</label>
-        <select id="scrSector"><option value="">全部產業</option></select>
+        <label id="scrLabelSector">產業</label>
+        <select id="scrSector"><option value="" id="scrOptAllSectors">全部產業</option></select>
       </div>
       <div class="scr-field">
-        <label>最低 OCF CAGR (%)</label>
-        <input id="scrMinCagr" type="number" step="0.1" placeholder="例：10">
+        <label id="scrLabelMinCagr">最低 OCF CAGR (%)</label>
+        <input id="scrMinCagr" type="number" step="0.1" placeholder="e.g. 10">
       </div>
       <div class="scr-field">
-        <label>最低 FCF 轉換率 (%)</label>
-        <input id="scrMinFcfConv" type="number" step="1" placeholder="例：70">
+        <label id="scrLabelMinFcf">最低 FCF 轉換率 (%)</label>
+        <input id="scrMinFcfConv" type="number" step="1" placeholder="e.g. 70">
       </div>
       <div class="scr-field">
-        <label>P/E 下限</label>
-        <input id="scrMinPe" type="number" step="0.1" placeholder="例：10">
+        <label id="scrLabelMinPe">P/E 下限</label>
+        <input id="scrMinPe" type="number" step="0.1" placeholder="e.g. 10">
       </div>
       <div class="scr-field">
-        <label>P/E 上限</label>
-        <input id="scrMaxPe" type="number" step="0.1" placeholder="例：50">
+        <label id="scrLabelMaxPe">P/E 上限</label>
+        <input id="scrMaxPe" type="number" step="0.1" placeholder="e.g. 50">
       </div>
-      <button class="scr-run" onclick="runScreener()">篩選</button>
-      <button class="scr-run" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
+      <button class="scr-run" id="btnScrRun" onclick="runScreener()">篩選</button>
+      <button class="scr-run" id="btnScrReset" style="background:var(--panel);color:var(--muted);border:1px solid var(--border)" onclick="resetScreener()">清除</button>
       <button class="scr-run" id="btnBulk"   style="background:#1a2e1a;border:1px solid #2d4a2d;color:#4ade80"   onclick="startBulkFetch()">&#8987; 載入全部數據</button>
       <button class="scr-run" id="btnBackup"     style="background:#1a1a2e;border:1px solid #2d2d5a;color:#818cf8" onclick="startBackupHistory()">&#128190; 備份歷史資料</button>
       <button class="scr-run" id="btnStopBackup" style="display:none;background:#2e1a1a;border:1px solid #5a2d2d;color:#f87171" onclick="stopBackupHistory()">&#9646;&#9646; 終止備份</button>
@@ -1434,8 +1436,8 @@ tr:hover td{background:#1e293b}
       <table>
         <thead>
           <tr>
-            <th>代碼</th><th>公司名稱</th><th>交易所</th><th>產業</th>
-            <th>股價</th><th>OCF CAGR</th><th>FCF 轉換率</th><th>P/E</th><th></th>
+            <th id="scrThTicker">代碼</th><th id="scrThName">公司名稱</th><th id="scrThExchange">交易所</th><th id="scrThSector">產業</th>
+            <th id="scrThPrice">股價</th><th>OCF CAGR</th><th id="scrThFcfConv">FCF 轉換率</th><th>P/E</th><th></th>
           </tr>
         </thead>
         <tbody id="scrBody"></tbody>
@@ -1473,13 +1475,13 @@ tr:hover td{background:#1e293b}
         <table>
           <thead>
             <tr>
-              <th>期間</th>
-              <th style="color:var(--green)">營業現金流</th>
+              <th id="cfThPeriod">期間</th>
+              <th style="color:var(--green)" id="cfThOcf">營業現金流</th>
               <th>YoY%</th>
-              <th style="color:var(--red)">資本支出</th>
-              <th style="color:var(--orange)">利息費用</th>
-              <th style="color:var(--blue)">自由現金流</th>
-              <th style="color:var(--purple)">FCF 轉換率</th>
+              <th style="color:var(--red)" id="cfThCapex">資本支出</th>
+              <th style="color:var(--orange)" id="cfThInterest">利息費用</th>
+              <th style="color:var(--blue)" id="cfThFcf">自由現金流</th>
+              <th style="color:var(--purple)" id="cfThFcfConv">FCF 轉換率</th>
             </tr>
           </thead>
           <tbody id="chartTable"></tbody>
@@ -1491,7 +1493,7 @@ tr:hover td{background:#1e293b}
     <div id="trend-section">
       <div class="stat-row" id="trendStats"></div>
       <div class="range-row">
-        <span style="font-size:.75rem;color:var(--muted);margin-right:4px">區間：</span>
+        <span style="font-size:.75rem;color:var(--muted);margin-right:4px" id="trendRangeLabel">區間：</span>
         <button class="range-btn" data-p="1d"   onclick="setRange(this)">1D</button>
         <button class="range-btn" data-p="1mo"  onclick="setRange(this)">1M</button>
         <button class="range-btn" data-p="3mo"  onclick="setRange(this)">3M</button>
@@ -1506,7 +1508,7 @@ tr:hover td{background:#1e293b}
         </span>
       </div>
       <div class="trend-wrap"><canvas id="trendChart"></canvas></div>
-      <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px">成交量</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:6px" id="volLabel">成交量</div>
       <div class="vol-wrap"><canvas id="volChart"></canvas></div>
     </div>
 
@@ -1518,9 +1520,9 @@ tr:hover td{background:#1e293b}
         <table>
           <thead>
             <tr>
-              <th>付息日期</th>
-              <th style="color:#facc15">每股股息 ($)</th>
-              <th>YoY%（年度）</th>
+              <th id="divThDate">付息日期</th>
+              <th style="color:#facc15" id="divThAmount">每股股息 ($)</th>
+              <th id="divThYoy">YoY%（年度）</th>
             </tr>
           </thead>
           <tbody id="divTable"></tbody>
@@ -1532,7 +1534,7 @@ tr:hover td{background:#1e293b}
     <div id="rev-section" style="display:none">
       <div class="stat-row" id="revStats"></div>
       <div class="range-row" id="revPeriodRow" style="margin-bottom:10px">
-        <span style="font-size:.75rem;color:var(--muted);margin-right:4px">期間：</span>
+        <span style="font-size:.75rem;color:var(--muted);margin-right:4px" id="revPeriodLabel">期間：</span>
         <button class="period-btn active" id="revBtnAnnual"    onclick="setRevPeriod('annual')">年度</button>
         <button class="period-btn"        id="revBtnQuarterly" onclick="setRevPeriod('quarterly')">季度</button>
       </div>
@@ -1541,11 +1543,11 @@ tr:hover td{background:#1e293b}
         <table>
           <thead>
             <tr>
-              <th>期間</th>
-              <th style="color:#60a5fa">總營收 ($M)</th>
+              <th id="revThPeriod">期間</th>
+              <th style="color:#60a5fa" id="revThRevenue">總營收 ($M)</th>
               <th>YoY%</th>
-              <th style="color:#4ade80">淨利 ($M)</th>
-              <th style="color:#fb923c">稀釋 EPS ($)</th>
+              <th style="color:#4ade80" id="revThNI">淨利 ($M)</th>
+              <th style="color:#fb923c" id="revThEps">稀釋 EPS ($)</th>
             </tr>
           </thead>
           <tbody id="revTable"></tbody>
@@ -1558,14 +1560,13 @@ tr:hover td{background:#1e293b}
       <div class="cmp-chips" id="cmpChips"></div>
       <div class="cmp-add-wrap">
         <div class="cmp-input-wrap">
-          <input id="cmpInput" placeholder="輸入代碼或公司名稱..." maxlength="20"
-                 autocomplete="off">
+          <input id="cmpInput" maxlength="20" autocomplete="off">
           <div id="cmpDropdown"></div>
         </div>
-        <button onclick="addCmpTicker()">+ 加入</button>
+        <button id="btnCmpAdd" onclick="addCmpTicker()">+ 加入</button>
       </div>
       <div class="range-row" id="cmpRangeRow">
-        <span style="font-size:.75rem;color:var(--muted);margin-right:4px">區間：</span>
+        <span style="font-size:.75rem;color:var(--muted);margin-right:4px" id="cmpRangeLabel">區間：</span>
         <button class="range-btn" data-p="1d"  onclick="setCmpRange(this)">1D</button>
         <button class="range-btn" data-p="1mo" onclick="setCmpRange(this)">1M</button>
         <button class="range-btn" data-p="3mo" onclick="setCmpRange(this)">3M</button>
@@ -1580,15 +1581,15 @@ tr:hover td{background:#1e293b}
 
   <!-- Popular stocks -->
   <section id="popularSection">
-    <h2>熱門股票</h2>
+    <h2 id="popularTitle">熱門股票</h2>
     <div class="stock-grid" id="popularGrid"><div class="empty-msg"><span class="spinner-inline"></span> 載入中...</div></div>
   </section>
 
   <!-- My stocks -->
   <section id="mySection">
     <h2 style="display:flex;align-items:center;gap:12px">
-      我的股票
-      <button onclick="clearAllMyStocks()" style="font-size:.72rem;padding:4px 12px;background:transparent;border:1px solid #4b5563;border-radius:6px;color:#6b7280;cursor:pointer;font-weight:500" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='#4b5563';this.style.color='#6b7280'">全部清除</button>
+      <span id="myTitle">我的股票</span>
+      <button id="btnClearAll" onclick="clearAllMyStocks()" style="font-size:.72rem;padding:4px 12px;background:transparent;border:1px solid #4b5563;border-radius:6px;color:#6b7280;cursor:pointer;font-weight:500" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='#4b5563';this.style.color='#6b7280'">全部清除</button>
     </h2>
     <div class="stock-grid" id="myGrid"><div class="empty-msg">尚無自訂股票。從搜尋或目錄新增。</div></div>
   </section>
@@ -1597,6 +1598,250 @@ tr:hover td{background:#1e293b}
 
 <script>
 Chart.register(ChartDataLabels);
+
+// ── i18n ──────────────────────────────────────────────────────
+let LANG = 'zh';
+const TRANS = {
+  zh: {
+    liveDotConnecting:'即時報價：連線中', liveDotConnected:'即時報價：已連線（每30秒更新）',
+    liveDotDisconnected:'即時報價：連線中斷，10秒後重試', liveDotUpdated:'即時報價：最後更新 ',
+    searchPlaceholder:'搜尋股票代碼或公司名稱...',
+    tabAll:'全部', btnScreener:'篩選器', btnCatalog:'+ 瀏覽股票目錄',
+    catalogTitle:'{ex} 股票目錄', catalogAdded:'已加入', catalogAdd:'+ 加入', catalogLoading:'載入...',
+    screenerTitle:'股票篩選器', scrLabelSector:'產業', scrAllSectors:'全部產業',
+    scrLabelMinCagr:'最低 OCF CAGR (%)', scrLabelMinFcf:'最低 FCF 轉換率 (%)',
+    scrLabelMinPe:'P/E 下限', scrLabelMaxPe:'P/E 上限',
+    scrRun:'篩選', scrReset:'清除', scrBulk:'載入全部數據', scrBackup:'備份歷史資料', scrStop:'終止備份',
+    scrThTicker:'代碼', scrThName:'公司名稱', scrThExchange:'交易所', scrThSector:'產業',
+    scrThPrice:'股價', scrThFcfConv:'FCF 轉換率',
+    scrEmpty:'無符合條件的股票',
+    scrCount:'共 {n} 檔', scrCountNote:'（{loaded} 檔已載入數據，其餘點「載入」抓取）',
+    scrView:'查看', scrLoad:'載入',
+    annual:'年度', quarterly:'季度',
+    tabCF:'現金流分析', tabTrend:'價格趨勢', tabDiv:'股息歷史', tabRev:'營收/EPS', tabCompare:'多股比較',
+    cfThPeriod:'期間', cfThOcf:'營業現金流', cfThCapex:'資本支出', cfThInterest:'利息費用',
+    cfThFcf:'自由現金流', cfThFcfConv:'FCF 轉換率',
+    kpiLatestOcf:'最新 OCF', kpiLatestOcfSub:'營業現金流',
+    kpiLatestFcf:'最新 FCF', kpiLatestFcfSub:'自由現金流',
+    kpiOcfCagr:'OCF CAGR', kpiOcfCagrSub:'年複合成長',
+    kpiFcfConv:'FCF 轉換率', kpiFcfConvSub:'FCF / OCF',
+    dsOcf:'營業現金流 (OCF)', dsCapex:'資本支出 (CapEx)', dsInterest:'利息費用', dsFcf:'自由現金流 (FCF)',
+    trendRangeLabel:'區間：', maLegendClose:'收盤價', volLabel:'成交量',
+    statCurrentPrice:'目前價格', statPctChange:'區間漲跌幅', statHigh:'區間最高',
+    statLow:'區間最低', statPe:'P/E 本益比',
+    dsTrendClose:'收盤價', dsVolume:'成交量',
+    divThDate:'付息日期', divThAmount:'每股股息 ($)', divThYoy:'YoY%（年度）',
+    divStatAnnual:'年度股息 / 股', divStatYield:'殖利率',
+    divStatLast:'最近一次股息', divStatDate:'最近付息日',
+    divChartLabel:'年度股息 / 股 ($)', noDividends:'此股票目前不配息', divLoadError:'無法取得股息資料',
+    revPeriodLabel:'期間：', revBtnAnnual:'年度', revBtnQuarterly:'季度',
+    revThPeriod:'期間', revThRevenue:'總營收 ($M)', revThNI:'淨利 ($M)', revThEps:'稀釋 EPS ($)',
+    revStatRevenue:'最新年度營收', revStatCagr:'營收 CAGR',
+    revStatNI:'最新年度淨利', revStatEps:'稀釋 EPS',
+    revDsRevenue:'總營收', revDsNI:'淨利', revDsEps:'稀釋 EPS',
+    noFinancials:'此股票無財務報表資料（如 ETF）', revLoadError:'無法取得財務資料',
+    cmpPlaceholder:'輸入代碼或公司名稱...', cmpAddBtn:'+ 加入', cmpRangeLabel:'區間：',
+    cmpMax:'最多比較 8 檔股票', cmpLoadError:'比較資料載入失敗',
+    popularTitle:'熱門股票', myTitle:'我的股票', btnClearAll:'全部清除',
+    popularError:'無法載入熱門股票', myEmpty:'尚無自訂股票。從搜尋或目錄新增。',
+    popularLoading:'載入中...',
+    cardMarketCap:'市值 ', cardRefresh:'更新',
+    noClearable:'沒有可清除的股票',
+    clearConfirm:'確定要清除全部 {n} 檔自訂股票嗎？\n（熱門股票不受影響）',
+    clearDone:'已清除 {n} 檔股票',
+    loading:'載入中...', added:'已加入 {name}',
+    refreshing:'更新中...', refreshDone:'{ticker} 已更新',
+    notFound:'找不到資料',
+    deleteConfirm:'確定移除 {ticker}？', deleted:'已移除 {ticker}',
+    noQtrData:'無季度資料', noPriceData:'無法取得價格資料',
+    exportNoCf:'無可匯出的現金流資料', exportNoRev:'無可匯出的財務資料',
+    exportNoDiv:'此股票不配息，無資料可匯出', exportNoTrend:'請先載入趨勢圖',
+    exportNoTab:'此頁籤不支援匯出',
+    exportHdrPeriod:'期間', exportHdrInterest:'利息費用 ($M)', exportHdrFcfConv:'FCF轉換率',
+    exportHdrRevenue:'總營收 ($M)', exportHdrNI:'淨利 ($M)', exportHdrEps:'稀釋EPS ($)',
+    exportHdrDate:'付息日', exportHdrDivAmt:'股息/股 ($)',
+    exportHdrClose:'收盤價 ($)', exportHdrVolume:'成交量',
+    exportSheetCF:'現金流', exportSheetRev:'營收EPS', exportSheetDiv:'股息歷史', exportSheetTrend:'價格趨勢',
+    bulkLoading:'載入中...', bulkConnecting:'正在連線...',
+    bulkDone:'完成！已載入 {total} 檔數據', bulkProgress:'{done} / {total}  正在載入 {ticker}...',
+    bulkError:'連線中斷，請重試',
+    backupLoading:'備份中...', backupConnecting:'正在連線...',
+    backupProgress:'{done} / {total}　備份中 {ticker}', backupError:'連線中斷，請重試',
+    backupDone:'備份完成　{time}　共 {total} 檔　已存入：股息歷史 / 財務報表 / 1y 日線 / 5y 週線',
+    backupStopped:'已於 {time} 終止備份（完成 {done} / {total} 檔）',
+    locale:'zh-TW',
+  },
+  en: {
+    liveDotConnecting:'Live prices: connecting', liveDotConnected:'Live prices: connected (every 30s)',
+    liveDotDisconnected:'Live prices: disconnected, retrying in 10s', liveDotUpdated:'Live prices: updated ',
+    searchPlaceholder:'Search ticker or company name...',
+    tabAll:'All', btnScreener:'Screener', btnCatalog:'+ Browse Catalog',
+    catalogTitle:'{ex} Catalog', catalogAdded:'Added', catalogAdd:'+ Add', catalogLoading:'Loading...',
+    screenerTitle:'Stock Screener', scrLabelSector:'Sector', scrAllSectors:'All Sectors',
+    scrLabelMinCagr:'Min OCF CAGR (%)', scrLabelMinFcf:'Min FCF Conv. (%)',
+    scrLabelMinPe:'P/E Min', scrLabelMaxPe:'P/E Max',
+    scrRun:'Filter', scrReset:'Clear', scrBulk:'Load All Data', scrBackup:'Backup History', scrStop:'Stop Backup',
+    scrThTicker:'Ticker', scrThName:'Company', scrThExchange:'Exchange', scrThSector:'Sector',
+    scrThPrice:'Price', scrThFcfConv:'FCF Conv.',
+    scrEmpty:'No matching stocks',
+    scrCount:'{n} results', scrCountNote:'({loaded} loaded, click Load for others)',
+    scrView:'View', scrLoad:'Load',
+    annual:'Annual', quarterly:'Quarterly',
+    tabCF:'Cash Flow', tabTrend:'Price Trend', tabDiv:'Dividends', tabRev:'Revenue/EPS', tabCompare:'Compare',
+    cfThPeriod:'Period', cfThOcf:'Operating CF', cfThCapex:'CapEx', cfThInterest:'Interest',
+    cfThFcf:'Free CF', cfThFcfConv:'FCF Conv.',
+    kpiLatestOcf:'Latest OCF', kpiLatestOcfSub:'Operating Cash Flow',
+    kpiLatestFcf:'Latest FCF', kpiLatestFcfSub:'Free Cash Flow',
+    kpiOcfCagr:'OCF CAGR', kpiOcfCagrSub:'Compound Annual Growth',
+    kpiFcfConv:'FCF Conv.', kpiFcfConvSub:'FCF / OCF',
+    dsOcf:'Operating CF (OCF)', dsCapex:'Capital Expenditure (CapEx)', dsInterest:'Interest Expense', dsFcf:'Free Cash Flow (FCF)',
+    trendRangeLabel:'Range:', maLegendClose:'Close', volLabel:'Volume',
+    statCurrentPrice:'Current Price', statPctChange:'Period Change', statHigh:'Period High',
+    statLow:'Period Low', statPe:'P/E Ratio',
+    dsTrendClose:'Close', dsVolume:'Volume',
+    divThDate:'Ex-Date', divThAmount:'Dividend/Share ($)', divThYoy:'YoY% (Annual)',
+    divStatAnnual:'Annual Div/Share', divStatYield:'Yield',
+    divStatLast:'Last Payment', divStatDate:'Last Pay Date',
+    divChartLabel:'Annual Dividend/Share ($)', noDividends:'No dividends paid', divLoadError:'Failed to load dividend data',
+    revPeriodLabel:'Period:', revBtnAnnual:'Annual', revBtnQuarterly:'Quarterly',
+    revThPeriod:'Period', revThRevenue:'Revenue ($M)', revThNI:'Net Income ($M)', revThEps:'Diluted EPS ($)',
+    revStatRevenue:'Latest Revenue', revStatCagr:'Revenue CAGR',
+    revStatNI:'Latest Net Income', revStatEps:'Diluted EPS',
+    revDsRevenue:'Revenue', revDsNI:'Net Income', revDsEps:'Diluted EPS',
+    noFinancials:'No financial data (e.g. ETF)', revLoadError:'Failed to load financial data',
+    cmpPlaceholder:'Enter ticker or company name...', cmpAddBtn:'+ Add', cmpRangeLabel:'Range:',
+    cmpMax:'Maximum 8 tickers', cmpLoadError:'Failed to load comparison data',
+    popularTitle:'Popular Stocks', myTitle:'My Stocks', btnClearAll:'Clear All',
+    popularError:'Failed to load popular stocks', myEmpty:'No custom stocks. Add from search or catalog.',
+    popularLoading:'Loading...',
+    cardMarketCap:'Mkt Cap ', cardRefresh:'Refresh',
+    noClearable:'No stocks to clear',
+    clearConfirm:'Clear all {n} custom stocks?\n(Popular stocks not affected)',
+    clearDone:'Cleared {n} stocks',
+    loading:'Loading...', added:'Added {name}',
+    refreshing:'Refreshing...', refreshDone:'{ticker} updated',
+    notFound:'Data not found',
+    deleteConfirm:'Remove {ticker}?', deleted:'Removed {ticker}',
+    noQtrData:'No quarterly data', noPriceData:'Failed to load price data',
+    exportNoCf:'No cash flow data to export', exportNoRev:'No financial data to export',
+    exportNoDiv:'No dividend data (stock does not pay dividends)', exportNoTrend:'Load the price chart first',
+    exportNoTab:'Export not supported for this tab',
+    exportHdrPeriod:'Period', exportHdrInterest:'Interest ($M)', exportHdrFcfConv:'FCF Conv.',
+    exportHdrRevenue:'Revenue ($M)', exportHdrNI:'Net Income ($M)', exportHdrEps:'Diluted EPS ($)',
+    exportHdrDate:'Date', exportHdrDivAmt:'Dividend/Share ($)',
+    exportHdrClose:'Close ($)', exportHdrVolume:'Volume',
+    exportSheetCF:'CashFlow', exportSheetRev:'RevenueEPS', exportSheetDiv:'Dividends', exportSheetTrend:'PriceTrend',
+    bulkLoading:'Loading...', bulkConnecting:'Connecting...',
+    bulkDone:'Done! Loaded {total} stocks', bulkProgress:'{done} / {total}  Loading {ticker}...',
+    bulkError:'Connection lost, please retry',
+    backupLoading:'Backing up...', backupConnecting:'Connecting...',
+    backupProgress:'{done} / {total}  Backing up {ticker}', backupError:'Connection lost, please retry',
+    backupDone:'Backup complete  {time}  {total} stocks  Saved: Dividends / Financials / 1Y Daily / 5Y Weekly',
+    backupStopped:'Backup stopped at {time} ({done} / {total} complete)',
+    locale:'en-US',
+  }
+};
+
+function t(key, vars){
+  let s = (TRANS[LANG]||TRANS.zh)[key] || key;
+  if(vars) Object.keys(vars).forEach(k => s = s.replaceAll('{'+k+'}', vars[k]));
+  return s;
+}
+
+function toggleLang(){
+  LANG = LANG === 'zh' ? 'en' : 'zh';
+  applyLang();
+}
+
+function applyLangStatic(){
+  document.documentElement.lang = LANG === 'zh' ? 'zh-TW' : 'en';
+  document.getElementById('langToggle').textContent = LANG === 'zh' ? 'EN' : '中文';
+  // Header
+  const dot = document.getElementById('liveDot');
+  if(dot) dot.title = t('liveDotConnecting');
+  document.getElementById('searchInput').placeholder = t('searchPlaceholder');
+  // Exchange tabs
+  document.getElementById('tabAll').textContent = t('tabAll');
+  document.getElementById('btnScreenerToggle').textContent = '⌗ ' + t('btnScreener');
+  document.getElementById('btnCatalogToggle').textContent = t('btnCatalog');
+  // Screener
+  document.getElementById('screenerTitle').textContent = t('screenerTitle');
+  document.getElementById('scrLabelSector').textContent = t('scrLabelSector');
+  const opt0 = document.getElementById('scrOptAllSectors');
+  if(opt0) opt0.textContent = t('scrAllSectors');
+  document.getElementById('scrLabelMinCagr').textContent = t('scrLabelMinCagr');
+  document.getElementById('scrLabelMinFcf').textContent = t('scrLabelMinFcf');
+  document.getElementById('scrLabelMinPe').textContent = t('scrLabelMinPe');
+  document.getElementById('scrLabelMaxPe').textContent = t('scrLabelMaxPe');
+  document.getElementById('btnScrRun').textContent = t('scrRun');
+  document.getElementById('btnScrReset').textContent = t('scrReset');
+  document.getElementById('btnBulk').innerHTML = '&#8987; ' + t('scrBulk');
+  document.getElementById('btnBackup').innerHTML = '&#128190; ' + t('scrBackup');
+  document.getElementById('btnStopBackup').innerHTML = '&#9646;&#9646; ' + t('scrStop');
+  document.getElementById('scrThTicker').textContent = t('scrThTicker');
+  document.getElementById('scrThName').textContent = t('scrThName');
+  document.getElementById('scrThExchange').textContent = t('scrThExchange');
+  document.getElementById('scrThSector').textContent = t('scrThSector');
+  document.getElementById('scrThPrice').textContent = t('scrThPrice');
+  document.getElementById('scrThFcfConv').textContent = t('scrThFcfConv');
+  // Period toggle
+  document.getElementById('btnAnnual').textContent = t('annual');
+  document.getElementById('btnQuarterly').textContent = t('quarterly');
+  // View tabs
+  document.getElementById('tabCF').textContent = t('tabCF');
+  document.getElementById('tabTrend').textContent = t('tabTrend');
+  document.getElementById('tabDiv').textContent = t('tabDiv');
+  document.getElementById('tabRev').textContent = t('tabRev');
+  document.getElementById('tabCompare').textContent = t('tabCompare');
+  // CF table headers
+  document.getElementById('cfThPeriod').textContent = t('cfThPeriod');
+  document.getElementById('cfThOcf').textContent = t('cfThOcf');
+  document.getElementById('cfThCapex').textContent = t('cfThCapex');
+  document.getElementById('cfThInterest').textContent = t('cfThInterest');
+  document.getElementById('cfThFcf').textContent = t('cfThFcf');
+  document.getElementById('cfThFcfConv').textContent = t('cfThFcfConv');
+  // Trend
+  document.getElementById('trendRangeLabel').textContent = t('trendRangeLabel');
+  document.getElementById('volLabel').textContent = t('volLabel');
+  // Div table headers
+  document.getElementById('divThDate').textContent = t('divThDate');
+  document.getElementById('divThAmount').textContent = t('divThAmount');
+  document.getElementById('divThYoy').textContent = t('divThYoy');
+  // Rev
+  document.getElementById('revPeriodLabel').textContent = t('revPeriodLabel');
+  document.getElementById('revBtnAnnual').textContent = t('revBtnAnnual');
+  document.getElementById('revBtnQuarterly').textContent = t('revBtnQuarterly');
+  document.getElementById('revThPeriod').textContent = t('revThPeriod');
+  document.getElementById('revThRevenue').textContent = t('revThRevenue');
+  document.getElementById('revThNI').textContent = t('revThNI');
+  document.getElementById('revThEps').textContent = t('revThEps');
+  // Compare
+  document.getElementById('cmpInput').placeholder = t('cmpPlaceholder');
+  document.getElementById('btnCmpAdd').textContent = t('cmpAddBtn');
+  document.getElementById('cmpRangeLabel').textContent = t('cmpRangeLabel');
+  // Popular / My Stocks
+  document.getElementById('popularTitle').textContent = t('popularTitle');
+  document.getElementById('myTitle').textContent = t('myTitle');
+  document.getElementById('btnClearAll').textContent = t('btnClearAll');
+}
+
+function applyLang(){
+  applyLangStatic();
+  // Re-render dynamic content
+  if(catalogVisible) loadCatalog();
+  loadPopular();
+  loadMyStocks();
+  if(screenerVisible) runScreener();
+  // Re-render chart if open
+  const panel = document.getElementById('chart-panel');
+  if(panel.style.display !== 'none' && currentTicker){
+    if(currentView === 'cf' && currentStockData) renderChart(currentPeriod);
+    if(currentView === 'trend' && currentTrendData) renderTrend(currentTrendData);
+    if(currentView === 'div' && currentDivData) renderDividend(currentDivData);
+    if(currentView === 'rev' && currentRevData) renderFinancials(currentRevData, revPeriod);
+    if(currentView === 'compare') loadCompare();
+  }
+}
 
 let cfChart    = null;
 let trendChart = null;
@@ -1662,7 +1907,7 @@ async function toggleCatalog(){
 
 async function loadCatalog(){
   const ex = currentExchange === 'ALL' ? 'NasdaqGS' : currentExchange;
-  document.getElementById('catalog-title').textContent = `${ex} 股票目錄`;
+  document.getElementById('catalog-title').textContent = t('catalogTitle').replace('{ex}', ex);
   const res = await fetch(`/api/catalog?exchange=${ex}`);
   const items = await res.json();
   const grid = document.getElementById('catGrid');
@@ -1673,24 +1918,24 @@ async function loadCatalog(){
         <div class="cat-name">${s.name}</div>
       </div>
       ${s.in_db
-        ? `<span class="cat-added">已加入</span>`
-        : `<button class="cat-add" id="catadd-${s.ticker}" onclick="addFromCatalog('${s.ticker}')">+ 加入</button>`
+        ? `<span class="cat-added">${t('catalogAdded')}</span>`
+        : `<button class="cat-add" id="catadd-${s.ticker}" onclick="addFromCatalog('${s.ticker}')">${t('catalogAdd')}</button>`
       }
     </div>`).join('');
 }
 
 async function addFromCatalog(ticker){
   const btn = document.getElementById('catadd-'+ticker);
-  if(btn){ btn.disabled=true; btn.textContent='載入...'; }
+  if(btn){ btn.disabled=true; btn.textContent=t('catalogLoading'); }
   const res = await fetch('/api/stocks', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ticker})
   });
   const d = await res.json();
-  if(!res.ok){ toast('Error: '+d.error); if(btn){btn.disabled=false;btn.textContent='+ 加入';} return; }
-  toast(`已加入 ${d.name}`);
+  if(!res.ok){ toast('Error: '+d.error); if(btn){btn.disabled=false;btn.textContent=t('catalogAdd');} return; }
+  toast(t('added',{name:d.name}));
   const item = document.getElementById('catitem-'+ticker);
-  if(item){ item.classList.add('in-db'); item.innerHTML=item.innerHTML.replace(/<button.*<\/button>/,'<span class="cat-added">已加入</span>'); }
+  if(item){ item.classList.add('in-db'); item.innerHTML=item.innerHTML.replace(/<button.*<\/button>/,`<span class="cat-added">${t('catalogAdded')}</span>`); }
   await loadMyStocks();
   showChart(ticker);
 }
@@ -1733,11 +1978,11 @@ async function pickSearch(ticker){
   searchInput.value='';
   const inDb = await isInDb(ticker);
   if(!inDb){
-    toast('載入中...');
+    toast(t('loading'));
     const res = await fetch('/api/stocks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker})});
     const d = await res.json();
     if(!res.ok){toast('Error: '+d.error);return;}
-    toast(`已加入 ${d.name}`);
+    toast(t('added',{name:d.name}));
     await loadMyStocks();
   }
   showChart(ticker);
@@ -1753,7 +1998,7 @@ async function loadPopular(){
   const res = await fetch('/api/popular');
   const stocks = await res.json();
   const grid = document.getElementById('popularGrid');
-  if(!stocks.length){ grid.innerHTML='<div class="empty-msg">無法載入熱門股票</div>'; return; }
+  if(!stocks.length){ grid.innerHTML=`<div class="empty-msg">${t('popularError')}</div>`; return; }
   grid.innerHTML = stocks.map(s=>cardHTML(s)).join('');
 }
 
@@ -1761,11 +2006,11 @@ async function loadPopular(){
 async function clearAllMyStocks(){
   const grid = document.getElementById('myGrid');
   const count = grid.querySelectorAll('.stock-card').length;
-  if(!count){ toast('沒有可清除的股票'); return; }
-  if(!confirm(`確定要清除全部 ${count} 檔自訂股票嗎？\n（熱門股票不受影響）`)) return;
+  if(!count){ toast(t('noClearable')); return; }
+  if(!confirm(t('clearConfirm',{n:count}))) return;
   const res = await fetch('/api/stocks', {method:'DELETE'});
   const d = await res.json();
-  toast(`已清除 ${d.deleted} 檔股票`);
+  toast(t('clearDone',{n:d.deleted}));
   if(currentTicker && !["AAPL","MSFT","NVDA","TSLA","AMZN"].includes(currentTicker)){
     currentTicker = null;
     document.getElementById('chart-panel').style.display = 'none';
@@ -1783,7 +2028,7 @@ async function loadMyStocks(){
   if(currentExchange !== 'ALL') stocks = stocks.filter(s=>s.exchange===currentExchange);
   const grid = document.getElementById('myGrid');
   if(!stocks.length){
-    grid.innerHTML='<div class="empty-msg">尚無自訂股票。從搜尋或目錄新增。</div>';
+    grid.innerHTML=`<div class="empty-msg">${t('myEmpty')}</div>`;
     return;
   }
   grid.innerHTML = stocks.map(s=>cardHTML(s)).join('');
@@ -1795,7 +2040,7 @@ function cardHTML(s){
   const ex = s.exchange||'';
   const isActive = s.ticker===currentTicker;
   const mc = fmtCap(s.market_cap);
-  const dt = s.last_updated ? new Date(s.last_updated).toLocaleDateString('zh-TW') : '';
+  const dt = s.last_updated ? new Date(s.last_updated).toLocaleDateString(t('locale')) : '';
   return `
   <div class="stock-card${isActive?' active':''}" id="card-${s.ticker}" onclick="showChart('${s.ticker}')">
     <div class="card-top">
@@ -1807,7 +2052,7 @@ function cardHTML(s){
       <div class="card-price">
         <div class="price">${s.current_price!=null?'$'+s.current_price.toFixed(2):'—'}</div>
         <div class="price-chg" style="color:var(--dim)">—</div>
-        <div style="font-size:.68rem;color:var(--dim);margin-top:3px">市值 ${mc}</div>
+        <div style="font-size:.68rem;color:var(--dim);margin-top:3px">${t('cardMarketCap')}${mc}</div>
       </div>
     </div>
     <div class="kpi-row">
@@ -1818,7 +2063,7 @@ function cardHTML(s){
       <div class="kpi"><div class="v" style="color:#f9a8d4">${k.pe_ratio!=null?k.pe_ratio.toFixed(1):'N/A'}</div><div class="l">P/E</div></div>
     </div>
     <div class="card-footer">
-      <button class="btn btn-refresh" onclick="event.stopPropagation();refreshCard('${s.ticker}')">&#8635; 更新</button>
+      <button class="btn btn-refresh" onclick="event.stopPropagation();refreshCard('${s.ticker}')">&#8635; ${t('cardRefresh')}</button>
       <button class="btn btn-del" onclick="event.stopPropagation();deleteCard('${s.ticker}')">&#10005;</button>
       <span class="updated">${dt}</span>
     </div>
@@ -1860,7 +2105,7 @@ async function showChart(ticker){
   ['card-'+ticker].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('active');});
 
   const res = await fetch(`/api/stocks/${ticker}`);
-  if(!res.ok){toast('找不到資料');return;}
+  if(!res.ok){toast(t('notFound'));return;}
   currentStockData = await res.json();
 
   document.getElementById('chart-panel').style.display='block';
@@ -1919,15 +2164,15 @@ function setPeriod(p){
 function renderChart(period){
   const s = currentStockData;
   const series = period==='quarterly' ? s.quarterly : s.annual;
-  if(!series){toast('無季度資料');return;}
+  if(!series){toast(t('noQtrData'));return;}
 
   // KPIs (annual always)
   const k = s.kpis||{};
   document.getElementById('kpiCards').innerHTML=`
-    <div class="kpi-card"><div class="v" style="color:var(--green)">${fmt(k.latest_ocf)}</div><div class="l">最新 OCF</div><div class="s">營業現金流</div></div>
-    <div class="kpi-card"><div class="v" style="color:var(--blue)">${fmt(k.latest_fcf)}</div><div class="l">最新 FCF</div><div class="s">自由現金流</div></div>
-    <div class="kpi-card"><div class="v" style="color:var(--orange)">${k.ocf_cagr!=null?k.ocf_cagr.toFixed(1)+'%':'N/A'}</div><div class="l">OCF CAGR</div><div class="s">年複合成長</div></div>
-    <div class="kpi-card"><div class="v" style="color:var(--purple)">${k.fcf_conversion!=null?k.fcf_conversion.toFixed(0)+'%':'N/A'}</div><div class="l">FCF 轉換率</div><div class="s">FCF / OCF</div></div>`;
+    <div class="kpi-card"><div class="v" style="color:var(--green)">${fmt(k.latest_ocf)}</div><div class="l">${t('kpiLatestOcf')}</div><div class="s">${t('kpiLatestOcfSub')}</div></div>
+    <div class="kpi-card"><div class="v" style="color:var(--blue)">${fmt(k.latest_fcf)}</div><div class="l">${t('kpiLatestFcf')}</div><div class="s">${t('kpiLatestFcfSub')}</div></div>
+    <div class="kpi-card"><div class="v" style="color:var(--orange)">${k.ocf_cagr!=null?k.ocf_cagr.toFixed(1)+'%':'N/A'}</div><div class="l">${t('kpiOcfCagr')}</div><div class="s">${t('kpiOcfCagrSub')}</div></div>
+    <div class="kpi-card"><div class="v" style="color:var(--purple)">${k.fcf_conversion!=null?k.fcf_conversion.toFixed(0)+'%':'N/A'}</div><div class="l">${t('kpiFcfConv')}</div><div class="s">${t('kpiFcfConvSub')}</div></div>`;
 
   // Table
   const rows = series.labels.map((lbl,i)=>{
@@ -1959,10 +2204,10 @@ function renderChart(period){
     data:{
       labels: series.labels,
       datasets:[
-        {label:'營業現金流 (OCF)',data:series.ocf,backgroundColor:'rgba(74,222,128,.72)',borderColor:'rgba(74,222,128,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
-        {label:'資本支出 (CapEx)',data:series.capex,backgroundColor:'rgba(248,113,113,.72)',borderColor:'rgba(248,113,113,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
-        {label:'利息費用',data:series.interest,backgroundColor:'rgba(251,191,36,.72)',borderColor:'rgba(251,191,36,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
-        {label:'自由現金流 (FCF)',data:series.fcf,type:'line',borderColor:'rgba(96,165,250,1)',backgroundColor:'rgba(96,165,250,.12)',borderWidth:2.5,pointRadius:4,pointHoverRadius:7,fill:true,tension:.3,yAxisID:'y',datalabels:{display:false}},
+        {label:t('dsOcf'),data:series.ocf,backgroundColor:'rgba(74,222,128,.72)',borderColor:'rgba(74,222,128,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
+        {label:t('dsCapex'),data:series.capex,backgroundColor:'rgba(248,113,113,.72)',borderColor:'rgba(248,113,113,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
+        {label:t('dsInterest'),data:series.interest,backgroundColor:'rgba(251,191,36,.72)',borderColor:'rgba(251,191,36,1)',borderWidth:1,borderRadius:3,yAxisID:'y'},
+        {label:t('dsFcf'),data:series.fcf,type:'line',borderColor:'rgba(96,165,250,1)',backgroundColor:'rgba(96,165,250,.12)',borderWidth:2.5,pointRadius:4,pointHoverRadius:7,fill:true,tension:.3,yAxisID:'y',datalabels:{display:false}},
       ],
     },
     options:{
@@ -1990,11 +2235,11 @@ function renderChart(period){
 // ── Dividend chart ────────────────────────────────────────────
 async function loadDividend(ticker){
   if(!ticker) return;
-  document.getElementById('divStats').innerHTML = '<div style="color:var(--muted);font-size:.82rem">載入中…</div>';
+  document.getElementById('divStats').innerHTML = `<div style="color:var(--muted);font-size:.82rem">${t('loading')}</div>`;
   document.getElementById('divTable').innerHTML = '';
   if(divChart){ divChart.destroy(); divChart=null; }
   const res = await fetch(`/api/stocks/${ticker}/dividends`);
-  if(!res.ok){ document.getElementById('divStats').innerHTML='<div style="color:var(--muted)">無法取得股息資料</div>'; return; }
+  if(!res.ok){ document.getElementById('divStats').innerHTML=`<div style="color:var(--muted)">${t('divLoadError')}</div>`; return; }
   const d = await res.json();
   currentDivData = d;
   renderDividend(d);
@@ -2003,7 +2248,7 @@ async function loadDividend(ticker){
 function renderDividend(d){
   const statsEl = document.getElementById('divStats');
   if(!d.has_dividends){
-    statsEl.innerHTML = '<div style="color:var(--muted);font-size:.88rem;padding:20px 0">此股票目前不配息</div>';
+    statsEl.innerHTML = `<div style="color:var(--muted);font-size:.88rem;padding:20px 0">${t('noDividends')}</div>`;
     document.getElementById('divTable').innerHTML = '';
     return;
   }
@@ -2011,19 +2256,19 @@ function renderDividend(d){
   statsEl.innerHTML = `
     <div class="stat-card">
       <div class="v" style="color:#facc15">$${st.trailing_annual?.toFixed(2) ?? 'N/A'}</div>
-      <div class="l">年度股息 / 股</div>
+      <div class="l">${t('divStatAnnual')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:var(--green)">${st.yield_pct!=null ? st.yield_pct.toFixed(2)+'%' : 'N/A'}</div>
-      <div class="l">殖利率</div>
+      <div class="l">${t('divStatYield')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:#e2e8f0">$${st.last_amount?.toFixed(4) ?? 'N/A'}</div>
-      <div class="l">最近一次股息</div>
+      <div class="l">${t('divStatLast')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:var(--muted);font-size:.95rem">${st.last_date ?? 'N/A'}</div>
-      <div class="l">最近付息日</div>
+      <div class="l">${t('divStatDate')}</div>
     </div>`;
 
   // Annual bar chart
@@ -2035,7 +2280,7 @@ function renderDividend(d){
     data: {
       labels: ann.labels,
       datasets: [{
-        label: '年度股息 / 股 ($)',
+        label: t('divChartLabel'),
         data: ann.dividends,
         backgroundColor: 'rgba(250,204,21,.72)',
         borderColor: 'rgba(250,204,21,1)',
@@ -2091,11 +2336,11 @@ async function loadFinancials(ticker, period){
     renderFinancials(currentRevData, period);
     return;
   }
-  document.getElementById('revStats').innerHTML = '<div style="color:var(--muted);font-size:.82rem">載入中…</div>';
+  document.getElementById('revStats').innerHTML = `<div style="color:var(--muted);font-size:.82rem">${t('loading')}</div>`;
   document.getElementById('revTable').innerHTML = '';
   if(revChart){ revChart.destroy(); revChart=null; }
   const res = await fetch(`/api/stocks/${ticker}/financials`);
-  if(!res.ok){ document.getElementById('revStats').innerHTML='<div style="color:var(--muted)">無法取得財務資料</div>'; return; }
+  if(!res.ok){ document.getElementById('revStats').innerHTML=`<div style="color:var(--muted)">${t('revLoadError')}</div>`; return; }
   const d = await res.json();
   currentRevData = d;
   // Show/hide quarterly toggle
@@ -2113,7 +2358,7 @@ function setRevPeriod(p){
 function renderFinancials(d, period){
   const statsEl = document.getElementById('revStats');
   if(!d || !d.has_financials){
-    statsEl.innerHTML = '<div style="color:var(--muted);font-size:.88rem;padding:20px 0">此股票無財務報表資料（如 ETF）</div>';
+    statsEl.innerHTML = `<div style="color:var(--muted);font-size:.88rem;padding:20px 0">${t('noFinancials')}</div>`;
     document.getElementById('revTable').innerHTML = '';
     return;
   }
@@ -2121,19 +2366,19 @@ function renderFinancials(d, period){
   statsEl.innerHTML = `
     <div class="stat-card">
       <div class="v" style="color:#60a5fa">${k.latest_rev!=null ? (k.latest_rev>=1000?'$'+(k.latest_rev/1000).toFixed(2)+'B':'$'+k.latest_rev.toFixed(0)+'M') : 'N/A'}</div>
-      <div class="l">最新年度營收</div>
+      <div class="l">${t('revStatRevenue')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:var(--orange)">${k.rev_cagr!=null ? k.rev_cagr.toFixed(1)+'%' : 'N/A'}</div>
-      <div class="l">營收 CAGR</div>
+      <div class="l">${t('revStatCagr')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:#4ade80">${k.latest_ni!=null ? (k.latest_ni>=1000?'$'+(k.latest_ni/1000).toFixed(2)+'B':'$'+k.latest_ni.toFixed(0)+'M') : 'N/A'}</div>
-      <div class="l">最新年度淨利</div>
+      <div class="l">${t('revStatNI')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:#fb923c">${k.latest_eps!=null ? '$'+k.latest_eps.toFixed(2) : 'N/A'}</div>
-      <div class="l">稀釋 EPS</div>
+      <div class="l">${t('revStatEps')}</div>
     </div>`;
 
   const series = (period==='quarterly' && d.quarterly) ? d.quarterly : d.annual;
@@ -2168,19 +2413,19 @@ function renderFinancials(d, period){
       labels: series.labels,
       datasets: [
         {
-          label: '總營收', data: series.revenue,
+          label: t('revDsRevenue'), data: series.revenue,
           backgroundColor: 'rgba(96,165,250,.65)', borderColor: 'rgba(96,165,250,1)',
           borderWidth: 1, borderRadius: 3, yAxisID: 'yRev',
           datalabels: { display: false },
         },
         {
-          label: '淨利', data: series.net_income,
+          label: t('revDsNI'), data: series.net_income,
           backgroundColor: 'rgba(74,222,128,.55)', borderColor: 'rgba(74,222,128,1)',
           borderWidth: 1, borderRadius: 3, yAxisID: 'yRev',
           datalabels: { display: false },
         },
         {
-          label: '稀釋 EPS', data: series.eps,
+          label: t('revDsEps'), data: series.eps,
           type: 'line', borderColor: 'rgba(251,146,60,1)', backgroundColor: 'rgba(251,146,60,.12)',
           borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 7, fill: false, tension: .3,
           yAxisID: 'yEps',
@@ -2234,43 +2479,43 @@ function exportData(format){
 
   if(currentView === 'cf'){
     const s = currentStockData;
-    if(!s || !s.annual){ toast('無可匯出的現金流資料'); return; }
+    if(!s || !s.annual){ toast(t('exportNoCf')); return; }
     const series = (currentPeriod === 'quarterly' && s.has_quarterly) ? s.quarterly : s.annual;
-    headers = ['期間', 'OCF ($M)', 'CapEx ($M)', '利息費用 ($M)', 'FCF ($M)', 'FCF轉換率'];
+    headers = [t('exportHdrPeriod'), 'OCF ($M)', 'CapEx ($M)', t('exportHdrInterest'), 'FCF ($M)', t('exportHdrFcfConv')];
     rows = series.labels.map((lbl, i) => {
       const conv = (series.fcf[i] != null && series.ocf[i])
         ? (series.fcf[i] / series.ocf[i] * 100).toFixed(1) + '%' : '';
       return [lbl, series.ocf[i] ?? '', series.capex[i] ?? '', series.interest[i] ?? '', series.fcf[i] ?? '', conv];
     });
-    sheetName = '現金流';
+    sheetName = t('exportSheetCF');
     filename = `${ticker}_cashflow_${currentPeriod}`;
 
   } else if(currentView === 'rev'){
-    if(!currentRevData || !currentRevData.has_financials){ toast('無可匯出的財務資料'); return; }
+    if(!currentRevData || !currentRevData.has_financials){ toast(t('exportNoRev')); return; }
     const series = (revPeriod === 'quarterly' && currentRevData.quarterly) ? currentRevData.quarterly : currentRevData.annual;
-    headers = ['期間', '總營收 ($M)', '淨利 ($M)', '稀釋EPS ($)'];
+    headers = [t('exportHdrPeriod'), t('exportHdrRevenue'), t('exportHdrNI'), t('exportHdrEps')];
     rows = series.labels.map((lbl, i) => [lbl, series.revenue[i] ?? '', series.net_income[i] ?? '', series.eps[i] ?? '']);
-    sheetName = '營收EPS';
+    sheetName = t('exportSheetRev');
     filename = `${ticker}_revenue_${revPeriod}`;
 
   } else if(currentView === 'div'){
-    if(!currentDivData || !currentDivData.has_dividends){ toast('此股票不配息，無資料可匯出'); return; }
-    headers = ['付息日', '股息/股 ($)'];
+    if(!currentDivData || !currentDivData.has_dividends){ toast(t('exportNoDiv')); return; }
+    headers = [t('exportHdrDate'), t('exportHdrDivAmt')];
     rows = currentDivData.dates.map((dt, i) => [dt, currentDivData.amounts[i] ?? '']);
-    sheetName = '股息歷史';
+    sheetName = t('exportSheetDiv');
     filename = `${ticker}_dividends`;
 
   } else if(currentView === 'trend'){
-    if(!currentTrendData){ toast('請先載入趨勢圖'); return; }
+    if(!currentTrendData){ toast(t('exportNoTrend')); return; }
     const d = currentTrendData;
     const [lbl1, lbl2] = d.ma_labels || ['MA20', 'MA50'];
-    headers = ['日期', '收盤價 ($)', '成交量', lbl1, lbl2];
+    headers = [t('exportHdrPeriod'), t('exportHdrClose'), t('exportHdrVolume'), lbl1, lbl2];
     rows = d.dates.map((dt, i) => [dt, d.close[i] ?? '', d.volume[i] ?? '', d.ma20[i] ?? '', d.ma50[i] ?? '']);
-    sheetName = '價格趨勢';
+    sheetName = t('exportSheetTrend');
     filename = `${ticker}_trend_${currentRange}`;
 
   } else {
-    toast('此頁籤不支援匯出');
+    toast(t('exportNoTab'));
     return;
   }
 
@@ -2303,7 +2548,7 @@ function setRange(btn){
 async function loadTrend(ticker, period){
   if(!ticker) return;
   const res = await fetch(`/api/stocks/${ticker}/history?period=${period}`);
-  if(!res.ok){ toast('無法取得價格資料'); return; }
+  if(!res.ok){ toast(t('noPriceData')); return; }
   const d = await res.json();
   renderTrend(d);
 }
@@ -2318,29 +2563,29 @@ function renderTrend(d){
   document.getElementById('trendStats').innerHTML = `
     <div class="stat-card">
       <div class="v" style="color:var(--green)">$${st.latest_price?.toFixed(2) ?? 'N/A'}</div>
-      <div class="l">目前價格</div>
+      <div class="l">${t('statCurrentPrice')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:${chgColor}">${st.pct_change!=null ? chgSign+st.pct_change.toFixed(2)+'%' : 'N/A'}</div>
-      <div class="l">區間漲跌幅</div>
+      <div class="l">${t('statPctChange')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:#e2e8f0">$${st.high_52w?.toFixed(2) ?? 'N/A'}</div>
-      <div class="l">區間最高</div>
+      <div class="l">${t('statHigh')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:#e2e8f0">$${st.low_52w?.toFixed(2) ?? 'N/A'}</div>
-      <div class="l">區間最低</div>
+      <div class="l">${t('statLow')}</div>
     </div>
     <div class="stat-card">
       <div class="v" style="color:var(--purple)">${st.pe_ratio?.toFixed(1) ?? 'N/A'}</div>
-      <div class="l">P/E 本益比</div>
+      <div class="l">${t('statPe')}</div>
     </div>`;
 
   // Update MA legend
   const [maA, maB] = d.ma_labels ?? ['MA20','MA50'];
   document.getElementById('maLegend').innerHTML =
-    `<span style="color:#60a5fa">&#9644;</span> 收盤價 &nbsp;` +
+    `<span style="color:#60a5fa">&#9644;</span> ${t('maLegendClose')} &nbsp;` +
     `<span style="color:#fbbf24">&#9644;</span> ${maA} &nbsp;` +
     `<span style="color:#f87171">&#9644;</span> ${maB}`;
 
@@ -2367,7 +2612,7 @@ function renderTrend(d){
       labels: d.dates,
       datasets: [
         {
-          label: '收盤價',
+          label: t('dsTrendClose'),
           data: d.close,
           borderColor: 'rgba(96,165,250,1)',
           backgroundColor: makeGrad(tCtx, 'rgba(96,165,250,1)'),
@@ -2440,7 +2685,7 @@ function renderTrend(d){
     data: {
       labels: d.dates,
       datasets: [{
-        label: '成交量',
+        label: t('dsVolume'),
         data: d.volume,
         backgroundColor: volColors,
         borderWidth: 0,
@@ -2456,7 +2701,7 @@ function renderTrend(d){
           backgroundColor: '#0f3460', titleColor: '#e2e8f0', bodyColor: '#94a3b8',
           callbacks: {
             title: items => items[0].label,
-            label: c => ` 成交量: ${(c.parsed.y/1e6).toFixed(1)}M` ,
+            label: c => ` ${t('dsVolume')}: ${(c.parsed.y/1e6).toFixed(1)}M` ,
           }
         },
         datalabels: { display: false },
@@ -2478,24 +2723,24 @@ function renderTrend(d){
 
 // ── CRUD helpers ──────────────────────────────────────────────
 async function refreshCard(ticker){
-  toast('更新中...');
+  toast(t('refreshing'));
   const res=await fetch(`/api/stocks/${ticker}/refresh`,{method:'POST'});
   const d=await res.json();
   if(!res.ok){toast('Error: '+d.error);return;}
-  toast(`${ticker} 已更新`);
+  toast(t('refreshDone',{ticker}));
   await loadMyStocks();
   await loadPopular();
   if(currentTicker===ticker) showChart(ticker);
 }
 
 async function deleteCard(ticker){
-  if(!confirm(`確定移除 ${ticker}？`)) return;
+  if(!confirm(t('deleteConfirm',{ticker}))) return;
   await fetch(`/api/stocks/${ticker}`,{method:'DELETE'});
   if(currentTicker===ticker){
     currentTicker=null;
     document.getElementById('chart-panel').style.display='none';
   }
-  toast(`已移除 ${ticker}`);
+  toast(t('deleted',{ticker}));
   loadMyStocks();
   loadPopular();
   if(catalogVisible) loadCatalog();
@@ -2541,7 +2786,7 @@ let cmpSearchDebounce = null;
 function pickCmpSearch(ticker){
   document.getElementById('cmpDropdown').style.display = 'none';
   document.getElementById('cmpInput').value = '';
-  if(cmpTickers.length >= 8){ toast('最多比較 8 檔股票'); return; }
+  if(cmpTickers.length >= 8){ toast(t('cmpMax')); return; }
   if(!cmpTickers.includes(ticker)) cmpTickers.push(ticker);
   renderCmpChips();
   loadCompare();
@@ -2559,7 +2804,7 @@ function addCmpTicker(){
   const v = document.getElementById('cmpInput').value.trim().toUpperCase();
   document.getElementById('cmpInput').value = '';
   if(!v) return;
-  if(cmpTickers.length >= 8){ toast('最多比較 8 檔股票'); return; }
+  if(cmpTickers.length >= 8){ toast(t('cmpMax')); return; }
   if(!cmpTickers.includes(v)) cmpTickers.push(v);
   renderCmpChips();
   loadCompare();
@@ -2586,7 +2831,7 @@ async function loadCompare(){
     return;
   }
   const res = await fetch(`/api/compare?tickers=${cmpTickers.join(',')}&period=${cmpRange}`);
-  if(!res.ok){ toast('比較資料載入失敗'); return; }
+  if(!res.ok){ toast(t('cmpLoadError')); return; }
   renderCompare(await res.json());
 }
 
@@ -2663,7 +2908,7 @@ async function toggleScreener(){
     const res = await fetch('/api/sectors');
     const sects = await res.json();
     const sel = document.getElementById('scrSector');
-    sel.innerHTML = '<option value="">全部產業</option>' +
+    sel.innerHTML = `<option value="" id="scrOptAllSectors">${t('scrAllSectors')}</option>` +
       sects.map(s=>`<option value="${s}">${s}</option>`).join('');
     runScreener();
   }
@@ -2695,12 +2940,12 @@ function resetScreener(){
 function renderScreener(stocks){
   const inDbCount = stocks.filter(s => s.in_db !== false).length;
   const note = inDbCount < stocks.length
-    ? `（${inDbCount} 檔已載入數據，其餘點「載入」抓取）`
+    ? t('scrCountNote',{loaded:inDbCount})
     : '';
-  document.getElementById('scrCount').textContent = `共 ${stocks.length} 檔 ${note}`;
+  document.getElementById('scrCount').textContent = t('scrCount',{n:stocks.length}) + ' ' + note;
   const tbody = document.getElementById('scrBody');
   if(!stocks.length){
-    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:30px">無符合條件的股票</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:30px">${t('scrEmpty')}</td></tr>`;
     return;
   }
   tbody.innerHTML = stocks.map(s=>{
@@ -2711,7 +2956,7 @@ function renderScreener(stocks){
     const cagrColor = k.ocf_cagr     >= 10 ? 'var(--green)' : 'var(--text)';
     const convColor = k.fcf_conversion >= 70 ? 'var(--green)' : 'var(--text)';
     const dash = `<span style="color:var(--dim)">—</span>`;
-    const btnLabel = hasData ? '查看' : '載入';
+    const btnLabel = hasData ? t('scrView') : t('scrLoad');
     return `<tr style="${rowStyle}" onclick="scrPick('${s.ticker}')">
       <td><strong style="color:${hasData?'#e2e8f0':'var(--muted)'}">${s.ticker}</strong></td>
       <td style="color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name||''}</td>
@@ -2729,11 +2974,11 @@ function renderScreener(stocks){
 async function scrPick(ticker){
   const inDb = await isInDb(ticker);
   if(!inDb){
-    toast('載入中...');
+    toast(t('loading'));
     const res = await fetch('/api/stocks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ticker})});
     const d = await res.json();
     if(!res.ok){toast('Error: '+d.error);return;}
-    toast(`已加入 ${d.name}`);
+    toast(t('added',{name:d.name}));
   } else {
     await fetch(`/api/stocks/${ticker}/pin`, {method:'POST'});
   }
@@ -2749,10 +2994,10 @@ function startBulkFetch(){
   const fill = document.getElementById('bulkFill');
   const stat = document.getElementById('bulkStatus');
   btn.disabled = true;
-  btn.textContent = '載入中...';
+  btn.textContent = t('bulkLoading');
   wrap.style.display = 'block';
   fill.style.width = '0%';
-  stat.textContent = '正在連線...';
+  stat.textContent = t('bulkConnecting');
 
   const es = new EventSource('/api/bulk-fetch');
   es.onmessage = e => {
@@ -2760,20 +3005,20 @@ function startBulkFetch(){
     const pct = d.total > 0 ? Math.round(d.done / d.total * 100) : 0;
     fill.style.width = pct + '%';
     if(d.finished){
-      stat.textContent = `完成！已載入 ${d.total} 檔數據`;
+      stat.textContent = t('bulkDone',{total:d.total});
       btn.disabled = false;
-      btn.textContent = '&#8987; 載入全部數據';
+      btn.innerHTML = '&#8987; ' + t('scrBulk');
       es.close();
       loadMyStocks();
       runScreener();
     } else {
-      stat.textContent = `${d.done} / ${d.total}  正在載入 ${d.ticker}...`;
+      stat.textContent = t('bulkProgress',{done:d.done,total:d.total,ticker:d.ticker});
     }
   };
   es.onerror = () => {
-    stat.textContent = '連線中斷，請重試';
+    stat.textContent = t('bulkError');
     btn.disabled = false;
-    btn.textContent = '&#8987; 載入全部數據';
+    btn.innerHTML = '&#8987; ' + t('scrBulk');
     es.close();
   };
 }
@@ -2792,12 +3037,12 @@ function startBackupHistory(){
   const doneBox = document.getElementById('backupDoneInfo');
 
   btn.disabled = true;
-  btn.textContent = '備份中...';
+  btn.textContent = t('backupLoading');
   btnStop.style.display = '';
   doneBox.style.display = 'none';
   wrap.style.display = 'block';
   fill.style.width = '0%';
-  stat.textContent = '正在連線...';
+  stat.textContent = t('backupConnecting');
   _backupDone = 0; _backupTotal = 0;
 
   if(_backupES){ _backupES.close(); }
@@ -2812,27 +3057,27 @@ function startBackupHistory(){
     if(d.finished){
       _backupES.close(); _backupES = null;
       btn.disabled = false;
-      btn.textContent = '&#128190; 備份歷史資料';
+      btn.innerHTML = '&#128190; ' + t('scrBackup');
       btnStop.style.display = 'none';
       stat.textContent = '';
       wrap.style.display = 'none';
       // Show persistent completion banner
-      const now = new Date().toLocaleString('zh-TW');
+      const now = new Date().toLocaleString(t('locale'));
       document.getElementById('backupDoneText').textContent =
-        `備份完成　${now}　共 ${d.total} 檔　已存入：股息歷史 / 財務報表 / 1y 日線 / 5y 週線`;
+        t('backupDone',{time:now,total:d.total});
       doneBox.style.display = 'flex';
     } else {
       const warn = d.error ? ' ⚠' : '';
-      stat.textContent = `${d.done} / ${d.total}　備份中 ${d.ticker}${warn}`;
+      stat.textContent = t('backupProgress',{done:d.done,total:d.total,ticker:d.ticker}) + warn;
     }
   };
 
   _backupES.onerror = () => {
     _backupES.close(); _backupES = null;
     btn.disabled = false;
-    btn.textContent = '&#128190; 備份歷史資料';
+    btn.innerHTML = '&#128190; ' + t('scrBackup');
     btnStop.style.display = 'none';
-    stat.textContent = '連線中斷，請重試';
+    stat.textContent = t('backupError');
   };
 }
 
@@ -2843,10 +3088,10 @@ function stopBackupHistory(){
   const stat    = document.getElementById('bulkStatus');
   const fill    = document.getElementById('bulkFill');
   btn.disabled = false;
-  btn.textContent = '&#128190; 備份歷史資料';
+  btn.innerHTML = '&#128190; ' + t('scrBackup');
   btnStop.style.display = 'none';
-  const now = new Date().toLocaleTimeString('zh-TW');
-  stat.textContent = `已於 ${now} 終止備份（完成 ${_backupDone} / ${_backupTotal} 檔）`;
+  const now = new Date().toLocaleTimeString(t('locale'));
+  stat.textContent = t('backupStopped',{time:now,done:_backupDone,total:_backupTotal});
   fill.style.background = 'rgba(248,113,113,0.6)';
   setTimeout(() => { fill.style.background = ''; }, 3000);
 }
@@ -2857,21 +3102,21 @@ let priceSSE = null;
 function startPriceStream(){
   if(priceSSE){ priceSSE.close(); priceSSE = null; }
   const dot = document.getElementById('liveDot');
-  if(dot){ dot.title = '即時報價：連線中'; dot.classList.remove('active'); }
+  if(dot){ dot.title = t('liveDotConnecting'); dot.classList.remove('active'); }
   priceSSE = new EventSource('/api/prices/stream');
   priceSSE.onopen = () => {
-    if(dot){ dot.classList.add('active'); dot.title = '即時報價：已連線（每30秒更新）'; }
+    if(dot){ dot.classList.add('active'); dot.title = t('liveDotConnected'); }
   };
   priceSSE.onmessage = e => {
     try {
       const updates = JSON.parse(e.data);
       if(!Array.isArray(updates) || !updates.length) return;
       updates.forEach(applyPriceUpdate);
-      if(dot){ dot.title = '即時報價：最後更新 ' + new Date().toLocaleTimeString('zh-TW'); }
+      if(dot){ dot.title = t('liveDotUpdated') + new Date().toLocaleTimeString(t('locale')); }
     } catch(err){}
   };
   priceSSE.onerror = () => {
-    if(dot){ dot.classList.remove('active'); dot.title = '即時報價：連線中斷，10秒後重試'; }
+    if(dot){ dot.classList.remove('active'); dot.title = t('liveDotDisconnected'); }
     priceSSE.close(); priceSSE = null;
     setTimeout(startPriceStream, 10000);
   };
@@ -2901,6 +3146,7 @@ function applyPriceUpdate(u){
 
 // ── Init ──────────────────────────────────────────────────────
 (async function(){
+  applyLangStatic();  // apply translations to static elements on first load (no re-render)
   await loadPopular();
   await loadMyStocks();
   startPriceStream();

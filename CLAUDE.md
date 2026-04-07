@@ -312,6 +312,7 @@ migration needed.
 | v2.14   | 2026-03-25 | Historical data backup to MongoDB: `_fetch_dividends_payload()`, `_fetch_financials_payload()`, `_fetch_history_payload()` module-level helpers; `/api/backup-history` SSE endpoint iterates all DB stocks and stores `dividends_cache`, `financials_cache`, `history_cache_1y`, `history_cache_5y` + `history_cache_at` timestamp; existing `/dividends`, `/financials`, `/history` endpoints read from MongoDB cache first (pass `?refresh=1` to force live); "備份歷史資料" button in screener panel reuses bulk-fetch progress bar |
 | v2.14.1 | 2026-03-25 | Backup UX: "▮▮ 終止備份" stop button (visible only while running, closes SSE, shows red flash + aborted count); persistent green completion banner shows timestamp + stock count + data types; dismissable with ✕; verified 307/307 stocks fully backed up (dividends_cache, financials_cache, history_cache_1y 252 rows, history_cache_5y 262 rows) |
 | v2.14.2 | 2026-03-26 | Fix catalog click: already-added tickers in catalog browser were not clickable — added `onclick="showChart()"` to `in_db` items so clicking opens the chart panel directly |
+| v2.15   | 2026-04-07 | Daily scheduler: new `scheduled_update.ps1` runs at 18:00 via Windows Task Scheduler (`FinanceDashboard_DailyUpdate`) — restarts Flask server, triggers bulk-fetch for all 307 tickers, then runs backup-history; progress logged to `scheduled_update.log` |
 
 ## Future Improvements
 

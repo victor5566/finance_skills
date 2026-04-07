@@ -329,6 +329,7 @@ v2 改為巢狀結構（`annual.labels`、`annual.ocf`…）。
 | v2.14 | 2026-03-25 | 歷史資料備份至 MongoDB：新增 `_fetch_dividends_payload()`、`_fetch_financials_payload()`、`_fetch_history_payload()` 模組層級輔助函式；`/api/backup-history` SSE 端點逐一迭代資料庫中所有股票，將 `dividends_cache`、`financials_cache`、`history_cache_1y`、`history_cache_5y` 及 `history_cache_at` 時間戳記存入 MongoDB；現有 `/dividends`、`/financials`、`/history` 端點優先讀取 MongoDB 快取（加 `?refresh=1` 可強制重抓）；篩選器面板新增「備份歷史資料」按鈕，重用批量載入的進度條 |
 | v2.14.1 | 2026-03-25 | 備份 UX 改善：新增「▮▮ 終止備份」按鈕（備份進行中才顯示，點擊關閉 SSE 並顯示終止進度）；備份完成後顯示永久綠色橫幅含時間戳記、股票數與資料類型，可點 ✕ 關閉；已驗證 307/307 檔全數備份（`dividends_cache`、`financials_cache`、`history_cache_1y` 252 列、`history_cache_5y` 262 列） |
 | v2.14.2 | 2026-03-26 | 修正目錄點擊功能：股票目錄中已加入的股票無法點擊 — 對 `in_db` 項目加入 `onclick="showChart()"` 使點擊可直接開啟圖表面板 |
+| v2.15   | 2026-04-07 | 定時排程：新增 `scheduled_update.ps1`；每日 18:00 自動執行重啟 Server → 刷新全部 307 檔股票資料（bulk-fetch）→ 備份歷史資料（backup-history）；執行記錄寫入 `scheduled_update.log`；透過 Windows 工作排程器（`FinanceDashboard_DailyUpdate`）觸發 |
 
 ## 未來改善方向
 

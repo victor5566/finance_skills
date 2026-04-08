@@ -313,6 +313,7 @@ migration needed.
 | v2.14.1 | 2026-03-25 | Backup UX: "▮▮ 終止備份" stop button (visible only while running, closes SSE, shows red flash + aborted count); persistent green completion banner shows timestamp + stock count + data types; dismissable with ✕; verified 307/307 stocks fully backed up (dividends_cache, financials_cache, history_cache_1y 252 rows, history_cache_5y 262 rows) |
 | v2.14.2 | 2026-03-26 | Fix catalog click: already-added tickers in catalog browser were not clickable — added `onclick="showChart()"` to `in_db` items so clicking opens the chart panel directly |
 | v2.15   | 2026-04-07 | Daily scheduler: new `scheduled_update.ps1` runs at 18:00 via Windows Task Scheduler (`FinanceDashboard_DailyUpdate`) — restarts Flask server, triggers bulk-fetch for all 307 tickers, then runs backup-history; progress logged to `scheduled_update.log` |
+| v2.16   | 2026-04-08 | English/Chinese language toggle: EN/中文 button in header; full `TRANS` dictionary (195+ keys, zh/en); `t(key, vars)` helper with variable interpolation; `applyLang()` / `applyLangStatic()` for on-the-fly re-render — all UI strings (labels, toasts, chart datasets, export headers, status messages) use `t()`; switching language instantly re-renders cards, charts, screener, catalog, and all dynamic content |
 
 ## Future Improvements
 
